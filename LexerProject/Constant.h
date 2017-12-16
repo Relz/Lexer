@@ -1,0 +1,6 @@
+#ifndef PROJECT_CONSTANT_H
+#define PROJECT_CONSTANT_H
+
+const int REQUIRED_ARGC = 1;
+
+#endif //PROJECT_CONSTANT_H

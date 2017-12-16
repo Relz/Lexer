@@ -1,0 +1,8 @@
+PROJECT(Rule)
+
+SET(SOURCE_FILES
+		Rule.cpp
+		Rule.h
+)
+
+ADD_SUBDIRECTORY(Rule)
