@@ -97,6 +97,8 @@ namespace Constant
 		const std::string END_OF_LINE_LF = "\n";
 		const std::string END_OF_LINE_CR = "\r";
 		const std::string END_OF_LINE_CRLF = "\r\n";
+		const std::string UNDERSCORE = "_";
+		const char UNDERSCORE_CHARACTER = '_';
 	}
 
 	namespace Parentheses
@@ -200,6 +202,12 @@ namespace Constant
 		const std::string STRING_LITERAL = "String literal";
 		const std::string CHARACTER_LITERAL = "Character literal";
 		const std::string UNKNOWN = "Unknown";
+	}
+
+	namespace Number
+	{
+		const size_t DEFAULT_SYSTEM = 10;
+		const size_t MAX_SYSTEM = 36;
 	}
 }
 

@@ -10,19 +10,30 @@ namespace
 	public:
 		static bool IsLetter(char ch)
 		{
-			return _letters.find(ch) != _letters.end();
+			return _UPPERCASE_LETTERS.find(ch) != _UPPERCASE_LETTERS.end()
+					|| _LOWERCASE_LETTERS.find(ch) != _LOWERCASE_LETTERS.end();
 		}
 
 		static bool IsIdentifier(const std::string & str)
 		{
-			if (str.empty() || !IsLetter(str.front()))
+			if (
+					str.empty()
+					|| (
+						!IsLetter(str.front())
+						&& !IsIdentifierSpecialCharacter(str.front())
+					)
+			)
 			{
 				return false;
 			}
 			bool result = true;
 			for (size_t i = 1; i < str.length(); ++i)
 			{
-				if (!Rule::IsLetter(str.at(i)) && !Rule::IsDigit(str.at(i)))
+				if (
+						!Rule::IsLetter(str.at(i))
+						&& !Rule::IsDigit(str.at(i))
+						&& !IsIdentifierSpecialCharacter(str.front())
+				)
 				{
 					result = false;
 					break;
@@ -32,12 +43,43 @@ namespace
 			return result;
 		}
 
-		static bool IsDigit(char ch)
+		static bool IsDigit(char ch, size_t system = Constant::Number::DEFAULT_SYSTEM)
 		{
-			return _digits.find(ch) != _digits.end();
+			if (system == Constant::Number::DEFAULT_SYSTEM)
+			{
+				return _DIGITS.find(ch) != _DIGITS.end();
+			}
+
+			std::set<char> availableSymbols;
+			size_t i = 0;
+			for (char digit : _DIGITS)
+			{
+				if (i == system)
+				{
+					break;
+				}
+				availableSymbols.emplace(digit);
+				++i;
+			}
+			for (char uppercaseLetter : _UPPERCASE_LETTERS)
+			{
+				if (i == system)
+				{
+					break;
+				}
+				availableSymbols.emplace(uppercaseLetter);
+				++i;
+			}
+			return availableSymbols.find(ch) != availableSymbols.end();
 		}
 
-		static bool IsInteger(const std::string & str, size_t fromIndex, size_t & failIndex)
+		static bool IsInteger(
+				const std::string & str,
+				size_t fromIndex,
+				size_t & failIndex,
+				std::string & goodString,
+				size_t system = Constant::Number::DEFAULT_SYSTEM
+		)
 		{
 			if (str.empty())
 			{
@@ -47,10 +89,11 @@ namespace
 			size_t i = fromIndex;
 			for (i; i < str.length(); ++i)
 			{
-				if (!Rule::IsDigit(str.at(i)))
+				if (!Rule::IsDigit(str.at(i), system))
 				{
 					result = false;
 					failIndex = i;
+					goodString = str.substr(fromIndex, i - fromIndex);
 					break;
 				}
 			}
@@ -58,13 +101,22 @@ namespace
 		}
 
 	private:
-		static const std::set<char> _letters;
+		static bool IsIdentifierSpecialCharacter(char ch)
+		{
+			return _IDENTIFIER_SPECIAL_CHARACTERS.find(ch) != _IDENTIFIER_SPECIAL_CHARACTERS.end();
+		}
 
-		static const std::set<char> _digits;
+		static const std::set<char> _UPPERCASE_LETTERS;
+
+		static const std::set<char> _LOWERCASE_LETTERS;
+
+		static const std::set<char> _DIGITS;
+
+		static const std::set<char> _IDENTIFIER_SPECIAL_CHARACTERS;
 	};
 }
 
-const std::set<char> Rule::_letters = {
+const std::set<char> Rule::_UPPERCASE_LETTERS = {
 		'A',
 		'B',
 		'C',
@@ -90,7 +142,10 @@ const std::set<char> Rule::_letters = {
 		'W',
 		'X',
 		'Y',
-		'Z',
+		'Z'
+};
+
+const std::set<char> Rule::_LOWERCASE_LETTERS = {
 		'a',
 		'b',
 		'c',
@@ -116,11 +171,10 @@ const std::set<char> Rule::_letters = {
 		'w',
 		'x',
 		'y',
-		'z',
-		'_'
+		'z'
 };
 
-const std::set<char> Rule::_digits = {
+const std::set<char> Rule::_DIGITS = {
 		'0',
 		'1',
 		'2',
@@ -131,6 +185,11 @@ const std::set<char> Rule::_digits = {
 		'7',
 		'8',
 		'9'
+};
+
+const std::set<char> Rule::_IDENTIFIER_SPECIAL_CHARACTERS = {
+		Constant::Separator::UNDERSCORE_CHARACTER,
+		'-'
 };
 
 #endif //TOKEN_RULE_H

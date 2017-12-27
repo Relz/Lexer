@@ -51,15 +51,12 @@ namespace
 				Token & token
 		)
 		{
-			try
-			{
-				token = unorderedMap.at(searchStr);
-				return true;
-			}
-			catch (std::out_of_range & e)
+			if (unorderedMap.find(searchStr) == unorderedMap.end())
 			{
 				return false;
 			}
+			token = unorderedMap.at(searchStr);
+			return true;
 		}
 
 		static bool TryAddTypeAt(const std::string & searchStr, Token & token)
@@ -124,7 +121,8 @@ namespace
 			}
 
 			size_t failIndex;
-			if (Rule::IsInteger(scannedString, 1, failIndex))
+			std::string goodString;
+			if (Rule::IsInteger(scannedString, 0, failIndex, goodString))
 			{
 				token = Token::INTEGER;
 				return true;
@@ -132,10 +130,41 @@ namespace
 
 			if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
 			{
-				if (Rule::IsInteger(scannedString, failIndex + 1, failIndex))
+				if (Rule::IsInteger(scannedString, failIndex + 1, failIndex, goodString))
 				{
 					token = Token::FLOAT;
 					return true;
+				}
+			}
+			else if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
+			{
+				size_t numberSystem;
+				try
+				{
+					numberSystem = std::stoul(goodString);
+					if (numberSystem > Constant::Number::MAX_SYSTEM)
+					{
+						throw std::exception();
+					}
+				}
+				catch (...)
+				{
+					token = Token::UNKNOWN;
+					return false;
+				}
+				if (Rule::IsInteger(scannedString, failIndex + 1, failIndex, goodString, numberSystem))
+				{
+					token = Token::INTEGER;
+					return true;
+				}
+
+				if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+				{
+					if (Rule::IsInteger(scannedString, failIndex + 1, failIndex, goodString))
+					{
+						token = Token::FLOAT;
+						return true;
+					}
 				}
 			}
 
@@ -147,7 +176,7 @@ namespace
 					if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
 						|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
 					{
-						if (Rule::IsInteger(scannedString, failIndex + 2, failIndex))
+						if (Rule::IsInteger(scannedString, failIndex + 2, failIndex, goodString))
 						{
 							token = Token::EXPONENTIAL;
 							return true;
@@ -155,7 +184,7 @@ namespace
 
 						if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
 						{
-							if (Rule::IsInteger(scannedString, failIndex + 1, failIndex))
+							if (Rule::IsInteger(scannedString, failIndex + 1, failIndex, goodString))
 							{
 								token = Token::EXPONENTIAL;
 								return true;
@@ -165,7 +194,7 @@ namespace
 				}
 			}
 			token = Token::UNKNOWN;
-			return true;
+			return false;
 		}
 
 		static const std::unordered_map<std::string, Token> _stringsToArithmeticOperatorTokens;
