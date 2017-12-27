@@ -9,6 +9,7 @@
 #include "BaseSettings.h"
 #include "VectorSettings.h"
 #include "MatrixSettings.h"
+#include "Position.h"
 
 class CInput
 {
@@ -18,8 +19,10 @@ public:
 	{
 		if (IsEndOfStream())
 		{
-			throw std::invalid_argument("Поток пуст");
+			throw std::invalid_argument("Stream is empty");
 		}
+
+		m_lastPosition = GetStreamLastPosition();
 	}
 
 	explicit CInput(const std::string & inputFileName)
@@ -27,12 +30,14 @@ public:
 		m_inputFile.open(inputFileName);
 		if (!m_inputFile.good())
 		{
-			throw std::invalid_argument("Файл \"" + inputFileName + "\" не существует");
+			throw std::invalid_argument("File \"" + inputFileName + "\" doesn't exists");
 		}
 		if (IsEndOfStream())
 		{
-			throw std::invalid_argument("Файл \"" + inputFileName + "\" пуст");
+			throw std::invalid_argument("File \"" + inputFileName + "\" is empty");
 		}
+
+		m_lastPosition = GetStreamLastPosition();
 	}
 
 	template<class T>
@@ -59,11 +64,11 @@ public:
 
 	bool SkipLine()
 	{
-		while (IsNotEndOfLine() && !IsEndOfStream())
+		while (!IsEndOfLine() && !IsEndOfStream())
 		{
-			m_is.get();
+			GetChar();
 		}
-		m_is.get();
+		GetChar();
 		return !IsEndOfStream();
 	}
 
@@ -80,8 +85,9 @@ public:
 		return true;
 	}
 
-	void SkipSymbols(const std::vector<char> & symbols)
+	bool SkipSymbols(const std::vector<char> & symbols)
 	{
+		bool result = false;
 		bool symbolSkipped = true;
 		while(symbolSkipped)
 		{
@@ -90,11 +96,13 @@ public:
 			{
 				if (m_is.peek() == std::char_traits<char>::to_int_type(symbol))
 				{
-					m_is.get();
+					GetChar();
 					symbolSkipped = true;
+					result = true;
 				}
 			}
 		}
+		return result;
 	}
 
 	template<typename... Targs>
@@ -143,18 +151,31 @@ public:
 		return !matrix.empty() && (enoughRows || matrixSettings.readLimit == ReadLimit::UNLIMITED);
 	}
 
-	bool Scan(std::string & scanned, std::string & delimiter, std::vector<std::string> delimiters)
+	bool Scan(
+			std::vector<std::string> delimiters,
+			std::string & scannedString,
+			Position & scannedStringPosition,
+			std::string & delimiter,
+			Position & delimiterPosition
+	)
 	{
+		scannedStringPosition = Position();
+		delimiterPosition = Position();
 		std::string result;
 		if (IsEndOfStream())
 		{
-			scanned = "";
+			scannedString.clear();
+			delimiter.clear();
 			return false;
 		}
+		scannedStringPosition.line = m_position.line;
+		scannedStringPosition.column = m_position.column;
 		while (!IsEndOfStream())
 		{
 			if (FindDelimiter(delimiters, delimiter))
 			{
+				delimiterPosition.line = m_position.line;
+				delimiterPosition.column = scannedStringPosition.column;
 				break;
 			}
 			else
@@ -162,15 +183,18 @@ public:
 				char ch;
 				if (ReadArguments(ch))
 				{
+					++scannedStringPosition.column;
 					result += ch;
 				}
 				else
 				{
+					++scannedStringPosition.line;
 					SkipLine();
 				}
 			}
 		}
-		scanned = result;
+		scannedString = result;
+		scannedStringPosition.column -= scannedString.length();
 		return true;
 	}
 
@@ -179,16 +203,97 @@ public:
 		return m_is.peek() == std::ifstream::traits_type::eof();
 	}
 
+	bool SkipUntilSymbols(const std::vector<char> & symbols, std::string & skippedString)
+	{
+		std::string possibleSkippedString;
+		bool symbolReached = false;
+		while(!symbolReached)
+		{
+			for (char symbol : symbols)
+			{
+				if (m_is.peek() == std::char_traits<char>::to_int_type(symbol))
+				{
+					skippedString = std::move(possibleSkippedString);
+					symbolReached = true;
+					break;
+				}
+			}
+			if (!symbolReached)
+			{
+				if (m_is.eof())
+				{
+					skippedString = std::move(possibleSkippedString);
+					return false;
+				}
+				char ch;
+				if (GetChar(ch))
+				{
+					possibleSkippedString += ch;
+				}
+			}
+		}
+		return symbolReached;
+	}
+
+	bool SkipUntilStrings(const std::vector<std::string> & strings, std::string & skippedString)
+	{
+		bool result = false;
+		std::string possibleSkippedString;
+		while(true)
+		{
+			if (m_is.eof())
+			{
+				skippedString = std::move(possibleSkippedString);
+				return false;
+			}
+			std::string delimiter;
+			long savedLine = m_position.line;
+			long savedColumn = m_position.column;
+			if (FindDelimiter(strings, delimiter))
+			{
+				result = true;
+				skippedString = std::move(possibleSkippedString);
+				m_is.seekg(-delimiter.length(), m_is.cur);
+				m_position.line = savedLine;
+				m_position.column = savedColumn;
+				break;
+			}
+			char ch;
+			if (GetChar(ch))
+			{
+				possibleSkippedString += ch;
+			}
+		}
+		return result;
+	}
+
+	const Position & GetPosition()
+	{
+		return m_position;
+	}
+
 private:
 	template<class T>
 	bool GetArgumentFromStream(T & arg)
 	{
-		return (IsNotEndOfLine() && !m_is.eof() && m_is >> arg);
+		if (!IsEndOfLine() && !m_is.eof() && m_is >> arg)
+		{
+			if (m_is.tellg() != -1)
+			{
+				m_position.column = m_is.tellg() + 1;
+			}
+			else
+			{
+				m_position.column = m_lastPosition;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	bool GetArgumentFromStream(char & arg)
 	{
-		return (IsNotEndOfLine() && !m_is.eof() && m_is.get(arg));
+		return (!IsEndOfLine() && !m_is.eof() && GetChar(arg));
 	}
 
 	bool GetArgumentsFromStream() { return true; }
@@ -314,37 +419,43 @@ private:
 	static const int ENDL_SYMBOL_CODE_LF = 10;
 	static const int ENDL_SYMBOL_CODE_CR = 13;
 
-	bool IsNotEndOfLine()
+	bool IsEndOfLine()
 	{
 		if (m_is.peek() == ENDL_SYMBOL_CODE_CR)
 		{
+			long savedLine = m_position.line;
+			long savedColumn = m_position.column;
 			char nextSymbol;
 			m_is.get(nextSymbol);
 			if (m_is.peek() == ENDL_SYMBOL_CODE_LF)
 			{
-				return false;
+				return true;
 			}
 			else
 			{
 				m_is.seekg(-1, std::ios::cur);
-				return false;
+				m_position.line = savedLine;
+				m_position.column = savedColumn;
+				return true;
 			}
 		}
 		else if (m_is.peek() == ENDL_SYMBOL_CODE_LF)
 		{
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	bool FindDelimiter(const std::vector<std::string> & delimiters, std::string & result)
 	{
+		long savedLine = m_position.line;
+		long savedColumn = m_position.column;
 		for (const std::string & delimiter : delimiters)
 		{
 			std::string possibleDelimiter;
 			bool found = true;
 			char ch;
-			while (possibleDelimiter.length() < delimiter.length() && ReadArguments(ch))
+			while (possibleDelimiter.length() < delimiter.length() && !m_is.eof() && GetChar(ch))
 			{
 				possibleDelimiter += ch;
 				size_t index = possibleDelimiter.length() - 1;
@@ -363,13 +474,51 @@ private:
 				result = possibleDelimiter;
 				return true;
 			}
-			m_is.seekg(-possibleDelimiter.length(), m_is.cur);
+			if (!possibleDelimiter.empty())
+			{
+				m_is.seekg(-possibleDelimiter.length(), m_is.cur);
+				m_position.line = savedLine;
+				m_position.column = savedColumn;
+			}
 		}
-		result = "";
+		result.clear();
 
 		return false;
 	}
 
+	bool GetChar()
+	{
+		char ch;
+		return GetChar(ch);
+	}
+
+	bool GetChar(char & ch)
+	{
+		if (IsEndOfLine() && !IsEndOfStream())
+		{
+			m_position.line += 1;
+			m_position.column = 0;
+		}
+		if (m_is.get(ch))
+		{
+			m_position.column += 1;
+			return true;
+		}
+		return false;
+	}
+
+	long GetStreamLastPosition()
+	{
+		m_is.seekg(0, std::ios::end);
+		long result = m_is.tellg();
+		++result;
+		m_is.seekg(0, std::ios::beg);
+		return result;
+	}
+
 	std::ifstream m_inputFile;
 	std::istream & m_is = m_inputFile;
+
+	long m_lastPosition;
+	Position m_position = {1, 1};
 };

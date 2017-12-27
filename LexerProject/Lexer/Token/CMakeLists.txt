@@ -1,10 +1,11 @@
-PROJECT(Token)
-
 SET(SOURCE_FILES
-		Token.h
-		TokenUtils.cpp
-		TokenUtils.h
-		Constant.h
-)
+        Token.h
+        TokenUtils.h
+        Rule.h
+        Constant/Parenthesis.h
+        Constant/Constant.h
+        TokenInfo.h
+        )
 
-ADD_SUBDIRECTORY(Rule)
+ADD_LIBRARY(Token ${SOURCE_FILES})
+SET_TARGET_PROPERTIES(Token PROPERTIES LINKER_LANGUAGE CXX)

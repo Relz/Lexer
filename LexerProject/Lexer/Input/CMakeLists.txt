@@ -7,7 +7,8 @@ SET(SOURCE_FILES
 		MatrixSettings.h
 		VectorSettings.h
 		Constant.h
+		Position.h
 )
 
 ADD_LIBRARY(Input SHARED ${SOURCE_FILES})
-set_target_properties(Input PROPERTIES LINKER_LANGUAGE CXX)
+SET_TARGET_PROPERTIES(Input PROPERTIES LINKER_LANGUAGE CXX)
