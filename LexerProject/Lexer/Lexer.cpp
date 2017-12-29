@@ -11,7 +11,7 @@ Lexer::Lexer(const std::string & inputFileName)
 	std::string lastScannedString;
 	while (_input.Scan(SCANNER_DELIMITERS, scannedString, scannedStringPosition, delimiter, delimiterPosition))
 	{
-		Token delimiterToken;
+		Token delimiterToken = Token::UNKNOWN;
 		bool delimiterTokenDetermined = false;
 		if (delimiter == Constant::Comment::LINE)
 		{
@@ -93,19 +93,23 @@ bool Lexer::Skip(const std::string & scannedString, const std::string & delimite
 bool Lexer::NeedMoreScanning(const std::string & scannedString, const std::string & delimiter)
 {
 	return
+		!scannedString.empty()
+		&&
 		(
-			Rule::IsDigit(scannedString.back())
-			&& delimiter == Constant::Separator::DOT
-		)
-		||
-		(
-			scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
-			&& delimiter == Constant::Operator::Arithmetic::PLUS
-		)
-		||
-		(
-			scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
-			&& delimiter == Constant::Operator::Arithmetic::MINUS
+			(
+				Rule::IsDigit(scannedString.back())
+				&& delimiter == Constant::Separator::DOT
+			)
+			||
+			(
+				scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
+				&& delimiter == Constant::Operator::Arithmetic::PLUS
+			)
+			||
+			(
+				scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
+				&& delimiter == Constant::Operator::Arithmetic::MINUS
+			)
 		);
 }
 
@@ -119,5 +123,15 @@ void Lexer::SkipBlockComment()
 }
 
 const std::unordered_map<std::string, std::unordered_set<std::string>> Lexer::SCANNER_SKIPS = {
-		{"", {"", " ", "\t", "\n", "\r", "\r\n"}}
+		{
+				"",
+				{
+						"",
+						Constant::Separator::SPACE,
+						Constant::Separator::TAB,
+						Constant::Separator::END_OF_LINE_LF,
+						Constant::Separator::END_OF_LINE_CR,
+						Constant::Separator::END_OF_LINE_CRLF
+				}
+		}
 };

@@ -14,7 +14,7 @@ namespace
 	class TokenUtils
 	{
 	public:
-		static bool DetermineTokens(
+		static void DetermineTokens(
 				const std::string & scannedString,
 				Position scannedStringPosition,
 				const std::string & delimiter,
@@ -24,7 +24,6 @@ namespace
 				std::vector<TokenInfo> & tokenInfos
 		)
 		{
-
 			bool skipDelimiterDetermining = (_delimitersToSkip.find(delimiter) != _delimitersToSkip.end());
 
 			if (!scannedString.empty())
@@ -299,7 +298,7 @@ const std::unordered_set<std::string> TokenUtils::_delimitersToSkip
 				Constant::Separator::END_OF_LINE_CR,
 				Constant::Separator::END_OF_LINE_CRLF,
 				Constant::Comment::LINE,
-				Constant::Comment::BLOCK_BEGINNING/*, Constant::Comment::BLOCK_ENDING*/
+				Constant::Comment::BLOCK_BEGINNING
 		};
 
 #endif //PROJECT_TOKENUTILS_H

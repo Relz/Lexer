@@ -145,7 +145,7 @@ namespace TokenExtensions
 		{
 			return _tokenToString.at(token);
 		}
-		catch (std::out_of_range & e)
+		catch (std::out_of_range &)
 		{
 			return "";
 		}

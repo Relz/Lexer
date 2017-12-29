@@ -1,10 +1,10 @@
-#include <iostream>
+#include "stdafx.h"
 #include "Constant.h"
 #include "Lexer/Lexer.h"
 
 int main(int argc, char *argv[])
 {
-	if (argc < REQUIRED_ARGC)
+	if (argc - 1 < REQUIRED_ARGC)
 	{
 		std::cerr << NO_ARGUMENT_ERROR << "\n";
 		return 1;

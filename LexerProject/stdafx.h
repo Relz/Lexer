@@ -3,4 +3,4 @@
 
 #include <iostream>
 
-#endif //PROJECTNAME_STDAFX_H
+#endif //PROJECT_STDAFX_H
