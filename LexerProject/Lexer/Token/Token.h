@@ -3,7 +3,7 @@
 
 #include "Constant/Constant.h"
 
-enum Token
+enum class Token
 {
 	// Arithmetic operators
 	PLUS,
