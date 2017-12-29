@@ -476,7 +476,7 @@ private:
 			}
 			if (!possibleDelimiter.empty())
 			{
-				m_is.seekg(-possibleDelimiter.length(), m_is.cur);
+				m_is.seekg(-(m_is.eof() ? possibleDelimiter.length() + 1 : possibleDelimiter.length()), m_is.cur);
 				m_position.line = savedLine;
 				m_position.column = savedColumn;
 			}
