@@ -63,13 +63,13 @@ Lexer::Lexer(const std::string & inputFileName)
 			}
 			lastScannedString.clear();
 			TokenUtils::DetermineTokens(
-					scannedString,
-					scannedStringPosition,
-					delimiter,
-					delimiterPosition,
-					delimiterToken,
-					delimiterTokenDetermined,
-					_tokenInfos
+				scannedString,
+				scannedStringPosition,
+				delimiter,
+				delimiterPosition,
+				delimiterToken,
+				delimiterTokenDetermined,
+				_tokenInfos
 			);
 		}
 	}
@@ -124,14 +124,14 @@ void Lexer::SkipBlockComment()
 
 const std::unordered_map<std::string, std::unordered_set<std::string>> Lexer::SCANNER_SKIPS = {
 		{
+			"",
+			{
 				"",
-				{
-						"",
-						Constant::Separator::SPACE,
-						Constant::Separator::TAB,
-						Constant::Separator::END_OF_LINE_LF,
-						Constant::Separator::END_OF_LINE_CR,
-						Constant::Separator::END_OF_LINE_CRLF
-				}
+				Constant::Separator::SPACE,
+				Constant::Separator::TAB,
+				Constant::Separator::END_OF_LINE_LF,
+				Constant::Separator::END_OF_LINE_CR,
+				Constant::Separator::END_OF_LINE_CRLF
+			}
 		}
 };
