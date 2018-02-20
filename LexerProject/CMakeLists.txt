@@ -3,7 +3,6 @@ PROJECT(LexerProject)
 SET(CMAKE_CXX_STANDARD 11)
 ADD_DEFINITIONS(-std=c++11)
 
-ADD_LIBRARY(PCH STATIC stdafx.cpp stdafx.h)
 SET_SOURCE_FILES_PROPERTIES(LexerProject/stdafx.cpp
         PROPERTIES
         COMPILE_FLAGS "-include ../LexerProject/stdafx.h")
@@ -13,5 +12,4 @@ ADD_EXECUTABLE(LexerProject ${SOURCE_FILES})
 
 ADD_SUBDIRECTORY(Lexer)
 
-TARGET_LINK_LIBRARIES(LexerProject PCH)
 TARGET_LINK_LIBRARIES(LexerProject Lexer)

@@ -3,6 +3,8 @@
 
 #include <set>
 
+using namespace std;
+
 namespace
 {
 	class Rule
@@ -10,15 +12,16 @@ namespace
 	public:
 		static bool IsLetter(char ch)
 		{
-			return _UPPERCASE_LETTERS.find(ch) != _UPPERCASE_LETTERS.end()
-					|| _LOWERCASE_LETTERS.find(ch) != _LOWERCASE_LETTERS.end();
+			return UPPERCASE_LETTERS.find(ch) != UPPERCASE_LETTERS.end()
+				|| LOWERCASE_LETTERS.find(ch) != LOWERCASE_LETTERS.end();
 		}
 
-		static bool IsIdentifier(const std::string & str)
+		static bool IsIdentifier(string const& str)
 		{
 			if (
 				str.empty()
-				|| (
+				||
+				(
 					!IsLetter(str.front())
 					&& !IsIdentifierSpecialCharacter(str.front())
 				)
@@ -40,27 +43,27 @@ namespace
 			return true;
 		}
 
-		static bool IsDigit(char ch, size_t system = Constant::Number::DEFAULT_SYSTEM)
+		static bool IsDigit(char ch, size_t numberSystem = Constant::Number::DEFAULT_SYSTEM)
 		{
-			if (system == Constant::Number::DEFAULT_SYSTEM)
+			if (numberSystem == Constant::Number::DEFAULT_SYSTEM)
 			{
-				return _DIGITS.find(ch) != _DIGITS.end();
+				return DIGITS.find(ch) != DIGITS.end();
 			}
 
-			std::set<char> availableSymbols;
+			set<char> availableSymbols;
 			size_t i = 0;
-			for (char digit : _DIGITS)
+			for (char digit : DIGITS)
 			{
-				if (i == system)
+				if (i == numberSystem)
 				{
 					break;
 				}
 				availableSymbols.emplace(digit);
 				++i;
 			}
-			for (char uppercaseLetter : _UPPERCASE_LETTERS)
+			for (char uppercaseLetter : UPPERCASE_LETTERS)
 			{
-				if (i == system)
+				if (i == numberSystem)
 				{
 					break;
 				}
@@ -71,11 +74,11 @@ namespace
 		}
 
 		static bool IsInteger(
-				const std::string & str,
-				size_t fromIndex,
-				size_t & failIndex,
-				std::string & goodString,
-				size_t system = Constant::Number::DEFAULT_SYSTEM
+			string const& str,
+			size_t fromIndex,
+			size_t & failIndex,
+			string & goodString,
+			size_t system = Constant::Number::DEFAULT_SYSTEM
 		)
 		{
 			if (str.empty())
@@ -98,20 +101,17 @@ namespace
 	private:
 		static bool IsIdentifierSpecialCharacter(char ch)
 		{
-			return _IDENTIFIER_SPECIAL_CHARACTERS.find(ch) != _IDENTIFIER_SPECIAL_CHARACTERS.end();
+			return IDENTIFIER_SPECIAL_CHARACTERS.find(ch) != IDENTIFIER_SPECIAL_CHARACTERS.end();
 		}
 
-		static const std::set<char> _UPPERCASE_LETTERS;
-
-		static const std::set<char> _LOWERCASE_LETTERS;
-
-		static const std::set<char> _DIGITS;
-
-		static const std::set<char> _IDENTIFIER_SPECIAL_CHARACTERS;
+		static const set<char> UPPERCASE_LETTERS;
+		static const set<char> LOWERCASE_LETTERS;
+		static const set<char> DIGITS;
+		static const set<char> IDENTIFIER_SPECIAL_CHARACTERS;
 	};
 }
 
-const std::set<char> Rule::_UPPERCASE_LETTERS =
+const set<char> Rule::UPPERCASE_LETTERS
 {
 	'A',
 	'B',
@@ -141,7 +141,7 @@ const std::set<char> Rule::_UPPERCASE_LETTERS =
 	'Z'
 };
 
-const std::set<char> Rule::_LOWERCASE_LETTERS =
+const set<char> Rule::LOWERCASE_LETTERS
 {
 	'a',
 	'b',
@@ -171,7 +171,7 @@ const std::set<char> Rule::_LOWERCASE_LETTERS =
 	'z'
 };
 
-const std::set<char> Rule::_DIGITS =
+const set<char> Rule::DIGITS
 {
 	'0',
 	'1',
@@ -185,9 +185,9 @@ const std::set<char> Rule::_DIGITS =
 	'9'
 };
 
-const std::set<char> Rule::_IDENTIFIER_SPECIAL_CHARACTERS = {
-		Constant::Separator::UNDERSCORE_CHARACTER,
-		'-'
+const set<char> Rule::IDENTIFIER_SPECIAL_CHARACTERS = {
+	Constant::Separator::UNDERSCORE_CHARACTER,
+	'-'
 };
 
 #endif //TOKEN_RULE_H

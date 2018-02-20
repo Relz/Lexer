@@ -5,7 +5,9 @@
 #include <vector>
 #include "Token/Constant/Constant.h"
 
-const std::vector<std::string> SCANNER_DELIMITERS =
+using namespace std;
+
+const vector<string> SCANNER_DELIMITERS
 {
 	Constant::Comment::BLOCK_BEGINNING,
 	Constant::Comment::LINE,

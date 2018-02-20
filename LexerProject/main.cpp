@@ -1,16 +1,18 @@
-#include "stdafx.h"
 #include "Constant.h"
 #include "Lexer/Lexer.h"
+#include <iostream>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
 	if (argc - 1 < REQUIRED_ARGC)
 	{
-		std::cerr << NO_ARGUMENT_ERROR << "\n";
-		return 1;
+		cerr << NO_ARGUMENT_ERROR << "\n";
+		return EXIT_FAILURE;
 	}
-	std::string inputFileName = argv[1];
+	string inputFileName = argv[1];
 	Lexer lexer(argv[1]);
 	lexer.Print();
-	return 0;
+	return EXIT_SUCCESS;
 }

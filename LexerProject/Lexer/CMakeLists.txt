@@ -1,11 +1,10 @@
 SET(SOURCE_FILES
-        Lexer.cpp
-        Lexer.h
+		Lexer.h
 		Constant.h
 		)
 
 ADD_LIBRARY(Lexer ${SOURCE_FILES})
 SET_TARGET_PROPERTIES(Lexer PROPERTIES LINKER_LANGUAGE CXX)
 
-ADD_SUBDIRECTORY(Input)
+ADD_SUBDIRECTORY(InputSolution)
 ADD_SUBDIRECTORY(Token)

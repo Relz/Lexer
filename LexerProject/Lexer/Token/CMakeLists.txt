@@ -4,7 +4,7 @@ SET(SOURCE_FILES
         Rule.h
         Constant/Parenthesis.h
         Constant/Constant.h
-        TokenInfo.h
+        TokenInformation.h
         )
 
 ADD_LIBRARY(Token ${SOURCE_FILES})

@@ -5,99 +5,101 @@
 #include <vector>
 #include "Parenthesis.h"
 
+using namespace std;
+
 namespace Constant
 {
 	namespace Comment
 	{
-		const std::string BLOCK_BEGINNING = "/*";
-		const std::string BLOCK_ENDING = "*/";
-		const std::string LINE = "//";
+		const string BLOCK_BEGINNING = "/*";
+		const string BLOCK_ENDING = "*/";
+		const string LINE = "//";
 	}
 
 	namespace Operator
 	{
 		namespace Arithmetic
 		{
-			const std::string DIVISION = "/";
-			const std::string MINUS = "-";
+			const string DIVISION = "/";
+			const string MINUS = "-";
 			const char MINUS_CHARACTER = '-';
-			const std::string MULTIPLY = "*";
-			const std::string PLUS = "+";
+			const string MULTIPLY = "*";
+			const string PLUS = "+";
 			const char PLUS_CHARACTER = '+';
 		};
 
 		namespace Assignment
 		{
-			const std::string ASSIGNMENT = "=";
-			const std::string DIVISION_ASSIGNMENT = "/=";
-			const std::string MINUS_ASSIGNMENT = "-=";
-			const std::string MULTIPLY_ASSIGNMENT = "*=";
-			const std::string PLUS_ASSIGNMENT = "+=";
+			const string ASSIGNMENT = "=";
+			const string DIVISION_ASSIGNMENT = "/=";
+			const string MINUS_ASSIGNMENT = "-=";
+			const string MULTIPLY_ASSIGNMENT = "*=";
+			const string PLUS_ASSIGNMENT = "+=";
 		}
 
 		namespace Comparison
 		{
-			const std::string EQUIVALENCE = "==";
-			const std::string NOT_EQUIVALENCE = "!=";
-			const std::string MORE_OR_EQUIVALENCE = ">=";
-			const std::string LESS_OR_EQUIVALENCE = "<=";
-			const std::string MORE = ">";
-			const std::string LESS = "<";
+			const string EQUIVALENCE = "==";
+			const string NOT_EQUIVALENCE = "!=";
+			const string MORE_OR_EQUIVALENCE = ">=";
+			const string LESS_OR_EQUIVALENCE = "<=";
+			const string MORE = ">";
+			const string LESS = "<";
 		}
 	}
 
 	namespace Keyword
 	{
-		const std::string CLASS = "class";
-		const std::string CONSTRUCTOR = "Constructor";
-		const std::string DO = "do";
-		const std::string EXTENDS = "extends";
-		const std::string FOR = "for";
-		const std::string GET = "get";
-		const std::string IMPLEMENTS = "implements";
-		const std::string NOT_INITIALIZED = "NULL";
-		const std::string PRIVATE = "private";
-		const std::string PUBLIC = "public";
-		const std::string RETURN = "return";
-		const std::string SET = "set";
-		const std::string WHILE = "while";
-		const std::string IF = "if";
-		const std::string ELSE = "else";
+		const string CLASS = "class";
+		const string CONSTRUCTOR = "Constructor";
+		const string DO = "do";
+		const string EXTENDS = "extends";
+		const string FOR = "for";
+		const string GET = "get";
+		const string IMPLEMENTS = "implements";
+		const string NOT_INITIALIZED = "NULL";
+		const string PRIVATE = "private";
+		const string PUBLIC = "public";
+		const string RETURN = "return";
+		const string SET = "set";
+		const string WHILE = "while";
+		const string IF = "if";
+		const string ELSE = "else";
 	}
 
 	namespace CoreType
 	{
 		namespace Number
 		{
-			const std::string DOUBLE = "Double";
-			const std::string FLOAT = "Float";
-			const std::string INTEGER = "Integer";
+			const string DOUBLE = "Double";
+			const string FLOAT = "Float";
+			const string INTEGER = "Integer";
 		};
 
 		namespace Complex
 		{
-			const std::string ARRAY = "Array";
-			const std::string STRING = "String";
+			const string ARRAY = "Array";
+			const string STRING = "String";
 		}
 
-		const std::string VOID = "Void";
+		const string VOID = "Void";
 	}
 
 	namespace Separator
 	{
-		const std::string DOT = ".";
+		const string DOT = ".";
 		const char DOT_CHARACTER = '.';
-		const std::string COLON = ":";
-		const std::string COMMA = ",";
-		const std::string SEMICOLON = ";";
-		const std::string EXPONENT = "E";
+		const string COLON = ":";
+		const string COMMA = ",";
+		const string SEMICOLON = ";";
+		const string EXPONENT = "E";
 		const char EXPONENT_CHARACTER = 'E';
-		const std::string SPACE = " ";
-		const std::string TAB = "\t";
-		const std::string END_OF_LINE_LF = "\n";
-		const std::string END_OF_LINE_CR = "\r";
-		const std::string END_OF_LINE_CRLF = "\r\n";
-		const std::string UNDERSCORE = "_";
+		const string SPACE = " ";
+		const string TAB = "\t";
+		const string END_OF_LINE_LF = "\n";
+		const string END_OF_LINE_CR = "\r";
+		const string END_OF_LINE_CRLF = "\r\n";
+		const string UNDERSCORE = "_";
 		const char UNDERSCORE_CHARACTER = '_';
 	}
 
@@ -108,100 +110,100 @@ namespace Constant
 		const Parenthesis ROUND_BRACKET = {"(", ")"};
 		const Parenthesis SQUARE_BRACKET = {"[", "]"};
 		const char QUOTE_CHARACTER = '\'';
-		const std::string QUOTE_STRING = "'";
+		const string QUOTE_STRING = "'";
 		const char DOUBLE_QUOTE_CHARACTER = '"';
-		const std::string DOUBLE_QUOTE = "\"";
+		const string DOUBLE_QUOTE = "\"";
 	}
 
 	namespace Name
 	{
 		namespace Comment
 		{
-			const std::string BLOCK = "Block comment";
-			const std::string LINE = "Line comment";
+			const string BLOCK = "Block comment";
+			const string LINE = "Line comment";
 		}
 
 		namespace Operator
 		{
 			namespace Arithmetic
 			{
-				const std::string DIVISION = "Division";
-				const std::string MINUS = "Minus";
-				const std::string MULTIPLY = "Multiply";
-				const std::string PLUS = "Plus";
+				const string DIVISION = "Division";
+				const string MINUS = "Minus";
+				const string MULTIPLY = "Multiply";
+				const string PLUS = "Plus";
 			}
 
 			namespace Assignment
 			{
-				const std::string ASSIGNMENT = "Assignment";
-				const std::string DIVISION_ASSIGNMENT = "Division assignment";
-				const std::string MINUS_ASSIGNMENT = "Minus assignment";
-				const std::string MULTIPLY_ASSIGNMENT = "Multiply assignment";
-				const std::string PLUS_ASSIGNMENT = "Plus assignment";
+				const string ASSIGNMENT = "Assignment";
+				const string DIVISION_ASSIGNMENT = "Division assignment";
+				const string MINUS_ASSIGNMENT = "Minus assignment";
+				const string MULTIPLY_ASSIGNMENT = "Multiply assignment";
+				const string PLUS_ASSIGNMENT = "Plus assignment";
 			}
 
 			namespace Comparison
 			{
-				const std::string EQUIVALENCE = "Equivalence";
-				const std::string NOT_EQUIVALENCE = "Not equivalence";
-				const std::string MORE_OR_EQUIVALENCE = "More or equal";
-				const std::string LESS_OR_EQUIVALENCE = "Less or equal";
-				const std::string MORE = "More";
-				const std::string LESS = "Less";
+				const string EQUIVALENCE = "Equivalence";
+				const string NOT_EQUIVALENCE = "Not equivalence";
+				const string MORE_OR_EQUIVALENCE = "More or equal";
+				const string LESS_OR_EQUIVALENCE = "Less or equal";
+				const string MORE = "More";
+				const string LESS = "Less";
 			}
 		}
 
 		namespace Keyword
 		{
-			const std::string CLASS = "Class keyword";
-			const std::string CONSTRUCTOR = "Constructor keyword";
-			const std::string DO = "Do keyword";
-			const std::string EXTENDS = "Extends keyword";
-			const std::string FOR = "For keyword";
-			const std::string GET = "Get keyword";
-			const std::string IMPLEMENTS = "Implements keyword";
-			const std::string NOT_INITIALIZED = "NULL keyword";
-			const std::string PRIVATE = "Private keyword";
-			const std::string PUBLIC = "Public keyword";
-			const std::string RETURN = "Return keyword";
-			const std::string SET = "Set keyword";
-			const std::string WHILE = "While keyword";
-			const std::string IF = "If keyword";
-			const std::string ELSE = "Else keyword";
+			const string CLASS = "Class keyword";
+			const string CONSTRUCTOR = "Constructor keyword";
+			const string DO = "Do keyword";
+			const string EXTENDS = "Extends keyword";
+			const string FOR = "For keyword";
+			const string GET = "Get keyword";
+			const string IMPLEMENTS = "Implements keyword";
+			const string NOT_INITIALIZED = "NULL keyword";
+			const string PRIVATE = "Private keyword";
+			const string PUBLIC = "Public keyword";
+			const string RETURN = "Return keyword";
+			const string SET = "Set keyword";
+			const string WHILE = "While keyword";
+			const string IF = "If keyword";
+			const string ELSE = "Else keyword";
 		}
 
-		const std::string INTEGER = "Integer";
-		const std::string FLOAT = "Float";
-		const std::string EXPONENTIAL = "Exponential";
+		const string INTEGER = "Integer";
+		const string FLOAT = "Float";
+		const string EXPONENTIAL = "Exponential";
 
 		namespace Separator
 		{
-			const std::string DOT = "Dot";
-			const std::string COLON = "Colon";
-			const std::string COMMA = "Comma";
-			const std::string SEMICOLON = "Semicolon";
-			const std::string EXPONENT = "Exponent";
+			const string DOT = "Dot";
+			const string COLON = "Colon";
+			const string COMMA = "Comma";
+			const string SEMICOLON = "Semicolon";
+			const string EXPONENT = "Exponent";
 		}
 
 		namespace Parentheses
 		{
-			const std::string ANGLE_BRACKET_LEFT = "Left angle bracket";
-			const std::string ANGLE_BRACKET_RIGHT = "Right angle bracket";
-			const std::string CURLY_BRACKET_LEFT = "Left curly bracket";
-			const std::string CURLY_BRACKET_RIGHT = "Right curly bracket";
-			const std::string ROUND_BRACKET_LEFT = "Left round bracket";
-			const std::string ROUND_BRACKET_RIGHT = "Right round bracket";
-			const std::string SQUARE_BRACKET_LEFT = "Left square bracket";
-			const std::string SQUARE_BRACKET_RIGHT = "Right square bracket";
-			const std::string QUOTE_STRING = "Character literal";
-			const std::string DOUBLE_QUOTE = "String literal";
+			const string ANGLE_BRACKET_LEFT = "Left angle bracket";
+			const string ANGLE_BRACKET_RIGHT = "Right angle bracket";
+			const string CURLY_BRACKET_LEFT = "Left curly bracket";
+			const string CURLY_BRACKET_RIGHT = "Right curly bracket";
+			const string ROUND_BRACKET_LEFT = "Left round bracket";
+			const string ROUND_BRACKET_RIGHT = "Right round bracket";
+			const string SQUARE_BRACKET_LEFT = "Left square bracket";
+			const string SQUARE_BRACKET_RIGHT = "Right square bracket";
+			const string QUOTE_STRING = "Character literal";
+			const string DOUBLE_QUOTE = "String literal";
 		}
 
-		const std::string TYPE = "Type";
-		const std::string IDENTIFIER = "Identifier";
-		const std::string STRING_LITERAL = "String literal";
-		const std::string CHARACTER_LITERAL = "Character literal";
-		const std::string UNKNOWN = "Unknown";
+		const string TYPE = "Type";
+		const string IDENTIFIER = "Identifier";
+		const string STRING_LITERAL = "String literal";
+		const string CHARACTER_LITERAL = "Character literal";
+		const string UNKNOWN = "Unknown";
 	}
 
 	namespace Number
