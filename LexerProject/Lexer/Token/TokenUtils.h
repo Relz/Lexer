@@ -9,46 +9,53 @@
 #include "Token.h"
 #include "TokenInformation.h"
 
-using namespace std;
-
 namespace
 {
 	class TokenUtils
 	{
 	public:
-		static void DetermineTokens(
-			string const& scannedString,
-			StreamPosition scannedStringPosition,
-			string const& delimiter,
-			StreamPosition delimiterPosition,
-			Token delimiterToken,
-			bool delimiterTokenDetermined,
-			vector<TokenInformation> & tokenInfos
-		)
+		static bool DetermineScannedStringToken(std::string const& scannedString, Token & token)
 		{
-			bool skipDelimiterDetermining = (_delimitersToSkip.find(delimiter) != _delimitersToSkip.end());
-
 			if (!scannedString.empty())
 			{
-				Token scannedStringToken;
-				DetermineScannedStringToken(scannedString, scannedStringToken);
-				tokenInfos.emplace_back(TokenInformation(scannedStringToken, scannedString, scannedStringPosition));
-			}
-
-			if (!skipDelimiterDetermining)
-			{
-				if (!delimiterTokenDetermined)
+				if (Rule::IsIdentifier(scannedString))
 				{
-					DetermineDelimiterToken(delimiter, delimiterToken);
+					if (TryAddTokenAt(STRING_TO_KEYWORD_TOKEN, scannedString, token)
+						|| TryAddTypeAt(scannedString, token))
+					{
+						return true;
+					}
+					token = Token::IDENTIFIER;
+					return true;
 				}
-				tokenInfos.emplace_back(TokenInformation(delimiterToken, delimiter, delimiterPosition));
+				if (DetermineNumberToken(scannedString, token))
+				{
+					return true;
+				}
 			}
+			token = Token::UNKNOWN;
+			return false;
+		}
+
+		static bool DetermineDelimiterToken(std::string const & delimiterString, Token & token)
+		{
+			token = Token::UNKNOWN;
+			return DELIMITERS_TO_SKIP.find(delimiterString) == DELIMITERS_TO_SKIP.end()
+					&&
+						(
+							TryToAddLiteralToken(delimiterString, token)
+								|| TryAddTokenAt(STRING_TO_COMPARISON_OPERATOR_TOKEN, delimiterString, token)
+								|| TryAddTokenAt(STRING_TO_ASSIGNMENT_OPERATOR_TOKEN, delimiterString, token)
+								|| TryAddTokenAt(STRING_TO_ARITHMETIC_OPERATOR_TOKEN, delimiterString, token)
+								|| TryAddTokenAt(STRING_TO_SEPARATOR_TOKEN, delimiterString, token)
+								|| TryAddTokenAt(STRING_TO_PARENTHESIS_TOKEN, delimiterString, token)
+						);
 		}
 
 	private:
 		static bool TryAddTokenAt(
-			unordered_map<string, Token> const& unorderedMap,
-			string const& searchStr,
+			std::unordered_map<std::string, Token> const& unorderedMap,
+			std::string const& searchStr,
 			Token & token
 		)
 		{
@@ -60,9 +67,9 @@ namespace
 			return true;
 		}
 
-		static bool TryAddTypeAt(string const& searchStr, Token & token)
+		static bool TryAddTypeAt(std::string const& searchStr, Token & token)
 		{
-			if (_types.find(searchStr) != _types.end())
+			if (TYPES.find(searchStr) != TYPES.end())
 			{
 				token = Token::TYPE;
 				return true;
@@ -73,43 +80,22 @@ namespace
 			}
 		}
 
-		static bool DetermineScannedStringToken(string const& scannedString, Token & token)
+		static bool TryToAddLiteralToken(std::string const & scannedString, Token & token)
 		{
-			if (!scannedString.empty())
+			if (scannedString.front() == Constant::Parentheses::QUOTE_CHARACTER)
 			{
-				if (Rule::IsIdentifier(scannedString))
-				{
-					if (
-						TryAddTokenAt(STRING_TO_KEYWORD_TOKEN, scannedString, token)
-						|| TryAddTypeAt(scannedString, token)
-					)
-					{
-						return true;
-					}
-					token = Token::IDENTIFIER;
-					return true;
-				}
-
-				if (DetermineNumberToken(scannedString, token))
-				{
-					return true;
-				}
+				token = Token::CHARACTER_LITERAL;
+				return true;
 			}
-			token = Token::UNKNOWN;
+			else if (scannedString.front() == Constant::Parentheses::DOUBLE_QUOTE_CHARACTER)
+			{
+				token = Token::STRING_LITERAL;
+				return true;
+			}
 			return false;
 		}
 
-		static bool DetermineDelimiterToken(string const& delimiter, Token & token)
-		{
-			token = Token::UNKNOWN;
-			return TryAddTokenAt(_stringsToComparisonOperatorTokens, delimiter, token)
-				|| TryAddTokenAt(_stringsToAssignmentOperatorTokens, delimiter, token)
-				|| TryAddTokenAt(STRING_TO_ARITHMETIC_OPERATOR_TOKEN, delimiter, token)
-				|| TryAddTokenAt(STRING_TO_SEPARATOR_TOKEN, delimiter, token)
-				|| TryAddTokenAt(STRING_TO_PARENTHESIS_TOKEN, delimiter, token);
-		}
-
-		static bool DetermineNumberToken(string const& scannedString, Token & token)
+		static bool DetermineNumberToken(std::string const& scannedString, Token & token)
 		{
 			if (scannedString.empty() || !Rule::IsDigit(scannedString.front()))
 			{
@@ -117,7 +103,7 @@ namespace
 			}
 
 			size_t failIndex;
-			string goodString;
+			std::string goodString;
 			if (Rule::IsInteger(scannedString, 0, failIndex, goodString))
 			{
 				token = Token::INTEGER;
@@ -140,7 +126,7 @@ namespace
 					numberSystem = stoul(goodString);
 					if (numberSystem > Constant::Number::MAX_SYSTEM)
 					{
-						throw exception();
+						throw std::exception();
 					}
 				}
 				catch (...)
@@ -193,18 +179,18 @@ namespace
 			return false;
 		}
 
-		static const unordered_map<string, Token> STRING_TO_ARITHMETIC_OPERATOR_TOKEN;
-		static const unordered_map<string, Token> STRING_TO_ASSIGNMENT_OPERATOR_TOKEN;
-		static const unordered_map<string, Token> STRING_TO_COMPARISON_OPERATOR_TOKEN;
-		static const unordered_map<string, Token> STRING_TO_SEPARATOR_TOKEN;
-		static const unordered_map<string, Token> STRING_TO_PARENTHESIS_TOKEN;
-		static const unordered_map<string, Token> STRING_TO_KEYWORD_TOKEN;
-		static const unordered_set<string> TYPES;
-		static const unordered_set<string> _delimitersToSkip;
+		static std::unordered_map<std::string, Token> const STRING_TO_ARITHMETIC_OPERATOR_TOKEN;
+		static std::unordered_map<std::string, Token> const STRING_TO_ASSIGNMENT_OPERATOR_TOKEN;
+		static std::unordered_map<std::string, Token> const STRING_TO_COMPARISON_OPERATOR_TOKEN;
+		static std::unordered_map<std::string, Token> const STRING_TO_SEPARATOR_TOKEN;
+		static std::unordered_map<std::string, Token> const STRING_TO_PARENTHESIS_TOKEN;
+		static std::unordered_map<std::string, Token> const STRING_TO_KEYWORD_TOKEN;
+		static std::unordered_set<std::string> const TYPES;
+		static std::unordered_set<std::string> const DELIMITERS_TO_SKIP;
 	};
 }
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_ARITHMETIC_OPERATOR_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_ARITHMETIC_OPERATOR_TOKEN
 {
 	{Constant::Operator::Arithmetic::DIVISION, Token::DIVISION},
 	{Constant::Operator::Arithmetic::MINUS, Token::MINUS},
@@ -212,7 +198,7 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_ARITHMETIC_OPERATOR_TOK
 	{Constant::Operator::Arithmetic::PLUS, Token::PLUS}
 };
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_ASSIGNMENT_OPERATOR_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_ASSIGNMENT_OPERATOR_TOKEN
 {
 	{Constant::Operator::Assignment::ASSIGNMENT, Token::ASSIGNMENT},
 	{Constant::Operator::Assignment::PLUS_ASSIGNMENT, Token::PLUS_ASSIGNMENT},
@@ -221,7 +207,7 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_ASSIGNMENT_OPERATOR_TOK
 	{Constant::Operator::Assignment::DIVISION_ASSIGNMENT, Token::DIVISION_ASSIGNMENT}
 };
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_COMPARISON_OPERATOR_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_COMPARISON_OPERATOR_TOKEN
 {
 	{Constant::Operator::Comparison::EQUIVALENCE, Token::EQUIVALENCE},
 	{Constant::Operator::Comparison::NOT_EQUIVALENCE, Token::NOT_EQUIVALENCE},
@@ -231,7 +217,7 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_COMPARISON_OPERATOR_TOK
 	{Constant::Operator::Comparison::LESS, Token::LESS}
 };
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_SEPARATOR_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_SEPARATOR_TOKEN
 {
 	{Constant::Separator::COLON, Token::COLON},
 	{Constant::Separator::COMMA, Token::COMMA},
@@ -239,10 +225,8 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_SEPARATOR_TOKEN
 	{Constant::Separator::SEMICOLON, Token::SEMICOLON}
 };
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_PARENTHESIS_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_PARENTHESIS_TOKEN
 {
-	{Constant::Parentheses::ANGLE_BRACKET.LEFT, Token::LEFT_ANGLE_BRACKET},
-	{Constant::Parentheses::ANGLE_BRACKET.RIGHT, Token::RIGHT_ANGLE_BRACKET},
 	{Constant::Parentheses::CURLY_BRACKET.LEFT, Token::LEFT_CURLY_BRACKET},
 	{Constant::Parentheses::CURLY_BRACKET.RIGHT, Token::RIGHT_CURLY_BRACKET},
 	{Constant::Parentheses::ROUND_BRACKET.LEFT, Token::LEFT_ROUND_BRACKET},
@@ -251,7 +235,7 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_PARENTHESIS_TOKEN
 	{Constant::Parentheses::SQUARE_BRACKET.RIGHT, Token::RIGHT_SQUARE_BRACKET}
 };
 
-const unordered_map<string, Token> TokenUtils::STRING_TO_KEYWORD_TOKEN
+std::unordered_map<std::string, Token> const TokenUtils::STRING_TO_KEYWORD_TOKEN
 {
 	{Constant::Keyword::CLASS, Token::CLASS},
 	{Constant::Keyword::CONSTRUCTOR, Token::CONSTRUCTOR},
@@ -270,7 +254,7 @@ const unordered_map<string, Token> TokenUtils::STRING_TO_KEYWORD_TOKEN
 	{Constant::Keyword::ELSE, Token::ELSE}
 };
 
-const unordered_set<string> TokenUtils::_types
+std::unordered_set<std::string> const TokenUtils::TYPES
 {
 	Constant::CoreType::Complex::ARRAY,
 	Constant::CoreType::Number::DOUBLE,
@@ -280,13 +264,12 @@ const unordered_set<string> TokenUtils::_types
 	Constant::CoreType::VOID
 };
 
-const unordered_set<string> TokenUtils::_delimitersToSkip
+std::unordered_set<std::string> const TokenUtils::DELIMITERS_TO_SKIP
 {
 	Constant::Separator::SPACE,
 	Constant::Separator::TAB,
 	Constant::Separator::END_OF_LINE_LF,
 	Constant::Separator::END_OF_LINE_CR,
-	Constant::Separator::END_OF_LINE_CRLF,
 	Constant::Comment::LINE,
 	Constant::Comment::BLOCK_BEGINNING
 };

@@ -5,15 +5,12 @@
 #include <vector>
 #include "Token/Constant/Constant.h"
 
-using namespace std;
-
-const vector<string> SCANNER_DELIMITERS
+const std::vector<std::string> SCANNER_DELIMITERS
 {
 	Constant::Comment::BLOCK_BEGINNING,
 	Constant::Comment::LINE,
 	Constant::Separator::SPACE,
 	Constant::Separator::TAB,
-	Constant::Separator::END_OF_LINE_CRLF,
 	Constant::Separator::END_OF_LINE_LF,
 	Constant::Separator::END_OF_LINE_CR,
 	Constant::Operator::Comparison::EQUIVALENCE,
@@ -36,15 +33,13 @@ const vector<string> SCANNER_DELIMITERS
 	Constant::Separator::DOT,
 	Constant::Separator::SEMICOLON,
 	Constant::Parentheses::QUOTE_STRING,
-	Constant::Parentheses::DOUBLE_QUOTE,
+	Constant::Parentheses::DOUBLE_QUOTE_STRING,
 	Constant::Parentheses::SQUARE_BRACKET.LEFT,
 	Constant::Parentheses::SQUARE_BRACKET.RIGHT,
 	Constant::Parentheses::ROUND_BRACKET.LEFT,
 	Constant::Parentheses::ROUND_BRACKET.RIGHT,
 	Constant::Parentheses::CURLY_BRACKET.LEFT,
 	Constant::Parentheses::CURLY_BRACKET.RIGHT,
-	Constant::Parentheses::ANGLE_BRACKET.LEFT,
-	Constant::Parentheses::ANGLE_BRACKET.RIGHT
 };
 
 #endif //LEXER_CONSTANT_H

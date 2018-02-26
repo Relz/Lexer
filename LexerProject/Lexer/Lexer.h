@@ -10,108 +10,107 @@
 #include "Token/TokenInformation.h"
 #include "Token/TokenUtils.h"
 
-using namespace std;
-
 class Lexer
 {
 public:
-	explicit Lexer(string const& inputFileName)
-			: m_inputFileName(inputFileName)
-			, m_input(inputFileName)
+	explicit Lexer(std::string const& inputFileName)
+		: m_inputFileName(inputFileName)
+		, m_input(inputFileName)
+	{}
+
+	bool GetNextTokenInformation(TokenInformation & tokenInformation)
 	{
-		string scannedString;
-		StreamPosition scannedStringPosition { };
-		string delimiter;
-		StreamPosition delimiterPosition { };
-		string lastScannedString;
-		while (m_input.Scan(SCANNER_DELIMITERS, scannedString, scannedStringPosition, delimiter, delimiterPosition))
+		if (!m_tokenInformations.empty())
 		{
-			Token delimiterToken = Token::UNKNOWN;
-			bool delimiterTokenDetermined = false;
-			if (delimiter == Constant::Comment::LINE)
+			tokenInformation = m_tokenInformations.front();
+			m_tokenInformations.erase(m_tokenInformations.begin());
+			return true;
+		}
+		bool result = false;
+		StreamString scanned;
+		StreamString delimiter;
+		std::string lastScannedString;
+		while (m_input.Scan(SCANNER_DELIMITERS, scanned, delimiter))
+		{
+			result = true;
+			if (TryToSkipComment(delimiter.string)) {}
+			else if (TryToCreateLiteral(delimiter.string, delimiter.string)) {}
+
+			if (!Skip(scanned.string, delimiter.string))
 			{
-				m_input.SkipLine();
-			}
-			else if (delimiter == Constant::Comment::BLOCK_BEGINNING)
-			{
-				SkipBlockComment();
-			}
-			else if (delimiter == Constant::Parentheses::DOUBLE_QUOTE)
-			{
-				if (m_input.SkipUntilStrings({ Constant::Parentheses::DOUBLE_QUOTE }, delimiter))
+				scanned.string.insert(
+					scanned.string.begin(),
+					std::make_move_iterator(lastScannedString.begin()),
+					std::make_move_iterator(lastScannedString.end())
+				);
+				if (NeedMoreScanning(scanned.string, delimiter.string))
 				{
-					delimiter.insert(delimiter.begin(), Constant::Parentheses::DOUBLE_QUOTE_CHARACTER);
-					delimiter.insert(delimiter.end(), Constant::Parentheses::DOUBLE_QUOTE_CHARACTER);
-					m_input.SkipArgument<char>();
-					delimiterToken = Token::STRING_LITERAL;
-				}
-				else
-				{
-					delimiterToken = Token::UNKNOWN;
-				}
-				delimiterTokenDetermined = true;
-			}
-			else if (delimiter == Constant::Parentheses::QUOTE_STRING)
-			{
-				char ch;
-				char expectedQuote;
-				m_input.ReadArguments(ch, expectedQuote);
-				if (expectedQuote == Constant::Parentheses::QUOTE_CHARACTER)
-				{
-					delimiter.insert(delimiter.end(), ch);
-					delimiter.insert(delimiter.end(), Constant::Parentheses::QUOTE_CHARACTER);
-					delimiterToken = Token::CHARACTER_LITERAL;
-				}
-				else
-				{
-					delimiterToken = Token::UNKNOWN;
-				}
-				delimiterTokenDetermined = true;
-			}
-			if (!Skip(scannedString, delimiter))
-			{
-				scannedString.insert(scannedString.begin(), lastScannedString.begin(), lastScannedString.end());
-				if (NeedMoreScanning(scannedString, delimiter))
-				{
-					lastScannedString = scannedString + delimiter;
+					lastScannedString = move(scanned.string);
+					lastScannedString.insert(lastScannedString.end(), make_move_iterator(delimiter.string.begin()), make_move_iterator(delimiter.string.end()));
 					continue;
 				}
-				lastScannedString.clear();
-				TokenUtils::DetermineTokens(
-					scannedString,
-					scannedStringPosition,
-					delimiter,
-					delimiterPosition,
-					delimiterToken,
-					delimiterTokenDetermined,
-					m_tokenInformations
-				);
+				Token scannedStringToken;
+				TokenUtils::DetermineScannedStringToken(scanned.string, scannedStringToken);
+				m_tokenInformations.emplace_back(TokenInformation(scannedStringToken, scanned, m_inputFileName));
+
+				Token delimiterToken;
+				TokenUtils::DetermineDelimiterToken(delimiter.string, delimiterToken);
+				m_tokenInformations.emplace_back(TokenInformation(delimiterToken, delimiter, m_inputFileName));
+				break;
 			}
 		}
-	}
-
-	void Print()
-	{
-		for (TokenInformation & tokenInfo : m_tokenInformations)
-		{
-			tokenInfo.SetFileName(m_inputFileName);
-			cout << tokenInfo.ToString() << "\n";
-		}
+		return result;
 	}
 
 private:
-	static const unordered_map<string, unordered_set<string>> SCANNER_SKIPS;
+	static std::unordered_map<std::string, std::unordered_set<std::string>> const SCANNER_SKIPS;
 
-	CInput m_input;
-	const string m_inputFileName;
-	vector<TokenInformation> m_tokenInformations;
+	Input m_input;
+	std::string const m_inputFileName;
+	std::vector<TokenInformation> m_tokenInformations;
 
-	bool Skip(string const& scannedString, string const& delimiter)
+	bool TryToSkipComment(std::string const& delimiterString)
+	{
+		if (delimiterString == Constant::Comment::LINE)
+		{
+			m_input.SkipLine();
+			return true;
+		}
+		if (delimiterString == Constant::Comment::BLOCK_BEGINNING)
+		{
+			SkipBlockComment();
+			return true;
+		}
+		return false;
+	}
+
+	bool TryToCreateLiteral(std::string const& delimiterString, std::string & literal)
+	{
+		char wrapper = 0;
+		if (delimiterString == Constant::Parentheses::DOUBLE_QUOTE_STRING)
+		{
+			wrapper = Constant::Parentheses::DOUBLE_QUOTE_CHARACTER;
+		}
+		else if (delimiterString == Constant::Parentheses::QUOTE_STRING)
+		{
+			wrapper = Constant::Parentheses::QUOTE_CHARACTER;
+		}
+		if (wrapper != 0 && m_input.SkipUntilCharacters({ wrapper }, literal))
+		{
+			literal.insert(literal.begin(), wrapper);
+			literal.insert(literal.end(), wrapper);
+			m_input.SkipArgument<char>();
+			return true;
+		}
+		return false;
+	}
+
+	bool Skip(std::string const& scannedString, std::string const& delimiterString)
 	{
 		return SCANNER_SKIPS.find(scannedString) != SCANNER_SKIPS.end()
-			&& SCANNER_SKIPS.at(scannedString).find(delimiter) != SCANNER_SKIPS.at(scannedString).end();
+			&& SCANNER_SKIPS.at(scannedString).find(delimiterString) != SCANNER_SKIPS.at(scannedString).end();
 	}
-	bool NeedMoreScanning(string const& scannedString, string const& delimiter)
+	bool NeedMoreScanning(std::string const& scannedString, std::string const& delimiter)
 	{
 		return
 			!scannedString.empty()
@@ -132,9 +131,10 @@ private:
 				)
 			);
 	}
+
 	void SkipBlockComment()
 	{
-		string skippedString;
+		std::string skippedString;
 		if (m_input.SkipUntilStrings({ Constant::Comment::BLOCK_ENDING }, skippedString))
 		{
 			m_input.SkipArguments<char>(Constant::Comment::BLOCK_ENDING.length());
@@ -142,7 +142,7 @@ private:
 	}
 };
 
-const unordered_map<string, unordered_set<string>> Lexer::SCANNER_SKIPS
+std::unordered_map<std::string, std::unordered_set<std::string>> const Lexer::SCANNER_SKIPS
 {
 	{
 		"",
@@ -151,8 +151,7 @@ const unordered_map<string, unordered_set<string>> Lexer::SCANNER_SKIPS
 			Constant::Separator::SPACE,
 			Constant::Separator::TAB,
 			Constant::Separator::END_OF_LINE_LF,
-			Constant::Separator::END_OF_LINE_CR,
-			Constant::Separator::END_OF_LINE_CRLF
+			Constant::Separator::END_OF_LINE_CR
 		}
 	}
 };

@@ -1,12 +1,10 @@
 #ifndef TOKEN_PARENTHESIS_H
 #define TOKEN_PARENTHESIS_H
 
-using namespace std;
-
 struct Parenthesis
 {
-	const string LEFT;
-	const string RIGHT;
+	std::string const LEFT;
+	std::string const RIGHT;
 };
 
 #endif //TOKEN_PARENTHESIS_H

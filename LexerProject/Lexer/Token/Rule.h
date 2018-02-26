@@ -3,8 +3,6 @@
 
 #include <set>
 
-using namespace std;
-
 namespace
 {
 	class Rule
@@ -16,7 +14,7 @@ namespace
 				|| LOWERCASE_LETTERS.find(ch) != LOWERCASE_LETTERS.end();
 		}
 
-		static bool IsIdentifier(string const& str)
+		static bool IsIdentifier(std::string const& str)
 		{
 			if (
 				str.empty()
@@ -50,7 +48,7 @@ namespace
 				return DIGITS.find(ch) != DIGITS.end();
 			}
 
-			set<char> availableSymbols;
+			std::set<char> availableSymbols;
 			size_t i = 0;
 			for (char digit : DIGITS)
 			{
@@ -74,10 +72,10 @@ namespace
 		}
 
 		static bool IsInteger(
-			string const& str,
+			std::string const& str,
 			size_t fromIndex,
 			size_t & failIndex,
-			string & goodString,
+			std::string & goodString,
 			size_t system = Constant::Number::DEFAULT_SYSTEM
 		)
 		{
@@ -104,14 +102,14 @@ namespace
 			return IDENTIFIER_SPECIAL_CHARACTERS.find(ch) != IDENTIFIER_SPECIAL_CHARACTERS.end();
 		}
 
-		static const set<char> UPPERCASE_LETTERS;
-		static const set<char> LOWERCASE_LETTERS;
-		static const set<char> DIGITS;
-		static const set<char> IDENTIFIER_SPECIAL_CHARACTERS;
+		static std::set<char> const UPPERCASE_LETTERS;
+		static std::set<char> const LOWERCASE_LETTERS;
+		static std::set<char> const DIGITS;
+		static std::set<char> const IDENTIFIER_SPECIAL_CHARACTERS;
 	};
 }
 
-const set<char> Rule::UPPERCASE_LETTERS
+std::set<char> const Rule::UPPERCASE_LETTERS
 {
 	'A',
 	'B',
@@ -141,7 +139,7 @@ const set<char> Rule::UPPERCASE_LETTERS
 	'Z'
 };
 
-const set<char> Rule::LOWERCASE_LETTERS
+std::set<char> const Rule::LOWERCASE_LETTERS
 {
 	'a',
 	'b',
@@ -171,7 +169,7 @@ const set<char> Rule::LOWERCASE_LETTERS
 	'z'
 };
 
-const set<char> Rule::DIGITS
+std::set<char> const Rule::DIGITS
 {
 	'0',
 	'1',
@@ -185,7 +183,7 @@ const set<char> Rule::DIGITS
 	'9'
 };
 
-const set<char> Rule::IDENTIFIER_SPECIAL_CHARACTERS = {
+std::set<char> const Rule::IDENTIFIER_SPECIAL_CHARACTERS = {
 	Constant::Separator::UNDERSCORE_CHARACTER,
 	'-'
 };

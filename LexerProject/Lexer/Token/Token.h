@@ -3,8 +3,6 @@
 
 #include "Constant/Constant.h"
 
-using namespace std;
-
 enum class Token
 {
 	// Arithmetic operators
@@ -66,9 +64,6 @@ enum class Token
 	LEFT_CURLY_BRACKET,
 	RIGHT_CURLY_BRACKET,
 
-	LEFT_ANGLE_BRACKET,
-	RIGHT_ANGLE_BRACKET,
-
 	// Other
 	TYPE,
 	IDENTIFIER,
@@ -79,7 +74,7 @@ enum class Token
 
 namespace TokenExtensions
 {
-	static const unordered_map<Token, string> TOKEN_TO_STRING
+	static const std::unordered_map<Token, std::string> TOKEN_TO_STRING
 	{
 		{Token::DIVISION, Constant::Name::Operator::Arithmetic::DIVISION},
 		{Token::MINUS, Constant::Name::Operator::Arithmetic::MINUS},
@@ -124,8 +119,6 @@ namespace TokenExtensions
 		{Token::COMMA, Constant::Name::Separator::COMMA},
 		{Token::SEMICOLON, Constant::Name::Separator::SEMICOLON},
 
-		{Token::LEFT_ANGLE_BRACKET, Constant::Name::Parentheses::ANGLE_BRACKET_LEFT},
-		{Token::RIGHT_ANGLE_BRACKET, Constant::Name::Parentheses::ANGLE_BRACKET_RIGHT},
 		{Token::LEFT_CURLY_BRACKET, Constant::Name::Parentheses::CURLY_BRACKET_LEFT},
 		{Token::RIGHT_CURLY_BRACKET, Constant::Name::Parentheses::CURLY_BRACKET_RIGHT},
 		{Token::LEFT_ROUND_BRACKET, Constant::Name::Parentheses::ROUND_BRACKET_LEFT},
@@ -137,10 +130,10 @@ namespace TokenExtensions
 		{Token::IDENTIFIER, Constant::Name::IDENTIFIER},
 		{Token::STRING_LITERAL, Constant::Name::STRING_LITERAL},
 		{Token::CHARACTER_LITERAL, Constant::Name::CHARACTER_LITERAL},
-		{Token::UNKNOWN, Constant::Name::UNKNOWN
+		{Token::UNKNOWN, Constant::Name::UNKNOWN}
 	};
 
-	static string ToString(Token token)
+	static std::string ToString(Token token)
 	{
 		return TOKEN_TO_STRING.find(token) == TOKEN_TO_STRING.end() ? "" : TOKEN_TO_STRING.at(token);
 	}

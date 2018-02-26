@@ -3,35 +3,32 @@
 
 #include "Token.h"
 
-using namespace std;
-
 class TokenInformation
 {
 public:
-	TokenInformation(Token token, string const& tokenString, StreamPosition const& position)
-			: m_token(token)
-			, m_tokenString(tokenString)
-			, m_position(position)
+	TokenInformation() = default;
+
+	TokenInformation(Token token, StreamString const& tokenStreamString, std::string const& fileName)
+		: m_token(token)
+		, m_tokenStreamString(tokenStreamString)
+		, m_fileName(fileName)
 	{
 	}
 
-	void SetFileName(string const& fileName)
+	std::string ToString() const
 	{
-		m_fileName = fileName;
+		return m_fileName + "["
+			+ std::to_string(m_tokenStreamString.position.GetLine())
+			+ ", "
+			+ std::to_string(m_tokenStreamString.position.GetColumn())
+			+ "]: \n"
+			+ "\t" + "String : " + m_tokenStreamString.string + "\n"
+			+ "\t" + "Type   : " + TokenExtensions::ToString(m_token) + "\n";
 	}
-
-	string ToString()
-	{
-		return m_fileName + "[" + to_string(m_position.GetLine()) + ", " + to_string(m_position.GetColumn()) + "]: \n"
-			   + "\t" + "String : " + m_tokenString + "\n"
-			   + "\t" + "Type   : " + TokenExtensions::ToString(m_token) + "\n";
-	}
-
 private:
-	const Token m_token;
-	const string m_tokenString;
-	string m_fileName;
-	const StreamPosition m_position;
+	Token m_token;
+	StreamString m_tokenStreamString;
+	std::string m_fileName;
 };
 
 
