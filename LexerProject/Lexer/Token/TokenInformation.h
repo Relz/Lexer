@@ -2,6 +2,8 @@
 #define TOKEN_TOKENINFO_H
 
 #include "Token.h"
+#include "../InputSolution/Input/StreamString.h"
+#include "TokenExtensions.h"
 
 class TokenInformation
 {

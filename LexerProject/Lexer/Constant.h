@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 #include "Token/Constant/Constant.h"
+#include "NumberSystem/NumberSystem.h"
 
-const std::vector<std::string> SCANNER_DELIMITERS
+static std::vector<std::string> const SCANNER_DELIMITERS
 {
 	Constant::Comment::BLOCK_BEGINNING,
 	Constant::Comment::LINE,
@@ -41,5 +42,7 @@ const std::vector<std::string> SCANNER_DELIMITERS
 	Constant::Parentheses::CURLY_BRACKET.LEFT,
 	Constant::Parentheses::CURLY_BRACKET.RIGHT,
 };
+
+static NumberSystem const DEFAULT_NUMBER_SYSTEM = NumberSystem::TEN;
 
 #endif //LEXER_CONSTANT_H
