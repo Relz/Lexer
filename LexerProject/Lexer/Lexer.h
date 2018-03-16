@@ -1,20 +1,20 @@
 #ifndef LEXER_LEXER_H
 #define LEXER_LEXER_H
 
-#include <string>
-#include <vector>
-#include <set>
-#include <unordered_set>
-#include <unordered_map>
 #include "Constant.h"
 #include "InputSolution/Input/Input.h"
-#include "Token/TokenInformation.h"
 #include "NumberSystem/NumberSystemExtensions.h"
+#include "Token/TokenInformation.h"
+#include <set>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 class Lexer
 {
 public:
-	explicit Lexer(std::string const& inputFileName)
+	explicit Lexer(std::string const & inputFileName)
 		: m_inputFileName(inputFileName)
 		, m_input(inputFileName)
 	{}
@@ -53,21 +53,21 @@ private:
 			{
 				continue;
 			}
-			else if (TryToCreateLiteral(delimiter.string, delimiter.string)) {}
+			else if (TryToCreateLiteral(delimiter.string, delimiter.string))
+			{
+			}
 
 			scanned.string.insert(
 				scanned.string.begin(),
 				std::make_move_iterator(lastScannedString.begin()),
-				std::make_move_iterator(lastScannedString.end())
-			);
+				std::make_move_iterator(lastScannedString.end()));
 			if (NeedMoreScanning(scanned.string, delimiter.string))
 			{
 				lastScannedString = move(scanned.string);
 				lastScannedString.insert(
 					lastScannedString.end(),
 					std::make_move_iterator(delimiter.string.begin()),
-					std::make_move_iterator(delimiter.string.end())
-				);
+					std::make_move_iterator(delimiter.string.end()));
 				continue;
 			}
 			if (!scanned.string.empty())
@@ -92,7 +92,7 @@ private:
 		return PopNextTokenInformation(tokenInformation);
 	}
 
-	bool TryToSkipComment(std::string const& delimiterString)
+	bool TryToSkipComment(std::string const & delimiterString)
 	{
 		if (delimiterString == Constant::Comment::LINE)
 		{
@@ -107,7 +107,7 @@ private:
 		return false;
 	}
 
-	bool TryToCreateLiteral(std::string const& delimiterString, std::string & literal)
+	bool TryToCreateLiteral(std::string const & delimiterString, std::string & literal)
 	{
 		char wrapper = 0;
 		if (delimiterString == Constant::Parentheses::DOUBLE_QUOTE_STRING)
@@ -128,26 +128,13 @@ private:
 		return false;
 	}
 
-	bool NeedMoreScanning(std::string const& scannedString, std::string const& delimiter)
+	bool NeedMoreScanning(std::string const & scannedString, std::string const & delimiter)
 	{
-		return
-			!scannedString.empty()
-			&&
-			(
-				(
-					IsDigit(scannedString.back())
-					&& delimiter == Constant::Separator::DOT
-				)
-				||
-				(
-					scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
-					&&
-					(
-						delimiter == Constant::Operator::Arithmetic::PLUS
-						|| delimiter == Constant::Operator::Arithmetic::MINUS
-					)
-				)
-			);
+		return !scannedString.empty()
+			&& ((IsDigit(scannedString.back()) && delimiter == Constant::Separator::DOT)
+				|| (scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
+					&& (delimiter == Constant::Operator::Arithmetic::PLUS
+						|| delimiter == Constant::Operator::Arithmetic::MINUS)));
 	}
 
 	void SkipBlockComment()
@@ -159,7 +146,7 @@ private:
 		}
 	}
 
-	static bool DetermineScannedStringToken(std::string const& scannedString, Token & token)
+	static bool DetermineScannedStringToken(std::string const & scannedString, Token & token)
 	{
 		token = Token::UNKNOWN;
 		if (scannedString.empty())
@@ -170,13 +157,15 @@ private:
 		{
 			token = Token::IDENTIFIER;
 			if (TokenExtensions::TryToGetKeywordToken(scannedString, token)
-				|| TokenExtensions::TryToGetTypeToken(scannedString, token)) {}
+				|| TokenExtensions::TryToGetTypeToken(scannedString, token))
+			{
+			}
 			return true;
 		}
 		return DetermineNumberToken(scannedString, token);
 	}
 
-	static bool IsIdentifier(std::string const& str)
+	static bool IsIdentifier(std::string const & str)
 	{
 		return std::regex_match(str.begin(), str.end(), Constant::Regex::IDENTIFIER);
 	}
@@ -189,12 +178,11 @@ private:
 	}
 
 	static bool IsInteger(
-		std::string const& str,
+		std::string const & str,
 		size_t fromIndex,
 		size_t & failIndex,
 		std::string & goodString,
-		NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM
-	)
+		NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM)
 	{
 		if (str.empty())
 		{
@@ -213,7 +201,7 @@ private:
 		return true;
 	}
 
-	static bool DetermineNumberToken(std::string const& scannedString, Token & token)
+	static bool DetermineNumberToken(std::string const & scannedString, Token & token)
 	{
 		if (scannedString.empty() || !IsDigit(scannedString.front()))
 		{
@@ -290,14 +278,14 @@ private:
 		return false;
 	}
 
-	static bool DetermineDelimiterToken(std::string const& delimiterString, Token & token)
+	static bool DetermineDelimiterToken(std::string const & delimiterString, Token & token)
 	{
 		token = Token::UNKNOWN;
-		return  TryToAddLiteralToken(delimiterString, token)
+		return TryToAddLiteralToken(delimiterString, token)
 			|| TokenExtensions::TryToGetDelimiterToken(delimiterString, token);
 	}
 
-	static bool TryToAddLiteralToken(std::string const& scannedString, Token & token)
+	static bool TryToAddLiteralToken(std::string const & scannedString, Token & token)
 	{
 		if (scannedString.front() == Constant::Parentheses::QUOTE_CHARACTER)
 		{
@@ -313,8 +301,7 @@ private:
 	}
 };
 
-std::unordered_set<std::string> const Lexer::DELIMITERS_TO_SKIP
-{
+std::unordered_set<std::string> const Lexer::DELIMITERS_TO_SKIP {
 	Constant::Separator::SPACE,
 	Constant::Separator::TAB,
 	Constant::Separator::END_OF_LINE_LF,

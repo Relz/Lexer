@@ -1,10 +1,10 @@
 #ifndef TOKEN_CONSTANT_H
 #define TOKEN_CONSTANT_H
 
+#include "Parenthesis.h"
+#include <regex>
 #include <string>
 #include <vector>
-#include <regex>
-#include "Parenthesis.h"
 
 namespace Constant
 {
@@ -101,9 +101,9 @@ namespace Constant
 
 	namespace Parentheses
 	{
-		static Parenthesis const CURLY_BRACKET = {"{", "}"};
-		static Parenthesis const ROUND_BRACKET = {"(", ")"};
-		static Parenthesis const SQUARE_BRACKET = {"[", "]"};
+		static Parenthesis const CURLY_BRACKET = { "{", "}" };
+		static Parenthesis const ROUND_BRACKET = { "(", ")" };
+		static Parenthesis const SQUARE_BRACKET = { "[", "]" };
 		static char const QUOTE_CHARACTER = '\'';
 		static std::string const QUOTE_STRING = "'";
 		static char const DOUBLE_QUOTE_CHARACTER = '"';

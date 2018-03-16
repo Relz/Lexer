@@ -1,13 +1,12 @@
 #ifndef LEXER_CONSTANT_H
 #define LEXER_CONSTANT_H
 
+#include "NumberSystem/NumberSystem.h"
+#include "Token/Constant/Constant.h"
 #include <string>
 #include <vector>
-#include "Token/Constant/Constant.h"
-#include "NumberSystem/NumberSystem.h"
 
-static std::vector<std::string> const SCANNER_DELIMITERS
-{
+static std::vector<std::string> const SCANNER_DELIMITERS {
 	Constant::Comment::BLOCK_BEGINNING,
 	Constant::Comment::LINE,
 	Constant::Separator::SPACE,
