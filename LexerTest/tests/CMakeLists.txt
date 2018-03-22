@@ -11,6 +11,7 @@ ADD_EXECUTABLE(LexerTest
 		DivisionTokenTest.cpp
 		AssignmentTokenTest.cpp
 		PlusAssignmentTokenTest.cpp
-		MinusAssignmentTokenTest.cpp)
+		MinusAssignmentTokenTest.cpp
+		MultiplyAssignmentTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)
