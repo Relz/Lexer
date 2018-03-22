@@ -1,6 +1,6 @@
 #include "TestHelper.h"
 
-void test(string const & string, vector<Token> const & expectedTokens)
+void ExpectTokens(string const & string, vector<Token> const & expectedTokens)
 {
 	stringstream stringStream(string);
 	Lexer lexer(stringStream);
@@ -11,7 +11,7 @@ void test(string const & string, vector<Token> const & expectedTokens)
 		EXPECT_LT(i, expectedTokens.size());
 		EXPECT_EQ(
 			TokenExtensions::ToString(tokenInformation.GetToken()), TokenExtensions::ToString(expectedTokens.at(i)));
-		--i;
+		++i;
 	}
 	EXPECT_EQ(i, expectedTokens.size());
 }

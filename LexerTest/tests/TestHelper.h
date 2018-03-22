@@ -10,6 +10,6 @@
 
 using namespace std;
 
-void test(string const & string, vector<Token> const & expectedTokens);
+void ExpectTokens(string const & string, vector<Token> const & expectedTokens);
 
 #endif //PROJECT_TESTHELPER_H
