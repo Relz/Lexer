@@ -1,7 +1,4 @@
 #include "gtest/gtest.h"
-#include <sstream>
-#include <string>
-
 #include "TestHelper.h"
 
 using namespace std;
