@@ -25,6 +25,7 @@ ADD_EXECUTABLE(LexerTest
 		ImplementsTokenTest.cpp
 		ConstructorTokenTest.cpp
 		NotInitializedTokenTest.cpp
-		PrivateTokenTest.cpp)
+		PrivateTokenTest.cpp
+		PublicTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)
