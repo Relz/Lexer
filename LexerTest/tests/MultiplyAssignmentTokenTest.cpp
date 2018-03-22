@@ -45,7 +45,6 @@ TEST(multiply_assignment_token, not_determining_if_part_of_comment)
 	ExpectTokens("// *= ", { });
 	ExpectTokens("//1*=1", { });
 	ExpectTokens("//;*=;", { });
-	ExpectTokens("//*=", { });
 	ExpectTokens("/**=*/", { });
 	ExpectTokens("/* *= */", { });
 	ExpectTokens("/*1*=1*/", { });
