@@ -33,6 +33,7 @@ ADD_EXECUTABLE(LexerTest
 		WhileTokenTest.cpp
 		DoTokenTest.cpp
 		ReturnTokenTest.cpp
-		IfTokenTest.cpp)
+		IfTokenTest.cpp
+		ElseTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)
