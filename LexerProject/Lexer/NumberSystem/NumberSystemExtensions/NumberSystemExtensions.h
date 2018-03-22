@@ -1,0 +1,23 @@
+#ifndef PROJECT_NUMBERSYSTEMEXTENSIONS_H
+#define PROJECT_NUMBERSYSTEMEXTENSIONS_H
+
+#include "../../Constant.h"
+#include "../NumberSystem.h"
+#include <set>
+#include <unordered_map>
+
+class NumberSystemExtensions
+{
+public:
+	static void CreateAvailableCharacters(NumberSystem numberSystem, std::set<char> & availableCharacters);
+	static bool CreateFromString(std::string const & str, NumberSystem & numberSystem);
+	static unsigned int ToUInt(NumberSystem numberSystem);
+
+private:
+	static std::set<char> const ALL_AVAILABLE_CHARACTERS;
+	static std::set<char> const DEFAULT_NUMBER_SYSTEM_DIGITS;
+	static std::unordered_map<std::string, NumberSystem> const STRING_TO_NUMBER_SYSTEM;
+	static std::unordered_map<NumberSystem, unsigned int> const NUMBER_SYSTEM_TO_UINT;
+};
+
+#endif //PROJECT_NUMBERSYSTEMEXTENSIONS_H

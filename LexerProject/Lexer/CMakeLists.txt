@@ -1,10 +1,13 @@
 SET(SOURCE_FILES
+		Lexer.cpp
 		Lexer.h
-		Constant.h
-		NumberSystem/NumberSystem.h NumberSystem/NumberSystemExtensions.h)
+		Constant.h)
 
 ADD_LIBRARY(Lexer ${SOURCE_FILES})
 SET_TARGET_PROPERTIES(Lexer PROPERTIES LINKER_LANGUAGE CXX)
 
+TARGET_LINK_LIBRARIES(Lexer Input NumberSystem Token)
+
 ADD_SUBDIRECTORY(InputSolution)
+ADD_SUBDIRECTORY(NumberSystem)
 ADD_SUBDIRECTORY(Token)

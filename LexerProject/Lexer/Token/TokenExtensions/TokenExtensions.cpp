@@ -1,56 +1,39 @@
-#ifndef PROJECT_TOKENEXTENSIONS_H
-#define PROJECT_TOKENEXTENSIONS_H
+#include "TokenExtensions.h"
 
-#include "Constant/Constant.h"
-#include "Token.h"
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-
-class TokenExtensions
+bool TokenExtensions::TryToGetDelimiterToken(std::string const & str, Token & token)
 {
-public:
-	static bool TryToGetDelimiterToken(std::string const & str, Token & token)
+	if (STRING_TO_DELIMITER_TOKEN.find(str) == STRING_TO_DELIMITER_TOKEN.end())
 	{
-		if (STRING_TO_DELIMITER_TOKEN.find(str) == STRING_TO_DELIMITER_TOKEN.end())
-		{
-			return false;
-		}
-		token = STRING_TO_DELIMITER_TOKEN.at(str);
-		return true;
+		return false;
 	}
+	token = STRING_TO_DELIMITER_TOKEN.at(str);
+	return true;
+}
 
-	static bool TryToGetKeywordToken(std::string const & str, Token & token)
+bool TokenExtensions::TryToGetKeywordToken(std::string const & str, Token & token)
+{
+	if (STRING_TO_KEYWORD_TOKEN.find(str) == STRING_TO_KEYWORD_TOKEN.end())
 	{
-		if (STRING_TO_KEYWORD_TOKEN.find(str) == STRING_TO_KEYWORD_TOKEN.end())
-		{
-			return false;
-		}
-		token = STRING_TO_KEYWORD_TOKEN.at(str);
-		return true;
+		return false;
 	}
+	token = STRING_TO_KEYWORD_TOKEN.at(str);
+	return true;
+}
 
-	static bool TryToGetTypeToken(std::string const & str, Token & token)
+bool TokenExtensions::TryToGetTypeToken(std::string const & str, Token & token)
+{
+	if (TYPES.find(str) == TYPES.end())
 	{
-		if (TYPES.find(str) == TYPES.end())
-		{
-			return false;
-		}
-		token = Token::TYPE;
-		return true;
+		return false;
 	}
+	token = Token::TYPE;
+	return true;
+}
 
-	static std::string ToString(Token token)
-	{
-		return TOKEN_TO_NAME.find(token) == TOKEN_TO_NAME.end() ? "" : TOKEN_TO_NAME.at(token);
-	}
-
-private:
-	static std::unordered_map<std::string, Token> const STRING_TO_DELIMITER_TOKEN;
-	static std::unordered_map<std::string, Token> const STRING_TO_KEYWORD_TOKEN;
-	static std::unordered_set<std::string> const TYPES;
-	static std::unordered_map<Token, std::string> const TOKEN_TO_NAME;
-};
+std::string TokenExtensions::ToString(Token token)
+{
+	return TOKEN_TO_NAME.find(token) == TOKEN_TO_NAME.end() ? "" : TOKEN_TO_NAME.at(token);
+}
 
 std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITER_TOKEN {
 	{ Constant::Operator::Arithmetic::DIVISION, Token::DIVISION },
@@ -103,12 +86,8 @@ std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_
 };
 
 std::unordered_set<std::string> const TokenExtensions::TYPES {
-	Constant::CoreType::Complex::ARRAY,
-	Constant::CoreType::Number::DOUBLE,
-	Constant::CoreType::Number::FLOAT,
-	Constant::CoreType::Number::INTEGER,
-	Constant::CoreType::Complex::STRING,
-	Constant::CoreType::VOID
+	Constant::CoreType::Complex::ARRAY,  Constant::CoreType::Number::DOUBLE,  Constant::CoreType::Number::FLOAT,
+	Constant::CoreType::Number::INTEGER, Constant::CoreType::Complex::STRING, Constant::CoreType::VOID
 };
 
 std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME {
@@ -168,5 +147,3 @@ std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME {
 	{ Token::CHARACTER_LITERAL, Constant::Name::CHARACTER_LITERAL },
 	{ Token::UNKNOWN, Constant::Name::UNKNOWN }
 };
-
-#endif //PROJECT_TOKENEXTENSIONS_H

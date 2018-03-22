@@ -3,6 +3,9 @@
 
 enum class Token
 {
+	// Default
+	UNKNOWN,
+
 	// Arithmetic operators
 	PLUS,
 	MINUS,
@@ -66,8 +69,7 @@ enum class Token
 	TYPE,
 	IDENTIFIER,
 	STRING_LITERAL,
-	CHARACTER_LITERAL,
-	UNKNOWN
+	CHARACTER_LITERAL
 };
 
 #endif //PROJECT_TOKEN_H

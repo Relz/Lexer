@@ -1,8 +1,10 @@
 INCLUDE_DIRECTORIES(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-ADD_EXECUTABLE(LexerTest
-		ConstructorTest.cpp
-		)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/LexerProject)
 
-TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main)
-TARGET_LINK_LIBRARIES(LexerTest Lexer)
+ADD_EXECUTABLE(LexerTest
+		PlusTokenTest.cpp
+		MinusTokenTest.cpp
+		TestHelper.cpp TestHelper.h)
+
+TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)

@@ -1,0 +1,6 @@
+SET(SOURCE_FILES
+		TokenExtensions.cpp
+		TokenExtensions.h)
+
+ADD_LIBRARY(TokenExtensions ${SOURCE_FILES})
+SET_TARGET_PROPERTIES(TokenExtensions PROPERTIES LINKER_LANGUAGE CXX)
