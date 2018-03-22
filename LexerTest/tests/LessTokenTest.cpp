@@ -30,6 +30,11 @@ TEST(less_token, determining_if_between_numbers)
 	ExpectTokens("1<1E+1", { Token::INTEGER, Token::LESS, Token::EXPONENTIAL });
 }
 
+TEST(less_token, not_determining_if_in_character_literal)
+{
+	ExpectTokens("'<'", { Token::CHARACTER_LITERAL });
+}
+
 TEST(less_token, not_determining_if_part_of_string_literal)
 {
 	ExpectTokens("\"<\"", { Token::STRING_LITERAL });

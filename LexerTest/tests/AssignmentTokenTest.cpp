@@ -64,6 +64,11 @@ TEST(assignment_token, not_determining_if_part_of_division_assignment)
 	ExpectTokens("/==", { Token::DIVISION_ASSIGNMENT, Token::ASSIGNMENT });
 }
 
+TEST(assignment_token, not_determining_if_in_character_literal)
+{
+	ExpectTokens("'='", { Token::CHARACTER_LITERAL });
+}
+
 TEST(assignment_token, not_determining_if_part_of_string_literal)
 {
 	ExpectTokens("\"=\"", { Token::STRING_LITERAL });
