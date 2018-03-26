@@ -221,7 +221,8 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			return false;
 		}
 
-		if (IsInteger(scannedString, failIndex + 1, failIndex, goodString, numberSystem))
+		std::string const possibleNumberString = scannedString.substr(goodString.length() + 1, scannedString.length());
+		if (IsInteger(possibleNumberString, failIndex + 1, failIndex, goodString, numberSystem))
 		{
 			token = Token::INTEGER;
 			return true;

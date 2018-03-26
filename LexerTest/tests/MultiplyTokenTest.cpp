@@ -1,4 +1,3 @@
-#include "gtest/gtest.h"
 #include "TestHelper.h"
 
 using namespace std;
