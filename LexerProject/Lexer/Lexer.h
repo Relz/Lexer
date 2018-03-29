@@ -3,14 +3,13 @@
 
 #include "Constant.h"
 #include "InputSolution/Input/Input.h"
-#include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
-#include "Token/TokenInformation/TokenInformation.h"
-#include <set>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <regex>
+
+class TokenInformation;
+enum class NumberSystem;
+enum class Token;
 
 class Lexer
 {

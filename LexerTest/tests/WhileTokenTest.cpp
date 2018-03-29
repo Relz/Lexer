@@ -1,4 +1,6 @@
+#include "Lexer/Token/Token.h"
 #include "TestHelper.h"
+#include "gtest/gtest.h"
 
 using namespace std;
 
@@ -22,11 +24,11 @@ TEST(while_token, determining_if_stay_near_delimiter)
 TEST(while_token, not_determining_if_between_numbers)
 {
 	ExpectTokens("1while1", { Token::UNKNOWN });
-	ExpectTokens("1while1.1", { Token::UNKNOWN });
+	ExpectTokens("1while1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1while1", { Token::UNKNOWN });
-	ExpectTokens("1.1while1.1", { Token::UNKNOWN });
+	ExpectTokens("1.1while1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1E+1while1", { Token::UNKNOWN });
-	ExpectTokens("1while1E+1", { Token::UNKNOWN });
+	ExpectTokens("1while1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(while_token, not_determining_if_part_of_string_literal)
@@ -39,16 +41,16 @@ TEST(while_token, not_determining_if_part_of_string_literal)
 
 TEST(while_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//while", { });
-	ExpectTokens("// while ", { });
-	ExpectTokens("//1while1", { });
-	ExpectTokens("//;while;", { });
-	ExpectTokens("/*while*/", { });
-	ExpectTokens("/* while */", { });
-	ExpectTokens("/*1while1*/", { });
-	ExpectTokens("/*;while;*/", { });
-	ExpectTokens("/*while", { });
-	ExpectTokens("/* while ", { });
-	ExpectTokens("/*1while1", { });
-	ExpectTokens("/*;while;", { });
+	ExpectTokens("//while", {});
+	ExpectTokens("// while ", {});
+	ExpectTokens("//1while1", {});
+	ExpectTokens("//;while;", {});
+	ExpectTokens("/*while*/", {});
+	ExpectTokens("/* while */", {});
+	ExpectTokens("/*1while1*/", {});
+	ExpectTokens("/*;while;*/", {});
+	ExpectTokens("/*while", {});
+	ExpectTokens("/* while ", {});
+	ExpectTokens("/*1while1", {});
+	ExpectTokens("/*;while;", {});
 }

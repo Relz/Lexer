@@ -1,4 +1,6 @@
+#include "Lexer/Token/Token.h"
 #include "TestHelper.h"
+#include "gtest/gtest.h"
 
 using namespace std;
 
@@ -22,11 +24,11 @@ TEST(constructor_token, determining_if_stay_near_delimiter)
 TEST(constructor_token, not_determining_if_between_numbers)
 {
 	ExpectTokens("1Constructor1", { Token::UNKNOWN });
-	ExpectTokens("1Constructor1.1", { Token::UNKNOWN });
+	ExpectTokens("1Constructor1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1Constructor1", { Token::UNKNOWN });
-	ExpectTokens("1.1Constructor1.1", { Token::UNKNOWN });
+	ExpectTokens("1.1Constructor1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1E+1Constructor1", { Token::UNKNOWN });
-	ExpectTokens("1Constructor1E+1", { Token::UNKNOWN });
+	ExpectTokens("1Constructor1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(constructor_token, not_determining_if_part_of_string_literal)

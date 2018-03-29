@@ -1,8 +1,12 @@
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
+#include "Lexer/Lexer.h"
+#include "gtest/gtest.h"
 #include "TestHelper.h"
+#include <sstream>
 
-void ExpectTokens(string const & string, vector<Token> const & expectedTokens)
+void ExpectTokens(std::string const & str, std::vector<Token> const & expectedTokens)
 {
-	stringstream stringStream(string);
+	std::stringstream stringStream(str);
 	Lexer lexer(stringStream);
 	size_t i = 0;
 	TokenInformation tokenInformation;

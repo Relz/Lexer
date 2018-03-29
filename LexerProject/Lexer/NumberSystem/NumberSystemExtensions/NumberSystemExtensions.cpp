@@ -1,3 +1,5 @@
+#include "../../Constant.h"
+#include "../NumberSystem.h"
 #include "NumberSystemExtensions.h"
 
 void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem, std::set<char> & availableCharacters)
@@ -8,7 +10,7 @@ void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem
 		return;
 	}
 	auto goalIterator = ALL_AVAILABLE_CHARACTERS.begin();
-	std::advance(goalIterator, ToUInt(numberSystem) - 1);
+	std::advance(goalIterator, ToUInt(numberSystem));
 	availableCharacters = std::set<char>(ALL_AVAILABLE_CHARACTERS.begin(), goalIterator);
 }
 
@@ -67,5 +69,6 @@ std::unordered_map<NumberSystem, unsigned int> const NumberSystemExtensions::NUM
 	{ NumberSystem::TWELVE, 12 },
 	{ NumberSystem::THIRTEEN, 13 },
 	{ NumberSystem::FOURTEEN, 14 },
-	{ NumberSystem::FIFTEEN, 15 }
+	{ NumberSystem::FIFTEEN, 15 },
+	{ NumberSystem::SIXTEEN, 16 }
 };

@@ -1,10 +1,10 @@
 #ifndef PROJECT_NUMBERSYSTEMEXTENSIONS_H
 #define PROJECT_NUMBERSYSTEMEXTENSIONS_H
 
-#include "../../Constant.h"
-#include "../NumberSystem.h"
 #include <set>
 #include <unordered_map>
+
+enum class NumberSystem;
 
 class NumberSystemExtensions
 {

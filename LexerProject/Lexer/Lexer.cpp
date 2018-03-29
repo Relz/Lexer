@@ -1,4 +1,7 @@
+#include "Token/TokenInformation/TokenInformation.h"
+#include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
 #include "Lexer.h"
+#include <set>
 
 Lexer::Lexer(std::string const & inputFileName)
 	: m_inputFileName(inputFileName)
@@ -119,11 +122,13 @@ bool Lexer::TryToCreateLiteral(std::string const & delimiterString, std::string 
 
 bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string const & delimiter)
 {
+	Token token;
 	return !scannedString.empty()
-		&& ((IsDigit(scannedString.back()) && delimiter == Constant::Separator::DOT)
+		&& ((delimiter == Constant::Separator::DOT && DetermineNumberToken(scannedString, token))
 			|| (scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
 				&& (delimiter == Constant::Operator::Arithmetic::PLUS
-					|| delimiter == Constant::Operator::Arithmetic::MINUS)));
+					|| delimiter == Constant::Operator::Arithmetic::MINUS)
+				&& DetermineNumberToken(scannedString.substr(0, scannedString.length() - 1), token)));
 }
 
 void Lexer::SkipBlockComment()
@@ -167,11 +172,7 @@ bool Lexer::IsDigit(char ch, NumberSystem numberSystem)
 }
 
 bool Lexer::IsInteger(
-	std::string const & str,
-	size_t fromIndex,
-	size_t & failIndex,
-	std::string & goodString,
-	NumberSystem numberSystem)
+	std::string const & str, size_t fromIndex, size_t & failIndex, std::string & goodString, NumberSystem numberSystem)
 {
 	if (str.empty())
 	{
@@ -221,8 +222,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			return false;
 		}
 
-		std::string const possibleNumberString = scannedString.substr(goodString.length() + 1, scannedString.length());
-		if (IsInteger(possibleNumberString, failIndex + 1, failIndex, goodString, numberSystem))
+		if (IsInteger(scannedString, failIndex + 1, failIndex, goodString, numberSystem))
 		{
 			token = Token::INTEGER;
 			return true;
