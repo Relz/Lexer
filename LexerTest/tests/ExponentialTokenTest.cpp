@@ -18,6 +18,19 @@ TEST(exponential_token, determining_if_stay_alone)
 	ExpectTokens("16_F.A_E-1", { Token::EXPONENTIAL });
 	ExpectTokens("16_F.0A_E+1", { Token::EXPONENTIAL });
 	ExpectTokens("16_F.0A_E-1", { Token::EXPONENTIAL });
+
+	ExpectTokens("1_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("1_E-1.1", { Token::EXPONENTIAL });
+	ExpectTokens("1.1_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("1.1_E-1.1", { Token::EXPONENTIAL });
+	ExpectTokens("2_1_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("2_1_E-1.1", { Token::EXPONENTIAL });
+	ExpectTokens("2_1.0_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("2_1.0_E-1.1", { Token::EXPONENTIAL });
+	ExpectTokens("16_F.A_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("16_F.A_E-1.1", { Token::EXPONENTIAL });
+	ExpectTokens("16_F.0A_E+1.1", { Token::EXPONENTIAL });
+	ExpectTokens("16_F.0A_E-1.1", { Token::EXPONENTIAL });
 }
 
 TEST(exponential_token, determining_if_stay_between_delimiters)
@@ -35,6 +48,13 @@ TEST(exponential_token, determining_if_stay_between_delimiters)
 	ExpectTokens(";2_1.1_E+3;", { Token::SEMICOLON, Token::EXPONENTIAL, Token::SEMICOLON });
 	ExpectTokens(" 16_F.A_E+1 ", { Token::EXPONENTIAL });
 	ExpectTokens(";16_F.A_E+1;", { Token::SEMICOLON, Token::EXPONENTIAL, Token::SEMICOLON });
+
+	ExpectTokens(" 1.1_E+1.1 ", { Token::EXPONENTIAL });
+	ExpectTokens(";1.1_E+1.1;", { Token::SEMICOLON, Token::EXPONENTIAL, Token::SEMICOLON });
+	ExpectTokens(" 2_1.1_E+3.1 ", { Token::EXPONENTIAL });
+	ExpectTokens(";2_1.1_E+3.1;", { Token::SEMICOLON, Token::EXPONENTIAL, Token::SEMICOLON });
+	ExpectTokens(" 16_F.A_E+1.1 ", { Token::EXPONENTIAL });
+	ExpectTokens(";16_F.A_E+1.1;", { Token::SEMICOLON, Token::EXPONENTIAL, Token::SEMICOLON });
 }
 
 TEST(exponential_token, determining_if_stay_near_delimiter)

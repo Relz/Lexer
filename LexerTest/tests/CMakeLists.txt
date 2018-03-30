@@ -38,6 +38,7 @@ ADD_EXECUTABLE(LexerTest
 		IntegerTokenTest.cpp
 		FloatTokenTest.cpp
 		ExponentialTokenTest.cpp
-		ColonTokenTest.cpp)
+		ColonTokenTest.cpp
+		CommaTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)
