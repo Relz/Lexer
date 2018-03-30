@@ -1,7 +1,7 @@
-#include "Lexer/Token/TokenInformation/TokenInformation.h"
-#include "Lexer/Lexer.h"
-#include "gtest/gtest.h"
 #include "TestHelper.h"
+#include "Lexer/Lexer.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
+#include "gtest/gtest.h"
 #include <sstream>
 
 void ExpectTokens(std::string const & str, std::vector<Token> const & expectedTokens)

@@ -36,6 +36,7 @@ ADD_EXECUTABLE(LexerTest
 		IfTokenTest.cpp
 		ElseTokenTest.cpp
 		IntegerTokenTest.cpp
-		FloatTokenTest.cpp)
+		FloatTokenTest.cpp
+		ExponentialTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)

@@ -1,6 +1,6 @@
+#include "NumberSystemExtensions.h"
 #include "../../Constant.h"
 #include "../NumberSystem.h"
-#include "NumberSystemExtensions.h"
 
 void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem, std::set<char> & availableCharacters)
 {

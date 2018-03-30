@@ -27,8 +27,8 @@ TEST(for_token, not_determining_if_between_numbers)
 	ExpectTokens("1for1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1for1", { Token::UNKNOWN });
 	ExpectTokens("1.1for1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1E+1for1", { Token::UNKNOWN });
-	ExpectTokens("1for1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER});
+	ExpectTokens("1_E+1for1", { Token::UNKNOWN });
+	ExpectTokens("1for1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(for_token, not_determining_if_part_of_string_literal)
@@ -41,16 +41,16 @@ TEST(for_token, not_determining_if_part_of_string_literal)
 
 TEST(for_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//for", { });
-	ExpectTokens("// for ", { });
-	ExpectTokens("//1for1", { });
-	ExpectTokens("//;for;", { });
-	ExpectTokens("/*for*/", { });
-	ExpectTokens("/* for */", { });
-	ExpectTokens("/*1for1*/", { });
-	ExpectTokens("/*;for;*/", { });
-	ExpectTokens("/*for", { });
-	ExpectTokens("/* for ", { });
-	ExpectTokens("/*1for1", { });
-	ExpectTokens("/*;for;", { });
+	ExpectTokens("//for", {});
+	ExpectTokens("// for ", {});
+	ExpectTokens("//1for1", {});
+	ExpectTokens("//;for;", {});
+	ExpectTokens("/*for*/", {});
+	ExpectTokens("/* for */", {});
+	ExpectTokens("/*1for1*/", {});
+	ExpectTokens("/*;for;*/", {});
+	ExpectTokens("/*for", {});
+	ExpectTokens("/* for ", {});
+	ExpectTokens("/*1for1", {});
+	ExpectTokens("/*;for;", {});
 }

@@ -27,8 +27,8 @@ TEST(not_equivalence_token, determining_if_between_numbers)
 	ExpectTokens("1!=1.1", { Token::INTEGER, Token::NOT_EQUIVALENCE, Token::FLOAT });
 	ExpectTokens("1.1!=1", { Token::FLOAT, Token::NOT_EQUIVALENCE, Token::INTEGER });
 	ExpectTokens("1.1!=1.1", { Token::FLOAT, Token::NOT_EQUIVALENCE, Token::FLOAT });
-	ExpectTokens("1E+1!=1", { Token::EXPONENTIAL, Token::NOT_EQUIVALENCE, Token::INTEGER });
-	ExpectTokens("1!=1E+1", { Token::INTEGER, Token::NOT_EQUIVALENCE, Token::EXPONENTIAL });
+	ExpectTokens("1_E+1!=1", { Token::EXPONENTIAL, Token::NOT_EQUIVALENCE, Token::INTEGER });
+	ExpectTokens("1!=1_E+1", { Token::INTEGER, Token::NOT_EQUIVALENCE, Token::EXPONENTIAL });
 }
 
 TEST(not_equivalence_token, not_determining_if_part_of_string_literal)

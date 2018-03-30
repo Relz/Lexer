@@ -27,6 +27,13 @@ TEST(division_token, determining_if_between_numbers)
 	ExpectTokens("1/1.1", { Token::INTEGER, Token::DIVISION, Token::FLOAT });
 	ExpectTokens("1.1/1", { Token::FLOAT, Token::DIVISION, Token::INTEGER });
 	ExpectTokens("1.1/1.1", { Token::FLOAT, Token::DIVISION, Token::FLOAT });
+	ExpectTokens("1_E+1/1", { Token::EXPONENTIAL, Token::DIVISION, Token::INTEGER });
+	ExpectTokens("1/1_E+1", { Token::INTEGER, Token::DIVISION, Token::EXPONENTIAL });
+	ExpectTokens("1_E+1/1.1", { Token::EXPONENTIAL, Token::DIVISION, Token::FLOAT });
+	ExpectTokens("1.1/1_E+1", { Token::FLOAT, Token::DIVISION, Token::EXPONENTIAL });
+	ExpectTokens("1.1_E+1/1", { Token::EXPONENTIAL, Token::DIVISION, Token::INTEGER });
+	ExpectTokens("1.1_E+1/1_E+1", { Token::EXPONENTIAL, Token::DIVISION, Token::EXPONENTIAL });
+	ExpectTokens("1.1_E+1/1.1_E+1", { Token::EXPONENTIAL, Token::DIVISION, Token::EXPONENTIAL });
 }
 
 TEST(division_token, not_determining_if_part_of_plus_assignment)

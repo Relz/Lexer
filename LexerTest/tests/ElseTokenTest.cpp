@@ -27,8 +27,8 @@ TEST(else_token, not_determining_if_between_numbers)
 	ExpectTokens("1else1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1else1", { Token::UNKNOWN });
 	ExpectTokens("1.1else1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1E+1else1", { Token::UNKNOWN });
-	ExpectTokens("1else1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokens("1_E+1else1", { Token::UNKNOWN });
+	ExpectTokens("1else1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(else_token, not_determining_if_part_of_string_literal)

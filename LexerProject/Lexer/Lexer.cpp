@@ -1,6 +1,6 @@
-#include "Token/TokenInformation/TokenInformation.h"
-#include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
 #include "Lexer.h"
+#include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
+#include "Token/TokenInformation/TokenInformation.h"
 #include <set>
 
 Lexer::Lexer(std::string const & inputFileName)
@@ -126,9 +126,10 @@ bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string cons
 	return !scannedString.empty()
 		&& ((delimiter == Constant::Separator::DOT && DetermineNumberToken(scannedString, token))
 			|| (scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
+				&& scannedString.at(scannedString.length() - 2) == Constant::Separator::UNDERSCORE_CHARACTER
 				&& (delimiter == Constant::Operator::Arithmetic::PLUS
 					|| delimiter == Constant::Operator::Arithmetic::MINUS)
-				&& DetermineNumberToken(scannedString.substr(0, scannedString.length() - 1), token)));
+				&& DetermineNumberToken(scannedString.substr(0, scannedString.length() - 2), token)));
 }
 
 void Lexer::SkipBlockComment()
@@ -174,9 +175,9 @@ bool Lexer::IsDigit(char ch, NumberSystem numberSystem)
 bool Lexer::IsInteger(
 	std::string const & str, size_t fromIndex, size_t & failIndex, std::string & goodString, NumberSystem numberSystem)
 {
-	if (str.empty())
+	if (str.empty() || fromIndex > str.length() - 1)
 	{
-		return true;
+		return false;
 	}
 	for (size_t i = fromIndex; i < str.length(); ++i)
 	{
@@ -213,8 +214,36 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			return true;
 		}
 	}
-	else if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
+
+	if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
 	{
+		if (scannedString.length() > failIndex + 1
+			&& scannedString.at(failIndex + 1) == Constant::Separator::EXPONENT_CHARACTER)
+		{
+			if (scannedString.length() > failIndex + 2)
+			{
+				char nextChar = scannedString.at(failIndex + 2);
+				if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
+					|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
+				{
+					if (IsInteger(scannedString, failIndex + 3, failIndex, goodString))
+					{
+						token = Token::EXPONENTIAL;
+						return true;
+					}
+
+					if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+					{
+						if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
+						{
+							token = Token::EXPONENTIAL;
+							return true;
+						}
+					}
+				}
+			}
+		}
+
 		NumberSystem numberSystem;
 		if (!NumberSystemExtensions::CreateFromString(goodString, numberSystem))
 		{
@@ -236,28 +265,32 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 				return true;
 			}
 		}
-	}
 
-	if (scannedString.at(failIndex) == Constant::Separator::EXPONENT_CHARACTER)
-	{
-		if (scannedString.length() > failIndex + 1)
+		if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
 		{
-			char nextChar = scannedString.at(failIndex + 1);
-			if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
-				|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
+			if (scannedString.length() > failIndex + 1
+				&& scannedString.at(failIndex + 1) == Constant::Separator::EXPONENT_CHARACTER)
 			{
-				if (IsInteger(scannedString, failIndex + 2, failIndex, goodString))
+				if (scannedString.length() > failIndex + 2)
 				{
-					token = Token::EXPONENTIAL;
-					return true;
-				}
-
-				if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
-				{
-					if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
+					char nextChar = scannedString.at(failIndex + 2);
+					if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
+						|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
 					{
-						token = Token::EXPONENTIAL;
-						return true;
+						if (IsInteger(scannedString, failIndex + 3, failIndex, goodString))
+						{
+							token = Token::EXPONENTIAL;
+							return true;
+						}
+
+						if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+						{
+							if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
+							{
+								token = Token::EXPONENTIAL;
+								return true;
+							}
+						}
 					}
 				}
 			}

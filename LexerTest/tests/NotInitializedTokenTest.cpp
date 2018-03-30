@@ -27,8 +27,8 @@ TEST(not_initialized_token, not_determining_if_between_numbers)
 	ExpectTokens("1NULL1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1NULL1", { Token::UNKNOWN });
 	ExpectTokens("1.1NULL1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1E+1NULL1", { Token::UNKNOWN });
-	ExpectTokens("1NULL1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokens("1_E+1NULL1", { Token::UNKNOWN });
+	ExpectTokens("1NULL1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(not_initialized_token, not_determining_if_part_of_string_literal)

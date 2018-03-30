@@ -27,8 +27,8 @@ TEST(private_token, not_determining_if_between_numbers)
 	ExpectTokens("1private1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1private1", { Token::UNKNOWN });
 	ExpectTokens("1.1private1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1E+1private1", { Token::UNKNOWN });
-	ExpectTokens("1private1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokens("1_E+1private1", { Token::UNKNOWN });
+	ExpectTokens("1private1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(private_token, not_determining_if_part_of_string_literal)

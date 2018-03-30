@@ -27,8 +27,8 @@ TEST(more_token, determining_if_between_numbers)
 	ExpectTokens("1>1.1", { Token::INTEGER, Token::MORE, Token::FLOAT });
 	ExpectTokens("1.1>1", { Token::FLOAT, Token::MORE, Token::INTEGER });
 	ExpectTokens("1.1>1.1", { Token::FLOAT, Token::MORE, Token::FLOAT });
-	ExpectTokens("1E+1>1", { Token::EXPONENTIAL, Token::MORE, Token::INTEGER });
-	ExpectTokens("1>1E+1", { Token::INTEGER, Token::MORE, Token::EXPONENTIAL });
+	ExpectTokens("1_E+1>1", { Token::EXPONENTIAL, Token::MORE, Token::INTEGER });
+	ExpectTokens("1>1_E+1", { Token::INTEGER, Token::MORE, Token::EXPONENTIAL });
 }
 
 TEST(more_token, not_determining_if_in_character_literal)

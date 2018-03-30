@@ -27,15 +27,15 @@ TEST(minus_token, determining_if_between_numbers)
 	ExpectTokens("1-1.1", { Token::INTEGER, Token::MINUS, Token::FLOAT });
 	ExpectTokens("1.1-1", { Token::FLOAT, Token::MINUS, Token::INTEGER });
 	ExpectTokens("1.1-1.1", { Token::FLOAT, Token::MINUS, Token::FLOAT });
-	ExpectTokens("1E-1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
-	ExpectTokens("1-1E-1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
-	ExpectTokens("1.1E-1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
-	ExpectTokens("1-1.1E-1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
-	ExpectTokens("1E-1.1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
-	ExpectTokens("1-1E-1.1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
-	ExpectTokens("1E-1-1.1", { Token::EXPONENTIAL, Token::MINUS, Token::FLOAT });
-	ExpectTokens("1.1-1E-1", { Token::FLOAT, Token::MINUS, Token::EXPONENTIAL });
-	ExpectTokens("1E-1-1E-1", { Token::EXPONENTIAL, Token::MINUS, Token::EXPONENTIAL });
+	ExpectTokens("1_E-1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
+	ExpectTokens("1-1_E-1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
+	ExpectTokens("1.1_E-1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
+	ExpectTokens("1-1.1_E-1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
+	ExpectTokens("1_E-1.1-1", { Token::EXPONENTIAL, Token::MINUS, Token::INTEGER });
+	ExpectTokens("1-1_E-1.1", { Token::INTEGER, Token::MINUS, Token::EXPONENTIAL });
+	ExpectTokens("1_E-1-1.1", { Token::EXPONENTIAL, Token::MINUS, Token::FLOAT });
+	ExpectTokens("1.1-1_E-1", { Token::FLOAT, Token::MINUS, Token::EXPONENTIAL });
+	ExpectTokens("1_E-1-1_E-1", { Token::EXPONENTIAL, Token::MINUS, Token::EXPONENTIAL });
 }
 
 TEST(minus_token, not_determining_if_part_of_minus_assignment)

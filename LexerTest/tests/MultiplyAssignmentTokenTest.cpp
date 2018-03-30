@@ -27,8 +27,8 @@ TEST(multiply_assignment_token, determining_if_between_numbers)
 	ExpectTokens("1*=1.1", { Token::INTEGER, Token::MULTIPLY_ASSIGNMENT, Token::FLOAT });
 	ExpectTokens("1.1*=1", { Token::FLOAT, Token::MULTIPLY_ASSIGNMENT, Token::INTEGER });
 	ExpectTokens("1.1*=1.1", { Token::FLOAT, Token::MULTIPLY_ASSIGNMENT, Token::FLOAT });
-	ExpectTokens("1E+1*=1", { Token::EXPONENTIAL, Token::MULTIPLY_ASSIGNMENT, Token::INTEGER });
-	ExpectTokens("1*=1E+1", { Token::INTEGER, Token::MULTIPLY_ASSIGNMENT, Token::EXPONENTIAL });
+	ExpectTokens("1_E+1*=1", { Token::EXPONENTIAL, Token::MULTIPLY_ASSIGNMENT, Token::INTEGER });
+	ExpectTokens("1*=1_E+1", { Token::INTEGER, Token::MULTIPLY_ASSIGNMENT, Token::EXPONENTIAL });
 }
 
 TEST(multiply_assignment_token, not_determining_if_part_of_string_literal)

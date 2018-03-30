@@ -27,8 +27,8 @@ TEST(return_token, not_determining_if_between_numbers)
 	ExpectTokens("1return1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
 	ExpectTokens("1.1return1", { Token::UNKNOWN });
 	ExpectTokens("1.1return1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1E+1return1", { Token::UNKNOWN });
-	ExpectTokens("1return1E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokens("1_E+1return1", { Token::UNKNOWN });
+	ExpectTokens("1return1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
 }
 
 TEST(return_token, not_determining_if_part_of_string_literal)
