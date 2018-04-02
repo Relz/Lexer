@@ -41,6 +41,7 @@ ADD_EXECUTABLE(LexerTest
 		ColonTokenTest.cpp
 		CommaTokenTest.cpp
 		DotTokenTest.cpp
-		SemicolonTokenTest.cpp)
+		SemicolonTokenTest.cpp
+		LeftSquareBracketTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)
