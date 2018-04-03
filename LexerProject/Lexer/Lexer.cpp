@@ -307,14 +307,14 @@ bool Lexer::DetermineDelimiterToken(std::string const & delimiterString, Token &
 		|| TokenExtensions::TryToGetDelimiterToken(delimiterString, token);
 }
 
-bool Lexer::TryToAddLiteralToken(std::string const & scannedString, Token & token)
+bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & token)
 {
-	if (scannedString.front() == Constant::Parentheses::QUOTE_CHARACTER)
+	if (delimiterString.front() == Constant::Parentheses::QUOTE_CHARACTER && delimiterString.length() == 3)
 	{
 		token = Token::CHARACTER_LITERAL;
 		return true;
 	}
-	else if (scannedString.front() == Constant::Parentheses::DOUBLE_QUOTE_CHARACTER)
+	else if (delimiterString.front() == Constant::Parentheses::DOUBLE_QUOTE_CHARACTER)
 	{
 		token = Token::STRING_LITERAL;
 		return true;

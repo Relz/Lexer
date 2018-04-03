@@ -42,7 +42,7 @@ private:
 		NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM);
 	static bool DetermineNumberToken(std::string const & scannedString, Token & token);
 	static bool DetermineDelimiterToken(std::string const & delimiterString, Token & token);
-	static bool TryToAddLiteralToken(std::string const & scannedString, Token & token);
+	static bool TryToAddLiteralToken(std::string const & delimiterString, Token & token);
 };
 
 #endif //LEXER_LEXER_H
