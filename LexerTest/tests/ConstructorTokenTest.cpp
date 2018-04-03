@@ -21,7 +21,7 @@ TEST(constructor_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";Constructor", { Token::SEMICOLON, Token::CONSTRUCTOR });
 }
 
-TEST(constructor_token, not_determining_if_between_numbers)
+TEST(constructor_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1Constructor1", { Token::UNKNOWN });
 	ExpectTokens("1Constructor1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

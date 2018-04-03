@@ -21,7 +21,7 @@ TEST(public_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";public", { Token::SEMICOLON, Token::PUBLIC });
 }
 
-TEST(public_token, not_determining_if_between_numbers)
+TEST(public_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1public1", { Token::UNKNOWN });
 	ExpectTokens("1public1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

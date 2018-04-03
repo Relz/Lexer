@@ -21,7 +21,7 @@ TEST(right_curly_bracket_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";}", { Token::SEMICOLON, Token::RIGHT_CURLY_BRACKET });
 }
 
-TEST(right_curly_bracket_token, not_determining_if_between_numbers)
+TEST(right_curly_bracket_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1}1", { Token::INTEGER, Token::RIGHT_CURLY_BRACKET, Token::INTEGER });
 	ExpectTokens("1.1}1", { Token::FLOAT, Token::RIGHT_CURLY_BRACKET, Token::INTEGER });

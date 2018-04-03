@@ -21,7 +21,7 @@ TEST(else_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";else", { Token::SEMICOLON, Token::ELSE });
 }
 
-TEST(else_token, not_determining_if_between_numbers)
+TEST(else_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1else1", { Token::UNKNOWN });
 	ExpectTokens("1else1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

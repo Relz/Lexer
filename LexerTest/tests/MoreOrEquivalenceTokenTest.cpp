@@ -21,7 +21,7 @@ TEST(more_or_equivalence_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";>=", { Token::SEMICOLON, Token::MORE_OR_EQUIVALENCE });
 }
 
-TEST(more_or_equivalence_token, determining_if_between_numbers)
+TEST(more_or_equivalence_token, determining_if_stay_between_numbers)
 {
 	ExpectTokens("1>=1", { Token::INTEGER, Token::MORE_OR_EQUIVALENCE, Token::INTEGER });
 	ExpectTokens("1>=1.1", { Token::INTEGER, Token::MORE_OR_EQUIVALENCE, Token::FLOAT });

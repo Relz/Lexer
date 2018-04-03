@@ -21,7 +21,7 @@ TEST(left_square_bracket_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";[", { Token::SEMICOLON, Token::LEFT_SQUARE_BRACKET });
 }
 
-TEST(left_square_bracket_token, not_determining_if_between_numbers)
+TEST(left_square_bracket_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1[1", { Token::INTEGER, Token::LEFT_SQUARE_BRACKET, Token::INTEGER });
 	ExpectTokens("1.1[1", { Token::FLOAT, Token::LEFT_SQUARE_BRACKET, Token::INTEGER });

@@ -21,7 +21,7 @@ TEST(plus_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";+", { Token::SEMICOLON, Token::PLUS });
 }
 
-TEST(plus_token, determining_if_between_numbers)
+TEST(plus_token, determining_if_stay_between_numbers)
 {
 	ExpectTokens("1+1", { Token::INTEGER, Token::PLUS, Token::INTEGER });
 	ExpectTokens("1+1.1", { Token::INTEGER, Token::PLUS, Token::FLOAT });

@@ -21,7 +21,7 @@ TEST(private_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";private", { Token::SEMICOLON, Token::PRIVATE });
 }
 
-TEST(private_token, not_determining_if_between_numbers)
+TEST(private_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1private1", { Token::UNKNOWN });
 	ExpectTokens("1private1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

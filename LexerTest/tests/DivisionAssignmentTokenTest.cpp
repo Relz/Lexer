@@ -21,7 +21,7 @@ TEST(division_assignment_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";/=", { Token::SEMICOLON, Token::DIVISION_ASSIGNMENT });
 }
 
-TEST(division_assignment_token, determining_if_between_numbers)
+TEST(division_assignment_token, determining_if_stay_between_numbers)
 {
 	ExpectTokens("1/=1", { Token::INTEGER, Token::DIVISION_ASSIGNMENT, Token::INTEGER });
 	ExpectTokens("1/=1.1", { Token::INTEGER, Token::DIVISION_ASSIGNMENT, Token::FLOAT });

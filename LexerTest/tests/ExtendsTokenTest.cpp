@@ -21,7 +21,7 @@ TEST(extends_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";extends", { Token::SEMICOLON, Token::EXTENDS });
 }
 
-TEST(extends_token, not_determining_if_between_numbers)
+TEST(extends_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1extends1", { Token::UNKNOWN });
 	ExpectTokens("1extends1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

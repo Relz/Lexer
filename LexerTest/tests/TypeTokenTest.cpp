@@ -49,7 +49,7 @@ TEST(type_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";Array", { Token::SEMICOLON, Token::TYPE });
 }
 
-TEST(type_token, not_determining_if_between_numbers)
+TEST(type_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1Integer1", { Token::UNKNOWN });
 	ExpectTokens("1Integer1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

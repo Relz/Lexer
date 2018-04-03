@@ -49,6 +49,7 @@ ADD_EXECUTABLE(LexerTest
 		LeftCurlyBracketTokenTest.cpp
 		RightCurlyBracketTokenTest.cpp
 		TypeTokenTest.cpp
-		IdentifierTokenTest.cpp)
+		IdentifierTokenTest.cpp
+		StringLiteralTokenTest.cpp)
 
 TARGET_LINK_LIBRARIES(LexerTest gtest gtest_main Lexer)

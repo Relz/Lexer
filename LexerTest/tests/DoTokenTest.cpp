@@ -21,7 +21,7 @@ TEST(do_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";do", { Token::SEMICOLON, Token::DO });
 }
 
-TEST(do_token, not_determining_if_between_numbers)
+TEST(do_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1do1", { Token::UNKNOWN });
 	ExpectTokens("1do1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

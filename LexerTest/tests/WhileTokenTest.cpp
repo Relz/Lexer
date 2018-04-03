@@ -21,7 +21,7 @@ TEST(while_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";while", { Token::SEMICOLON, Token::WHILE });
 }
 
-TEST(while_token, not_determining_if_between_numbers)
+TEST(while_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1while1", { Token::UNKNOWN });
 	ExpectTokens("1while1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

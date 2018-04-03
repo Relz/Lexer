@@ -21,7 +21,7 @@ TEST(less_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";<", { Token::SEMICOLON, Token::LESS });
 }
 
-TEST(less_token, determining_if_between_numbers)
+TEST(less_token, determining_if_stay_between_numbers)
 {
 	ExpectTokens("1<1", { Token::INTEGER, Token::LESS, Token::INTEGER });
 	ExpectTokens("1<1.1", { Token::INTEGER, Token::LESS, Token::FLOAT });

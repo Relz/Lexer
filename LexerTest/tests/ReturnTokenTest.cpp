@@ -21,7 +21,7 @@ TEST(return_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";return", { Token::SEMICOLON, Token::RETURN });
 }
 
-TEST(return_token, not_determining_if_between_numbers)
+TEST(return_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1return1", { Token::UNKNOWN });
 	ExpectTokens("1return1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });

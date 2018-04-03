@@ -26,7 +26,7 @@ TEST(identifier_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";id", { Token::SEMICOLON, Token::IDENTIFIER });
 }
 
-TEST(identifier_token, not_determining_if_between_numbers)
+TEST(identifier_token, not_determining_if_stay_between_numbers)
 {
 	ExpectTokens("1id1", { Token::UNKNOWN });
 	ExpectTokens("1id1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
