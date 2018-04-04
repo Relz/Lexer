@@ -31,6 +31,7 @@ bool Lexer::PopNextTokenInformation(TokenInformation & tokenInformation)
 
 bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 {
+	bool tokenDetermined = false;
 	StreamString scanned;
 	StreamString delimiter;
 	std::string lastScannedString;
@@ -57,7 +58,7 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 				std::make_move_iterator(delimiter.string.end()));
 			continue;
 		}
-		bool tokenDetermined = false;
+		tokenDetermined = false;
 		if (!scanned.string.empty())
 		{
 			Token scannedStringToken;
@@ -76,6 +77,14 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 		{
 			break;
 		}
+	}
+	if (!tokenDetermined && !lastScannedString.empty())
+	{
+		scanned.string.insert(
+				scanned.string.begin(),
+				std::make_move_iterator(lastScannedString.begin()),
+				std::make_move_iterator(lastScannedString.end()));
+		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_inputFileName));
 	}
 	if (m_tokenInformations.empty())
 	{

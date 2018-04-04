@@ -31,6 +31,12 @@ TEST(integer_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";16_F", { Token::SEMICOLON, Token::INTEGER });
 }
 
+TEST(integer_token, not_determining_if_not_completed)
+{
+	ExpectTokens("2_", { Token::UNKNOWN });
+	ExpectTokens("16_", { Token::UNKNOWN });
+}
+
 TEST(integer_token, not_determining_if_part_of_string_literal)
 {
 	ExpectTokens("\"1\"", { Token::STRING_LITERAL });

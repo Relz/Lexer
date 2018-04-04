@@ -31,6 +31,13 @@ TEST(float_token, determining_if_stay_near_delimiter)
 	ExpectTokens(";16_F.A", { Token::SEMICOLON, Token::FLOAT });
 }
 
+TEST(float_token, not_determining_if_not_completed)
+{
+	ExpectTokens("1.", { Token::UNKNOWN });
+	ExpectTokens("2_1.", { Token::UNKNOWN });
+	ExpectTokens("16_F.", { Token::UNKNOWN });
+}
+
 TEST(float_token, not_determining_if_part_of_string_literal)
 {
 	ExpectTokens("\"1.1\"", { Token::STRING_LITERAL });

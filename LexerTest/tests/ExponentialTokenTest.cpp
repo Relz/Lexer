@@ -118,6 +118,49 @@ TEST(exponential_token, not_determining_if_no_underscore_before_exponent_charact
 	ExpectTokens(";16_F.AE+1", { Token::SEMICOLON, Token::FLOAT, Token::PLUS, Token::INTEGER });
 }
 
+TEST(exponential_token, not_determining_if_not_completed)
+{
+	ExpectTokens("1_E+", { Token::UNKNOWN });
+	ExpectTokens("1_E-", { Token::UNKNOWN });
+	ExpectTokens("1.1_E+", { Token::UNKNOWN });
+	ExpectTokens("1.1_E-", { Token::UNKNOWN });
+	ExpectTokens("2_1_E+", { Token::UNKNOWN });
+	ExpectTokens("2_1_E-", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_E+", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_E-", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_E+", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_E-", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_E+", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_E-", { Token::UNKNOWN });
+
+	ExpectTokens("1_E", { Token::UNKNOWN });
+	ExpectTokens("1.1_E", { Token::UNKNOWN });
+	ExpectTokens("2_1_E", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_E", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_E", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_E", { Token::UNKNOWN });
+
+	ExpectTokens("1_", { Token::UNKNOWN });
+	ExpectTokens("1.1_", { Token::UNKNOWN });
+	ExpectTokens("2_1_", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_", { Token::UNKNOWN });
+
+	ExpectTokens("1_E+1.", { Token::UNKNOWN });
+	ExpectTokens("1_E-1.", { Token::UNKNOWN });
+	ExpectTokens("1.1_E+1.", { Token::UNKNOWN });
+	ExpectTokens("1.1_E-1.", { Token::UNKNOWN });
+	ExpectTokens("2_1_E+1.", { Token::UNKNOWN });
+	ExpectTokens("2_1_E-1.", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_E+1.", { Token::UNKNOWN });
+	ExpectTokens("2_1.0_E-1.", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_E+1.", { Token::UNKNOWN });
+	ExpectTokens("16_F.A_E-1.", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_E+1.", { Token::UNKNOWN });
+	ExpectTokens("16_F.0A_E-1.", { Token::UNKNOWN });
+}
+
 TEST(exponential_token, not_determining_if_part_of_string_literal)
 {
 	ExpectTokens("\"1_E+1\"", { Token::STRING_LITERAL });

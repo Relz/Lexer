@@ -6,6 +6,7 @@ using namespace std;
 
 TEST(identifier_token, determining_if_stay_alone)
 {
+	ExpectTokens("_", { Token::IDENTIFIER });
 	ExpectTokens("id", { Token::IDENTIFIER });
 	ExpectTokens("_id", { Token::IDENTIFIER });
 	ExpectTokens("_id_", { Token::IDENTIFIER });

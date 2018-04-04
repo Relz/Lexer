@@ -1,5 +1,6 @@
 #include "Constant.h"
 #include "Lexer/Lexer.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include <iostream>
 
 int main(int argc, char * argv[])
