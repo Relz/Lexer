@@ -36,16 +36,16 @@ TEST(string_literal_token, determining_if_stay_between_numbers)
 
 TEST(string_literal_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens(R"(//"")", { });
-	ExpectTokens(R"(// "" )", { });
-	ExpectTokens(R"(//1""1)", { });
-	ExpectTokens(R"(//;"";)", { });
-	ExpectTokens(R"(/*""*/)", { });
-	ExpectTokens(R"(/* "" */)", { });
-	ExpectTokens(R"(/*1""1*/)", { });
-	ExpectTokens(R"(/*;"";*/)", { });
-	ExpectTokens(R"(/*"")", { });
-	ExpectTokens(R"(/* "" )", { });
-	ExpectTokens(R"(/*1""1)", { });
-	ExpectTokens(R"(/*;"";)", { });
+	ExpectTokens(R"(//"")", { Token::LINE_COMMENT });
+	ExpectTokens(R"(// "" )", { Token::LINE_COMMENT });
+	ExpectTokens(R"(//1""1)", { Token::LINE_COMMENT });
+	ExpectTokens(R"(//;"";)", { Token::LINE_COMMENT });
+	ExpectTokens(R"(/*""*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/* "" */)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*1""1*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*;"";*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*"")", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/* "" )", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*1""1)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*;"";)", { Token::BLOCK_COMMENT });
 }

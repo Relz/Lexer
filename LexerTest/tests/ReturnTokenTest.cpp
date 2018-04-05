@@ -41,16 +41,16 @@ TEST(return_token, not_determining_if_part_of_string_literal)
 
 TEST(return_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//return", { });
-	ExpectTokens("// return ", { });
-	ExpectTokens("//1return1", { });
-	ExpectTokens("//;return;", { });
-	ExpectTokens("/*return*/", { });
-	ExpectTokens("/* return */", { });
-	ExpectTokens("/*1return1*/", { });
-	ExpectTokens("/*;return;*/", { });
-	ExpectTokens("/*return", { });
-	ExpectTokens("/* return ", { });
-	ExpectTokens("/*1return1", { });
-	ExpectTokens("/*;return;", { });
+	ExpectTokens("//return", { Token::LINE_COMMENT });
+	ExpectTokens("// return ", { Token::LINE_COMMENT });
+	ExpectTokens("//1return1", { Token::LINE_COMMENT });
+	ExpectTokens("//;return;", { Token::LINE_COMMENT });
+	ExpectTokens("/*return*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* return */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1return1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;return;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*return", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* return ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1return1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;return;", { Token::BLOCK_COMMENT });
 }

@@ -52,39 +52,39 @@ TEST(integer_token, not_determining_if_part_of_string_literal)
 
 TEST(integer_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//1", {});
-	ExpectTokens("// 1 ", {});
-	ExpectTokens("//;1;", {});
-	ExpectTokens("/*1*/", {});
-	ExpectTokens("/* 1 */", {});
-	ExpectTokens("/*1*/", {});
-	ExpectTokens("/*;1;*/", {});
-	ExpectTokens("/*1", {});
-	ExpectTokens("/* 1 ", {});
-	ExpectTokens("/*1", {});
-	ExpectTokens("/*;1;", {});
+	ExpectTokens("//1", { Token::LINE_COMMENT });
+	ExpectTokens("// 1 ", { Token::LINE_COMMENT });
+	ExpectTokens("//;1;", { Token::LINE_COMMENT });
+	ExpectTokens("/*1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 1 */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;1;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 1 ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;1;", { Token::BLOCK_COMMENT });
 
-	ExpectTokens("//2_1", {});
-	ExpectTokens("// 2_1 ", {});
-	ExpectTokens("//;2_1;", {});
-	ExpectTokens("/*2_1*/", {});
-	ExpectTokens("/* 2_1 */", {});
-	ExpectTokens("/*2_1*/", {});
-	ExpectTokens("/*;2_1;*/", {});
-	ExpectTokens("/*2_1", {});
-	ExpectTokens("/* 2_1 ", {});
-	ExpectTokens("/*2_1", {});
-	ExpectTokens("/*;2_1;", {});
+	ExpectTokens("//2_1", { Token::LINE_COMMENT });
+	ExpectTokens("// 2_1 ", { Token::LINE_COMMENT });
+	ExpectTokens("//;2_1;", { Token::LINE_COMMENT });
+	ExpectTokens("/*2_1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 2_1 */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*2_1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;2_1;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*2_1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 2_1 ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*2_1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;2_1;", { Token::BLOCK_COMMENT });
 
-	ExpectTokens("//16_F", {});
-	ExpectTokens("// 16_F ", {});
-	ExpectTokens("//;16_F;", {});
-	ExpectTokens("/*16_F*/", {});
-	ExpectTokens("/* 16_F */", {});
-	ExpectTokens("/*16_F*/", {});
-	ExpectTokens("/*;16_F;*/", {});
-	ExpectTokens("/*16_F", {});
-	ExpectTokens("/* 16_F ", {});
-	ExpectTokens("/*16_F", {});
-	ExpectTokens("/*;16_F;", {});
+	ExpectTokens("//16_F", { Token::LINE_COMMENT });
+	ExpectTokens("// 16_F ", { Token::LINE_COMMENT });
+	ExpectTokens("//;16_F;", { Token::LINE_COMMENT });
+	ExpectTokens("/*16_F*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 16_F */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*16_F*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;16_F;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*16_F", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* 16_F ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*16_F", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;16_F;", { Token::BLOCK_COMMENT });
 }

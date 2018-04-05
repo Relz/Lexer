@@ -41,16 +41,16 @@ TEST(character_literal_token, not_determining_if_has_length_not_equal_to_one)
 
 TEST(character_literal_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens(R"(//'1')", { });
-	ExpectTokens(R"(// '1' )", { });
-	ExpectTokens(R"(//1'1'1)", { });
-	ExpectTokens(R"(//;'1';)", { });
-	ExpectTokens(R"(/*'1'*/)", { });
-	ExpectTokens(R"(/* '1' */)", { });
-	ExpectTokens(R"(/*1'1'1*/)", { });
-	ExpectTokens(R"(/*;'1';*/)", { });
-	ExpectTokens(R"(/*'1')", { });
-	ExpectTokens(R"(/* '1' )", { });
-	ExpectTokens(R"(/*1'1'1)", { });
-	ExpectTokens(R"(/*;'1';)", { });
+	ExpectTokens(R"(//'1')", { Token::LINE_COMMENT });
+	ExpectTokens(R"(// '1' )", { Token::LINE_COMMENT });
+	ExpectTokens(R"(//1'1'1)", { Token::LINE_COMMENT });
+	ExpectTokens(R"(//;'1';)", { Token::LINE_COMMENT });
+	ExpectTokens(R"(/*'1'*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/* '1' */)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*1'1'1*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*;'1';*/)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*'1')", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/* '1' )", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*1'1'1)", { Token::BLOCK_COMMENT });
+	ExpectTokens(R"(/*;'1';)", { Token::BLOCK_COMMENT });
 }

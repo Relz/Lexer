@@ -46,16 +46,16 @@ TEST(comma_token, not_determining_if_part_of_string_literal)
 
 TEST(comma_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//,", { });
-	ExpectTokens("// , ", { });
-	ExpectTokens("//1,1", { });
-	ExpectTokens("//;,;", { });
-	ExpectTokens("/*,*/", { });
-	ExpectTokens("/* , */", { });
-	ExpectTokens("/*1,1*/", { });
-	ExpectTokens("/*;,;*/", { });
-	ExpectTokens("/*,", { });
-	ExpectTokens("/* , ", { });
-	ExpectTokens("/*1,1", { });
-	ExpectTokens("/*;,;", { });
+	ExpectTokens("//,", { Token::LINE_COMMENT });
+	ExpectTokens("// , ", { Token::LINE_COMMENT });
+	ExpectTokens("//1,1", { Token::LINE_COMMENT });
+	ExpectTokens("//;,;", { Token::LINE_COMMENT });
+	ExpectTokens("/*,*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* , */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1,1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;,;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*,", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* , ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1,1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;,;", { Token::BLOCK_COMMENT });
 }

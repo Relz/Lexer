@@ -41,16 +41,16 @@ TEST(while_token, not_determining_if_part_of_string_literal)
 
 TEST(while_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//while", {});
-	ExpectTokens("// while ", {});
-	ExpectTokens("//1while1", {});
-	ExpectTokens("//;while;", {});
-	ExpectTokens("/*while*/", {});
-	ExpectTokens("/* while */", {});
-	ExpectTokens("/*1while1*/", {});
-	ExpectTokens("/*;while;*/", {});
-	ExpectTokens("/*while", {});
-	ExpectTokens("/* while ", {});
-	ExpectTokens("/*1while1", {});
-	ExpectTokens("/*;while;", {});
+	ExpectTokens("//while", { Token::LINE_COMMENT });
+	ExpectTokens("// while ", { Token::LINE_COMMENT });
+	ExpectTokens("//1while1", { Token::LINE_COMMENT });
+	ExpectTokens("//;while;", { Token::LINE_COMMENT });
+	ExpectTokens("/*while*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* while */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1while1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;while;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*while", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* while ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1while1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;while;", { Token::BLOCK_COMMENT });
 }

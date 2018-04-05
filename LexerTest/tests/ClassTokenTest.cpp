@@ -41,16 +41,16 @@ TEST(class_token, not_determining_if_part_of_string_literal)
 
 TEST(class_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//class", { });
-	ExpectTokens("// class ", { });
-	ExpectTokens("//1class1", { });
-	ExpectTokens("//;class;", { });
-	ExpectTokens("/*class*/", { });
-	ExpectTokens("/* class */", { });
-	ExpectTokens("/*1class1*/", { });
-	ExpectTokens("/*;class;*/", { });
-	ExpectTokens("/*class", { });
-	ExpectTokens("/* class ", { });
-	ExpectTokens("/*1class1", { });
-	ExpectTokens("/*;class;", { });
+	ExpectTokens("//class", { Token::LINE_COMMENT });
+	ExpectTokens("// class ", { Token::LINE_COMMENT });
+	ExpectTokens("//1class1", { Token::LINE_COMMENT });
+	ExpectTokens("//;class;", { Token::LINE_COMMENT });
+	ExpectTokens("/*class*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* class */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1class1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;class;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*class", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* class ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1class1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;class;", { Token::BLOCK_COMMENT });
 }

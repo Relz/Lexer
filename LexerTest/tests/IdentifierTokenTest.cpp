@@ -47,16 +47,16 @@ TEST(identifier_token, not_determining_if_part_of_string_literal)
 
 TEST(identifier_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//id", { });
-	ExpectTokens("// id ", { });
-	ExpectTokens("//1id1", { });
-	ExpectTokens("//;id;", { });
-	ExpectTokens("/*id*/", { });
-	ExpectTokens("/* id */", { });
-	ExpectTokens("/*1id1*/", { });
-	ExpectTokens("/*;id;*/", { });
-	ExpectTokens("/*id", { });
-	ExpectTokens("/* id ", { });
-	ExpectTokens("/*1id1", { });
-	ExpectTokens("/*;id;", { });
+	ExpectTokens("//id", { Token::LINE_COMMENT });
+	ExpectTokens("// id ", { Token::LINE_COMMENT });
+	ExpectTokens("//1id1", { Token::LINE_COMMENT });
+	ExpectTokens("//;id;", { Token::LINE_COMMENT });
+	ExpectTokens("/*id*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* id */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1id1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;id;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*id", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* id ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1id1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;id;", { Token::BLOCK_COMMENT });
 }

@@ -41,16 +41,16 @@ TEST(constructor_token, not_determining_if_part_of_string_literal)
 
 TEST(constructor_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//Constructor", { });
-	ExpectTokens("// Constructor ", { });
-	ExpectTokens("//1Constructor1", { });
-	ExpectTokens("//;Constructor;", { });
-	ExpectTokens("/*Constructor*/", { });
-	ExpectTokens("/* Constructor */", { });
-	ExpectTokens("/*1Constructor1*/", { });
-	ExpectTokens("/*;Constructor;*/", { });
-	ExpectTokens("/*Constructor", { });
-	ExpectTokens("/* Constructor ", { });
-	ExpectTokens("/*1Constructor1", { });
-	ExpectTokens("/*;Constructor;", { });
+	ExpectTokens("//Constructor", { Token::LINE_COMMENT });
+	ExpectTokens("// Constructor ", { Token::LINE_COMMENT });
+	ExpectTokens("//1Constructor1", { Token::LINE_COMMENT });
+	ExpectTokens("//;Constructor;", { Token::LINE_COMMENT });
+	ExpectTokens("/*Constructor*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* Constructor */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1Constructor1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;Constructor;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*Constructor", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* Constructor ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1Constructor1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;Constructor;", { Token::BLOCK_COMMENT });
 }

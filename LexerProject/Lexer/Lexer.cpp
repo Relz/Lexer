@@ -37,9 +37,8 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 	std::string lastScannedString;
 	while (m_input.Scan(SCANNER_DELIMITERS, scanned, delimiter))
 	{
-		if (TryToSkipComment(delimiter.string))
+		if (TryToCreateComment(delimiter.string, delimiter.string))
 		{
-			continue;
 		}
 		else if (TryToCreateLiteral(delimiter.string, delimiter.string))
 		{
@@ -62,7 +61,15 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 		if (!scanned.string.empty())
 		{
 			Token scannedStringToken;
-			DetermineScannedStringToken(scanned.string, scannedStringToken);
+			DetermineScannedStringToken(scanned.string, scannedStringToken, m_customTypes);
+			if (scannedStringToken == Token::IDENTIFIER
+				&& !m_tokenInformations.empty()
+				&& m_tokenInformations.back().GetToken() == Token::CLASS
+			)
+			{
+				scannedStringToken = Token::TYPE;
+				m_customTypes.emplace(scanned.string);
+			}
 			m_tokenInformations.emplace_back(TokenInformation(scannedStringToken, scanned, m_inputFileName));
 			tokenDetermined = true;
 		}
@@ -93,16 +100,22 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 	return PopNextTokenInformation(tokenInformation);
 }
 
-bool Lexer::TryToSkipComment(std::string const & delimiterString)
+bool Lexer::TryToCreateComment(std::string const & delimiterString, std::string & comment)
 {
 	if (delimiterString == Constant::Comment::LINE)
 	{
-		m_input.SkipLine();
+		m_input.SkipLine(comment);
+		comment.insert(0, Constant::Comment::LINE);
 		return true;
 	}
 	if (delimiterString == Constant::Comment::BLOCK_BEGINNING)
 	{
-		SkipBlockComment();
+		if (m_input.SkipUntilStrings({ Constant::Comment::BLOCK_ENDING }, comment))
+		{
+			comment.append(Constant::Comment::BLOCK_ENDING);
+			m_input.SkipArguments<char>(Constant::Comment::BLOCK_ENDING.length());
+		}
+		comment.insert(0, Constant::Comment::BLOCK_BEGINNING);
 		return true;
 	}
 	return false;
@@ -141,16 +154,9 @@ bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string cons
 				&& DetermineNumberToken(scannedString.substr(0, scannedString.length() - 2), token)));
 }
 
-void Lexer::SkipBlockComment()
-{
-	std::string skippedString;
-	if (m_input.SkipUntilStrings({ Constant::Comment::BLOCK_ENDING }, skippedString))
-	{
-		m_input.SkipArguments<char>(Constant::Comment::BLOCK_ENDING.length());
-	}
-}
-
-bool Lexer::DetermineScannedStringToken(std::string const & scannedString, Token & token)
+bool Lexer::DetermineScannedStringToken(
+		std::string const & scannedString, Token & token, std::unordered_set<std::string> const & customTypes
+)
 {
 	token = Token::UNKNOWN;
 	if (scannedString.empty())
@@ -161,7 +167,7 @@ bool Lexer::DetermineScannedStringToken(std::string const & scannedString, Token
 	{
 		token = Token::IDENTIFIER;
 		if (TokenExtensions::TryToGetKeywordToken(scannedString, token)
-			|| TokenExtensions::TryToGetTypeToken(scannedString, token))
+			|| TokenExtensions::TryToGetTypeToken(scannedString, token, customTypes))
 		{
 		}
 		return true;
@@ -313,7 +319,8 @@ bool Lexer::DetermineDelimiterToken(std::string const & delimiterString, Token &
 {
 	token = Token::UNKNOWN;
 	return TryToAddLiteralToken(delimiterString, token)
-		|| TokenExtensions::TryToGetDelimiterToken(delimiterString, token);
+			|| TryToAddCommentToken(delimiterString, token)
+			|| TokenExtensions::TryToGetDelimiterToken(delimiterString, token);
 }
 
 bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & token)
@@ -326,6 +333,22 @@ bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & to
 	else if (delimiterString.front() == Constant::Parentheses::DOUBLE_QUOTE_CHARACTER)
 	{
 		token = Token::STRING_LITERAL;
+		return true;
+	}
+	return false;
+}
+
+bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & token)
+{
+	std::string commentBeginning = delimiterString.substr(0, 2);
+	if (commentBeginning == Constant::Comment::LINE)
+	{
+		token = Token::LINE_COMMENT;
+		return true;
+	}
+	else if (commentBeginning == Constant::Comment::BLOCK_BEGINNING)
+	{
+		token = Token::BLOCK_COMMENT;
 		return true;
 	}
 	return false;

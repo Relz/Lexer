@@ -41,16 +41,16 @@ TEST(if_token, not_determining_if_part_of_string_literal)
 
 TEST(if_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//if", { });
-	ExpectTokens("// if ", { });
-	ExpectTokens("//1if1", { });
-	ExpectTokens("//;if;", { });
-	ExpectTokens("/*if*/", { });
-	ExpectTokens("/* if */", { });
-	ExpectTokens("/*1if1*/", { });
-	ExpectTokens("/*;if;*/", { });
-	ExpectTokens("/*if", { });
-	ExpectTokens("/* if ", { });
-	ExpectTokens("/*1if1", { });
-	ExpectTokens("/*;if;", { });
+	ExpectTokens("//if", { Token::LINE_COMMENT });
+	ExpectTokens("// if ", { Token::LINE_COMMENT });
+	ExpectTokens("//1if1", { Token::LINE_COMMENT });
+	ExpectTokens("//;if;", { Token::LINE_COMMENT });
+	ExpectTokens("/*if*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* if */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1if1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;if;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*if", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* if ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1if1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;if;", { Token::BLOCK_COMMENT });
 }

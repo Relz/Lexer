@@ -41,16 +41,16 @@ TEST(implements_token, not_determining_if_part_of_string_literal)
 
 TEST(implements_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//implements", { });
-	ExpectTokens("// implements ", { });
-	ExpectTokens("//1implements1", { });
-	ExpectTokens("//;implements;", { });
-	ExpectTokens("/*implements*/", { });
-	ExpectTokens("/* implements */", { });
-	ExpectTokens("/*1implements1*/", { });
-	ExpectTokens("/*;implements;*/", { });
-	ExpectTokens("/*implements", { });
-	ExpectTokens("/* implements ", { });
-	ExpectTokens("/*1implements1", { });
-	ExpectTokens("/*;implements;", { });
+	ExpectTokens("//implements", { Token::LINE_COMMENT });
+	ExpectTokens("// implements ", { Token::LINE_COMMENT });
+	ExpectTokens("//1implements1", { Token::LINE_COMMENT });
+	ExpectTokens("//;implements;", { Token::LINE_COMMENT });
+	ExpectTokens("/*implements*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* implements */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1implements1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;implements;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*implements", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* implements ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1implements1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;implements;", { Token::BLOCK_COMMENT });
 }

@@ -41,16 +41,16 @@ TEST(private_token, not_determining_if_part_of_string_literal)
 
 TEST(private_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//private", { });
-	ExpectTokens("// private ", { });
-	ExpectTokens("//1private1", { });
-	ExpectTokens("//;private;", { });
-	ExpectTokens("/*private*/", { });
-	ExpectTokens("/* private */", { });
-	ExpectTokens("/*1private1*/", { });
-	ExpectTokens("/*;private;*/", { });
-	ExpectTokens("/*private", { });
-	ExpectTokens("/* private ", { });
-	ExpectTokens("/*1private1", { });
-	ExpectTokens("/*;private;", { });
+	ExpectTokens("//private", { Token::LINE_COMMENT });
+	ExpectTokens("// private ", { Token::LINE_COMMENT });
+	ExpectTokens("//1private1", { Token::LINE_COMMENT });
+	ExpectTokens("//;private;", { Token::LINE_COMMENT });
+	ExpectTokens("/*private*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* private */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1private1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;private;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*private", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* private ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1private1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;private;", { Token::BLOCK_COMMENT });
 }

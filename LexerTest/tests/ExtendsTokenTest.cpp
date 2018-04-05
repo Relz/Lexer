@@ -41,16 +41,16 @@ TEST(extends_token, not_determining_if_part_of_string_literal)
 
 TEST(extends_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//extends", { });
-	ExpectTokens("// extends ", { });
-	ExpectTokens("//1extends1", { });
-	ExpectTokens("//;extends;", { });
-	ExpectTokens("/*extends*/", { });
-	ExpectTokens("/* extends */", { });
-	ExpectTokens("/*1extends1*/", { });
-	ExpectTokens("/*;extends;*/", { });
-	ExpectTokens("/*extends", { });
-	ExpectTokens("/* extends ", { });
-	ExpectTokens("/*1extends1", { });
-	ExpectTokens("/*;extends;", { });
+	ExpectTokens("//extends", { Token::LINE_COMMENT });
+	ExpectTokens("// extends ", { Token::LINE_COMMENT });
+	ExpectTokens("//1extends1", { Token::LINE_COMMENT });
+	ExpectTokens("//;extends;", { Token::LINE_COMMENT });
+	ExpectTokens("/*extends*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* extends */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1extends1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;extends;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*extends", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* extends ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1extends1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;extends;", { Token::BLOCK_COMMENT });
 }

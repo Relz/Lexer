@@ -41,16 +41,16 @@ TEST(else_token, not_determining_if_part_of_string_literal)
 
 TEST(else_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//else", { });
-	ExpectTokens("// else ", { });
-	ExpectTokens("//1else1", { });
-	ExpectTokens("//;else;", { });
-	ExpectTokens("/*else*/", { });
-	ExpectTokens("/* else */", { });
-	ExpectTokens("/*1else1*/", { });
-	ExpectTokens("/*;else;*/", { });
-	ExpectTokens("/*else", { });
-	ExpectTokens("/* else ", { });
-	ExpectTokens("/*1else1", { });
-	ExpectTokens("/*;else;", { });
+	ExpectTokens("//else", { Token::LINE_COMMENT });
+	ExpectTokens("// else ", { Token::LINE_COMMENT });
+	ExpectTokens("//1else1", { Token::LINE_COMMENT });
+	ExpectTokens("//;else;", { Token::LINE_COMMENT });
+	ExpectTokens("/*else*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* else */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1else1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;else;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*else", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* else ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1else1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;else;", { Token::BLOCK_COMMENT });
 }

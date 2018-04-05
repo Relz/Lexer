@@ -112,6 +112,8 @@ namespace Constant
 
 	namespace Name
 	{
+		static std::string const UNKNOWN = "Unknown";
+
 		namespace Operator
 		{
 			namespace Arithmetic
@@ -187,7 +189,8 @@ namespace Constant
 		static std::string const IDENTIFIER = "Identifier";
 		static std::string const STRING_LITERAL = "String literal";
 		static std::string const CHARACTER_LITERAL = "Character literal";
-		static std::string const UNKNOWN = "Unknown";
+		static std::string const LINE_COMMENT = "Line comment";
+		static std::string const BLOCK_COMMENT = "Block comment";
 	}
 
 	namespace Regex

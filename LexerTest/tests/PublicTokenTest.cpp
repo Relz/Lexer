@@ -41,16 +41,16 @@ TEST(public_token, not_determining_if_part_of_string_literal)
 
 TEST(public_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//public", { });
-	ExpectTokens("// public ", { });
-	ExpectTokens("//1public1", { });
-	ExpectTokens("//;public;", { });
-	ExpectTokens("/*public*/", { });
-	ExpectTokens("/* public */", { });
-	ExpectTokens("/*1public1*/", { });
-	ExpectTokens("/*;public;*/", { });
-	ExpectTokens("/*public", { });
-	ExpectTokens("/* public ", { });
-	ExpectTokens("/*1public1", { });
-	ExpectTokens("/*;public;", { });
+	ExpectTokens("//public", { Token::LINE_COMMENT });
+	ExpectTokens("// public ", { Token::LINE_COMMENT });
+	ExpectTokens("//1public1", { Token::LINE_COMMENT });
+	ExpectTokens("//;public;", { Token::LINE_COMMENT });
+	ExpectTokens("/*public*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* public */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1public1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;public;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*public", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* public ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1public1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;public;", { Token::BLOCK_COMMENT });
 }

@@ -20,9 +20,10 @@ bool TokenExtensions::TryToGetKeywordToken(std::string const & str, Token & toke
 	return true;
 }
 
-bool TokenExtensions::TryToGetTypeToken(std::string const & str, Token & token)
+bool TokenExtensions::TryToGetTypeToken(
+	std::string const & str, Token & token, std::unordered_set<std::string> const & customTypes)
 {
-	if (TYPES.find(str) == TYPES.end())
+	if (TYPES.find(str) == TYPES.end() && customTypes.find(str) == customTypes.end())
 	{
 		return false;
 	}
@@ -35,7 +36,7 @@ std::string TokenExtensions::ToString(Token token)
 	return TOKEN_TO_NAME.find(token) == TOKEN_TO_NAME.end() ? "" : TOKEN_TO_NAME.at(token);
 }
 
-std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITER_TOKEN {
+std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITER_TOKEN{
 	{ Constant::Operator::Arithmetic::DIVISION, Token::DIVISION },
 	{ Constant::Operator::Arithmetic::MINUS, Token::MINUS },
 	{ Constant::Operator::Arithmetic::MULTIPLY, Token::MULTIPLY },
@@ -67,7 +68,7 @@ std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITE
 	{ Constant::Parentheses::SQUARE_BRACKET.RIGHT, Token::RIGHT_SQUARE_BRACKET }
 };
 
-std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_TOKEN {
+std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_TOKEN{
 	{ Constant::Keyword::CLASS, Token::CLASS },
 	{ Constant::Keyword::CONSTRUCTOR, Token::CONSTRUCTOR },
 	{ Constant::Keyword::DO, Token::DO },
@@ -85,12 +86,18 @@ std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_
 	{ Constant::Keyword::ELSE, Token::ELSE }
 };
 
-std::unordered_set<std::string> const TokenExtensions::TYPES {
-	Constant::CoreType::Complex::ARRAY,  Constant::CoreType::Number::DOUBLE,  Constant::CoreType::Number::FLOAT,
-	Constant::CoreType::Number::INTEGER, Constant::CoreType::Complex::STRING, Constant::CoreType::VOID
+std::unordered_set<std::string> const TokenExtensions::TYPES{
+	Constant::CoreType::Complex::ARRAY,
+	Constant::CoreType::Number::DOUBLE,
+	Constant::CoreType::Number::FLOAT,
+	Constant::CoreType::Number::INTEGER,
+	Constant::CoreType::Complex::STRING,
+	Constant::CoreType::VOID
 };
 
-std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME {
+std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME{
+	{ Token::UNKNOWN, Constant::Name::UNKNOWN },
+
 	{ Token::DIVISION, Constant::Name::Operator::Arithmetic::DIVISION },
 	{ Token::MINUS, Constant::Name::Operator::Arithmetic::MINUS },
 	{ Token::MULTIPLY, Constant::Name::Operator::Arithmetic::MULTIPLY },
@@ -145,5 +152,6 @@ std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME {
 	{ Token::IDENTIFIER, Constant::Name::IDENTIFIER },
 	{ Token::STRING_LITERAL, Constant::Name::STRING_LITERAL },
 	{ Token::CHARACTER_LITERAL, Constant::Name::CHARACTER_LITERAL },
-	{ Token::UNKNOWN, Constant::Name::UNKNOWN }
+	{ Token::LINE_COMMENT, Constant::Name::LINE_COMMENT },
+	{ Token::BLOCK_COMMENT, Constant::Name::BLOCK_COMMENT }
 };

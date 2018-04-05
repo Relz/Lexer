@@ -41,16 +41,16 @@ TEST(not_initialized_token, not_determining_if_part_of_string_literal)
 
 TEST(not_initialized_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//NULL", { });
-	ExpectTokens("// NULL ", { });
-	ExpectTokens("//1NULL1", { });
-	ExpectTokens("//;NULL;", { });
-	ExpectTokens("/*NULL*/", { });
-	ExpectTokens("/* NULL */", { });
-	ExpectTokens("/*1NULL1*/", { });
-	ExpectTokens("/*;NULL;*/", { });
-	ExpectTokens("/*NULL", { });
-	ExpectTokens("/* NULL ", { });
-	ExpectTokens("/*1NULL1", { });
-	ExpectTokens("/*;NULL;", { });
+	ExpectTokens("//NULL", { Token::LINE_COMMENT });
+	ExpectTokens("// NULL ", { Token::LINE_COMMENT });
+	ExpectTokens("//1NULL1", { Token::LINE_COMMENT });
+	ExpectTokens("//;NULL;", { Token::LINE_COMMENT });
+	ExpectTokens("/*NULL*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* NULL */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1NULL1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;NULL;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*NULL", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* NULL ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1NULL1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;NULL;", { Token::BLOCK_COMMENT });
 }

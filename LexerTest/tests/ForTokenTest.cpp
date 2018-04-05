@@ -41,16 +41,16 @@ TEST(for_token, not_determining_if_part_of_string_literal)
 
 TEST(for_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//for", {});
-	ExpectTokens("// for ", {});
-	ExpectTokens("//1for1", {});
-	ExpectTokens("//;for;", {});
-	ExpectTokens("/*for*/", {});
-	ExpectTokens("/* for */", {});
-	ExpectTokens("/*1for1*/", {});
-	ExpectTokens("/*;for;*/", {});
-	ExpectTokens("/*for", {});
-	ExpectTokens("/* for ", {});
-	ExpectTokens("/*1for1", {});
-	ExpectTokens("/*;for;", {});
+	ExpectTokens("//for", { Token::LINE_COMMENT });
+	ExpectTokens("// for ", { Token::LINE_COMMENT });
+	ExpectTokens("//1for1", { Token::LINE_COMMENT });
+	ExpectTokens("//;for;", { Token::LINE_COMMENT });
+	ExpectTokens("/*for*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* for */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1for1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;for;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*for", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* for ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1for1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;for;", { Token::BLOCK_COMMENT });
 }

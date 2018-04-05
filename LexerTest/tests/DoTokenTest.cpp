@@ -41,16 +41,16 @@ TEST(do_token, not_determining_if_part_of_string_literal)
 
 TEST(do_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//do", { });
-	ExpectTokens("// do ", { });
-	ExpectTokens("//1do1", { });
-	ExpectTokens("//;do;", { });
-	ExpectTokens("/*do*/", { });
-	ExpectTokens("/* do */", { });
-	ExpectTokens("/*1do1*/", { });
-	ExpectTokens("/*;do;*/", { });
-	ExpectTokens("/*do", { });
-	ExpectTokens("/* do ", { });
-	ExpectTokens("/*1do1", { });
-	ExpectTokens("/*;do;", { });
+	ExpectTokens("//do", { Token::LINE_COMMENT });
+	ExpectTokens("// do ", { Token::LINE_COMMENT });
+	ExpectTokens("//1do1", { Token::LINE_COMMENT });
+	ExpectTokens("//;do;", { Token::LINE_COMMENT });
+	ExpectTokens("/*do*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* do */", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1do1*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;do;*/", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*do", { Token::BLOCK_COMMENT });
+	ExpectTokens("/* do ", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*1do1", { Token::BLOCK_COMMENT });
+	ExpectTokens("/*;do;", { Token::BLOCK_COMMENT });
 }
