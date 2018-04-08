@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,51 +6,90 @@ using namespace std;
 
 TEST(for_token, determining_if_stay_alone)
 {
-	ExpectTokens("for", { Token::FOR });
+	ExpectTokenInformations("for", { TokenInformation(Token::FOR, StreamString("for", StreamPosition())) });
 }
 
 TEST(for_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" for ", { Token::FOR });
-	ExpectTokens(";for;", { Token::SEMICOLON, Token::FOR, Token::SEMICOLON });
+	ExpectTokenInformations(" for ", { TokenInformation(Token::FOR, StreamString("for", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";for;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::FOR, StreamString("for", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 5))) });
 }
 
 TEST(for_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("for;", { Token::FOR, Token::SEMICOLON });
-	ExpectTokens(";for", { Token::SEMICOLON, Token::FOR });
+	ExpectTokenInformations(
+		"for;",
+		{ TokenInformation(Token::FOR, StreamString("for", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 4))) });
+	ExpectTokenInformations(
+		";for",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::FOR, StreamString("for", StreamPosition(1, 2))) });
 }
 
 TEST(for_token, not_determining_if_stay_between_numbers)
 {
-	ExpectTokens("1for1", { Token::UNKNOWN });
-	ExpectTokens("1for1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1.1for1", { Token::UNKNOWN });
-	ExpectTokens("1.1for1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1_E+1for1", { Token::UNKNOWN });
-	ExpectTokens("1for1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokenInformations("1for1", { TokenInformation(Token::UNKNOWN, StreamString("1for1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1for1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1for1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 6))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 7))) });
+	ExpectTokenInformations("1.1for1", { TokenInformation(Token::UNKNOWN, StreamString("1.1for1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1.1for1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1.1for1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 8))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 9))) });
+	ExpectTokenInformations(
+		"1_E+1for1", { TokenInformation(Token::UNKNOWN, StreamString("1_E+1for1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1for1_E+1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1for1_E", StreamPosition())),
+		  TokenInformation(Token::PLUS, StreamString("+", StreamPosition(1, 8))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 9))) });
 }
 
 TEST(for_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"for\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" for \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1for1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";for;\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("for")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("for")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" for ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" for ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1for1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1for1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";for;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";for;")", StreamPosition())) });
 }
 
 TEST(for_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//for", { Token::LINE_COMMENT });
-	ExpectTokens("// for ", { Token::LINE_COMMENT });
-	ExpectTokens("//1for1", { Token::LINE_COMMENT });
-	ExpectTokens("//;for;", { Token::LINE_COMMENT });
-	ExpectTokens("/*for*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* for */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1for1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;for;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*for", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* for ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1for1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;for;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations(
+		"//for", { TokenInformation(Token::LINE_COMMENT, StreamString("//for", StreamPosition())) });
+	ExpectTokenInformations(
+		"// for ", { TokenInformation(Token::LINE_COMMENT, StreamString("// for ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1for1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1for1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;for;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;for;", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*for*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*for*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* for */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* for */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1for1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1for1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;for;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;for;*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*for", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*for", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* for ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* for ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1for1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1for1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;for;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;for;", StreamPosition())) });
 }

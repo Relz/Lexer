@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,51 +6,93 @@ using namespace std;
 
 TEST(public_token, determining_if_stay_alone)
 {
-	ExpectTokens("public", { Token::PUBLIC });
+	ExpectTokenInformations("public", { TokenInformation(Token::PUBLIC, StreamString("public", StreamPosition())) });
 }
 
 TEST(public_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" public ", { Token::PUBLIC });
-	ExpectTokens(";public;", { Token::SEMICOLON, Token::PUBLIC, Token::SEMICOLON });
+	ExpectTokenInformations(
+		" public ", { TokenInformation(Token::PUBLIC, StreamString("public", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";public;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::PUBLIC, StreamString("public", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 8))) });
 }
 
 TEST(public_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("public;", { Token::PUBLIC, Token::SEMICOLON });
-	ExpectTokens(";public", { Token::SEMICOLON, Token::PUBLIC });
+	ExpectTokenInformations(
+		"public;",
+		{ TokenInformation(Token::PUBLIC, StreamString("public", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 7))) });
+	ExpectTokenInformations(
+		";public",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::PUBLIC, StreamString("public", StreamPosition(1, 2))) });
 }
 
 TEST(public_token, not_determining_if_stay_between_numbers)
 {
-	ExpectTokens("1public1", { Token::UNKNOWN });
-	ExpectTokens("1public1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1.1public1", { Token::UNKNOWN });
-	ExpectTokens("1.1public1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1_E+1public1", { Token::UNKNOWN });
-	ExpectTokens("1public1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokenInformations(
+		"1public1", { TokenInformation(Token::UNKNOWN, StreamString("1public1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1public1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1public1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 9))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 10))) });
+	ExpectTokenInformations(
+		"1.1public1", { TokenInformation(Token::UNKNOWN, StreamString("1.1public1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1.1public1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1.1public1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 11))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 12))) });
+	ExpectTokenInformations(
+		"1_E+1public1", { TokenInformation(Token::UNKNOWN, StreamString("1_E+1public1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1public1_E+1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1public1_E", StreamPosition())),
+		  TokenInformation(Token::PLUS, StreamString("+", StreamPosition(1, 11))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 12))) });
 }
 
 TEST(public_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"public\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" public \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1public1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";public;\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("public")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("public")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" public ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" public ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1public1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1public1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";public;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";public;")", StreamPosition())) });
 }
 
 TEST(public_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//public", { Token::LINE_COMMENT });
-	ExpectTokens("// public ", { Token::LINE_COMMENT });
-	ExpectTokens("//1public1", { Token::LINE_COMMENT });
-	ExpectTokens("//;public;", { Token::LINE_COMMENT });
-	ExpectTokens("/*public*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* public */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1public1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;public;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*public", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* public ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1public1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;public;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations(
+		"//public", { TokenInformation(Token::LINE_COMMENT, StreamString("//public", StreamPosition())) });
+	ExpectTokenInformations(
+		"// public ", { TokenInformation(Token::LINE_COMMENT, StreamString("// public ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1public1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1public1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;public;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;public;", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*public*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*public*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* public */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* public */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1public1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1public1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;public;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;public;*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*public", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*public", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* public ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* public ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1public1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1public1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;public;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;public;", StreamPosition())) });
 }

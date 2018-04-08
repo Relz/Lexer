@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,57 +6,94 @@ using namespace std;
 
 TEST(identifier_token, determining_if_stay_alone)
 {
-	ExpectTokens("_", { Token::IDENTIFIER });
-	ExpectTokens("id", { Token::IDENTIFIER });
-	ExpectTokens("_id", { Token::IDENTIFIER });
-	ExpectTokens("_id_", { Token::IDENTIFIER });
-	ExpectTokens("_i_d_", { Token::IDENTIFIER });
-	ExpectTokens("1id", { Token::UNKNOWN });
-	ExpectTokens("i1d", { Token::IDENTIFIER });
+	ExpectTokenInformations("_", { TokenInformation(Token::IDENTIFIER, StreamString("_", StreamPosition())) });
+	ExpectTokenInformations("id", { TokenInformation(Token::IDENTIFIER, StreamString("id", StreamPosition())) });
+	ExpectTokenInformations("_id", { TokenInformation(Token::IDENTIFIER, StreamString("_id", StreamPosition())) });
+	ExpectTokenInformations("_id_", { TokenInformation(Token::IDENTIFIER, StreamString("_id_", StreamPosition())) });
+	ExpectTokenInformations("_i_d_", { TokenInformation(Token::IDENTIFIER, StreamString("_i_d_", StreamPosition())) });
+	ExpectTokenInformations("1id", { TokenInformation(Token::UNKNOWN, StreamString("1id", StreamPosition())) });
+	ExpectTokenInformations("i1d", { TokenInformation(Token::IDENTIFIER, StreamString("i1d", StreamPosition())) });
 }
 
 TEST(identifier_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" id ", { Token::IDENTIFIER });
-	ExpectTokens(";id;", { Token::SEMICOLON, Token::IDENTIFIER, Token::SEMICOLON });
+	ExpectTokenInformations(" id ", { TokenInformation(Token::IDENTIFIER, StreamString("id", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";id;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::IDENTIFIER, StreamString("id", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 4))) });
 }
 
 TEST(identifier_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("id;", { Token::IDENTIFIER, Token::SEMICOLON });
-	ExpectTokens(";id", { Token::SEMICOLON, Token::IDENTIFIER });
+	ExpectTokenInformations(
+		"id;",
+		{ TokenInformation(Token::IDENTIFIER, StreamString("id", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 3))) });
+	ExpectTokenInformations(
+		";id",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::IDENTIFIER, StreamString("id", StreamPosition(1, 2))) });
 }
 
 TEST(identifier_token, not_determining_if_stay_between_numbers)
 {
-	ExpectTokens("1id1", { Token::UNKNOWN });
-	ExpectTokens("1id1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1.1id1", { Token::UNKNOWN });
-	ExpectTokens("1.1id1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1_E+1id1", { Token::UNKNOWN });
-	ExpectTokens("1id1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokenInformations("1id1", { TokenInformation(Token::UNKNOWN, StreamString("1id1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1id1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1id1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 5))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 6))) });
+	ExpectTokenInformations("1.1id1", { TokenInformation(Token::UNKNOWN, StreamString("1.1id1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1.1id1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1.1id1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 7))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 8))) });
+	ExpectTokenInformations(
+		"1_E+1id1", { TokenInformation(Token::UNKNOWN, StreamString("1_E+1id1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1id1_E+1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1id1_E", StreamPosition())),
+		  TokenInformation(Token::PLUS, StreamString("+", StreamPosition(1, 7))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 8))) });
 }
 
 TEST(identifier_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"id\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" id \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1id1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";id;\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("id")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("id")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" id ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" id ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1id1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1id1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";id;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";id;")", StreamPosition())) });
 }
 
 TEST(identifier_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//id", { Token::LINE_COMMENT });
-	ExpectTokens("// id ", { Token::LINE_COMMENT });
-	ExpectTokens("//1id1", { Token::LINE_COMMENT });
-	ExpectTokens("//;id;", { Token::LINE_COMMENT });
-	ExpectTokens("/*id*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* id */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1id1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;id;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*id", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* id ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1id1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;id;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations("//id", { TokenInformation(Token::LINE_COMMENT, StreamString("//id", StreamPosition())) });
+	ExpectTokenInformations(
+		"// id ", { TokenInformation(Token::LINE_COMMENT, StreamString("// id ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1id1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1id1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;id;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;id;", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*id*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*id*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* id */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* id */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1id1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1id1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;id;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;id;*/", StreamPosition())) });
+	ExpectTokenInformations("/*id", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*id", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* id ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* id ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1id1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1id1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;id;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;id;", StreamPosition())) });
 }

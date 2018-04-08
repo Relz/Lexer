@@ -36,8 +36,8 @@ private:
 	static const long MIN_LINE = 1;
 	static const long MIN_COLUMN = 1;
 
-	long m_line;
-	long m_column;
+	long m_line = MIN_LINE;
+	long m_column = MIN_COLUMN;
 
 	void SafeSetLine(long value) { m_line = value >= MIN_LINE ? value : MIN_LINE; }
 

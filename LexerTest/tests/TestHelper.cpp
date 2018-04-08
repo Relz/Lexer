@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include <sstream>
 
-void ExpectTokens(std::string const & str, std::vector<Token> const & expectedTokens)
+void ExpectTokenInformations(std::string const & str, std::vector<TokenInformation> const & expectedTokenInformations)
 {
 	std::stringstream stringStream(str);
 	Lexer lexer(stringStream);
@@ -12,10 +12,19 @@ void ExpectTokens(std::string const & str, std::vector<Token> const & expectedTo
 	TokenInformation tokenInformation;
 	while (lexer.GetNextTokenInformation(tokenInformation))
 	{
-		EXPECT_LT(i, expectedTokens.size());
+		EXPECT_LT(i, expectedTokenInformations.size());
+		TokenInformation expectedTokenInformation = expectedTokenInformations.at(i);
+		Token expectedToken = expectedTokenInformation.GetToken();
+		StreamString expectedStreamString = expectedTokenInformation.GetTokenStreamString();
 		EXPECT_EQ(
-			TokenExtensions::ToString(tokenInformation.GetToken()), TokenExtensions::ToString(expectedTokens.at(i)));
+			TokenExtensions::ToString(tokenInformation.GetToken()), TokenExtensions::ToString(expectedToken));
+		EXPECT_EQ(
+			tokenInformation.GetTokenStreamString().string, expectedStreamString.string);
+		EXPECT_EQ(
+			tokenInformation.GetTokenStreamString().position.GetLine(), expectedStreamString.position.GetLine());
+		EXPECT_EQ(
+			tokenInformation.GetTokenStreamString().position.GetColumn(), expectedStreamString.position.GetColumn());
 		++i;
 	}
-	EXPECT_EQ(i, expectedTokens.size());
+	EXPECT_EQ(i, expectedTokenInformations.size());
 }

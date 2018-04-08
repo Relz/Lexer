@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,92 +6,171 @@ using namespace std;
 
 TEST(assignment_token, determining_if_stay_alone)
 {
-	ExpectTokens("=", { Token::ASSIGNMENT });
+	ExpectTokenInformations("=", { TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())) });
 }
 
 TEST(assignment_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" = ", { Token::ASSIGNMENT });
-	ExpectTokens(";=;", { Token::SEMICOLON, Token::ASSIGNMENT, Token::SEMICOLON });
+	ExpectTokenInformations(" = ", { TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";=;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("=;", { Token::ASSIGNMENT, Token::SEMICOLON });
-	ExpectTokens(";=", { Token::SEMICOLON, Token::ASSIGNMENT });
+	ExpectTokenInformations(
+		"=;",
+		{ TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";=",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))) });
 }
 
 TEST(assignment_token, determining_if_stay_between_numbers)
 {
-	ExpectTokens("1=1", { Token::INTEGER, Token::ASSIGNMENT, Token::INTEGER });
-	ExpectTokens("1=1.1", { Token::INTEGER, Token::ASSIGNMENT, Token::FLOAT });
-	ExpectTokens("1.1=1", { Token::FLOAT, Token::ASSIGNMENT, Token::INTEGER });
-	ExpectTokens("1.1=1.1", { Token::FLOAT, Token::ASSIGNMENT, Token::FLOAT });
-	ExpectTokens("1_E+1=1", { Token::EXPONENTIAL, Token::ASSIGNMENT, Token::INTEGER });
-	ExpectTokens("1=1_E+1", { Token::INTEGER, Token::ASSIGNMENT, Token::EXPONENTIAL });
+	ExpectTokenInformations(
+		"1=1",
+		{ TokenInformation(Token::INTEGER, StreamString("1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 3))) });
+	ExpectTokenInformations(
+		"1=1.1",
+		{ TokenInformation(Token::INTEGER, StreamString("1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))),
+		  TokenInformation(Token::FLOAT, StreamString("1.1", StreamPosition(1, 3))) });
+	ExpectTokenInformations(
+		"1.1=1",
+		{ TokenInformation(Token::FLOAT, StreamString("1.1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 4))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 5))) });
+	ExpectTokenInformations(
+		"1.1=1.1",
+		{ TokenInformation(Token::FLOAT, StreamString("1.1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 4))),
+		  TokenInformation(Token::FLOAT, StreamString("1.1", StreamPosition(1, 5))) });
+	ExpectTokenInformations(
+		"1_E+1=1",
+		{ TokenInformation(Token::EXPONENTIAL, StreamString("1_E+1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 6))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 7))) });
+	ExpectTokenInformations(
+		"1=1_E+1",
+		{ TokenInformation(Token::INTEGER, StreamString("1", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 2))),
+		  TokenInformation(Token::EXPONENTIAL, StreamString("1_E+1", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_plus_assignment)
 {
-	ExpectTokens("+=", { Token::PLUS_ASSIGNMENT });
-	ExpectTokens("=+=", { Token::ASSIGNMENT, Token::PLUS_ASSIGNMENT });
-	ExpectTokens("+==", { Token::PLUS_ASSIGNMENT, Token::ASSIGNMENT });
+	ExpectTokenInformations("+=", { TokenInformation(Token::PLUS_ASSIGNMENT, StreamString("+=", StreamPosition())) });
+	ExpectTokenInformations(
+		"=+=",
+		{ TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())),
+		  TokenInformation(Token::PLUS_ASSIGNMENT, StreamString("+=", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		"+==",
+		{ TokenInformation(Token::PLUS_ASSIGNMENT, StreamString("+=", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_equivalence)
 {
-	ExpectTokens("==", { Token::EQUIVALENCE });
-	ExpectTokens("===", { Token::EQUIVALENCE, Token::ASSIGNMENT });
+	ExpectTokenInformations("==", { TokenInformation(Token::EQUIVALENCE, StreamString("==", StreamPosition())) });
+	ExpectTokenInformations(
+		"===",
+		{ TokenInformation(Token::EQUIVALENCE, StreamString("==", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_minus_assignment)
 {
-	ExpectTokens("-=", { Token::MINUS_ASSIGNMENT });
-	ExpectTokens("=-=", { Token::ASSIGNMENT, Token::MINUS_ASSIGNMENT });
-	ExpectTokens("-==", { Token::MINUS_ASSIGNMENT, Token::ASSIGNMENT });
+	ExpectTokenInformations("-=", { TokenInformation(Token::MINUS_ASSIGNMENT, StreamString("-=", StreamPosition())) });
+	ExpectTokenInformations(
+		"=-=",
+		{ TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())),
+		  TokenInformation(Token::MINUS_ASSIGNMENT, StreamString("-=", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		"-==",
+		{ TokenInformation(Token::MINUS_ASSIGNMENT, StreamString("-=", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_multiply_assignment)
 {
-	ExpectTokens("*=", { Token::MULTIPLY_ASSIGNMENT });
-	ExpectTokens("=*=", { Token::ASSIGNMENT, Token::MULTIPLY_ASSIGNMENT });
-	ExpectTokens("*==", { Token::MULTIPLY_ASSIGNMENT, Token::ASSIGNMENT });
+	ExpectTokenInformations(
+		"*=", { TokenInformation(Token::MULTIPLY_ASSIGNMENT, StreamString("*=", StreamPosition())) });
+	ExpectTokenInformations(
+		"=*=",
+		{ TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())),
+		  TokenInformation(Token::MULTIPLY_ASSIGNMENT, StreamString("*=", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		"*==",
+		{ TokenInformation(Token::MULTIPLY_ASSIGNMENT, StreamString("*=", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_division_assignment)
 {
-	ExpectTokens("/=", { Token::DIVISION_ASSIGNMENT });
-	ExpectTokens("=/=", { Token::ASSIGNMENT, Token::DIVISION_ASSIGNMENT });
-	ExpectTokens("/==", { Token::DIVISION_ASSIGNMENT, Token::ASSIGNMENT });
+	ExpectTokenInformations(
+		"/=", { TokenInformation(Token::DIVISION_ASSIGNMENT, StreamString("/=", StreamPosition())) });
+	ExpectTokenInformations(
+		"=/=",
+		{ TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition())),
+		  TokenInformation(Token::DIVISION_ASSIGNMENT, StreamString("/=", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		"/==",
+		{ TokenInformation(Token::DIVISION_ASSIGNMENT, StreamString("/=", StreamPosition())),
+		  TokenInformation(Token::ASSIGNMENT, StreamString("=", StreamPosition(1, 3))) });
 }
 
 TEST(assignment_token, not_determining_if_in_character_literal)
 {
-	ExpectTokens("'='", { Token::CHARACTER_LITERAL });
+	ExpectTokenInformations(
+		"'='", { TokenInformation(Token::CHARACTER_LITERAL, StreamString("'='", StreamPosition())) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"=\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" = \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1=1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";=;\"", { Token::STRING_LITERAL });
-	ExpectTokens("\"===\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("=")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("=")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" = ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" = ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1=1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1=1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";=;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";=;")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("===")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("===")", StreamPosition())) });
 }
 
 TEST(assignment_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//=", { Token::LINE_COMMENT });
-	ExpectTokens("// = ", { Token::LINE_COMMENT });
-	ExpectTokens("//1=1", { Token::LINE_COMMENT });
-	ExpectTokens("//;=;", { Token::LINE_COMMENT });
-	ExpectTokens("//=", { Token::LINE_COMMENT });
-	ExpectTokens("/*=*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* = */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1=1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;=;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*=", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* = ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1=1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;=;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations("//=", { TokenInformation(Token::LINE_COMMENT, StreamString("//=", StreamPosition())) });
+	ExpectTokenInformations(
+		"// = ", { TokenInformation(Token::LINE_COMMENT, StreamString("// = ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1=1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1=1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;=;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;=;", StreamPosition())) });
+	ExpectTokenInformations("//=", { TokenInformation(Token::LINE_COMMENT, StreamString("//=", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*=*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*=*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* = */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* = */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1=1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1=1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;=;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;=;*/", StreamPosition())) });
+	ExpectTokenInformations("/*=", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*=", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* = ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* = ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1=1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1=1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;=;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;=;", StreamPosition())) });
 }

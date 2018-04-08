@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,51 +6,90 @@ using namespace std;
 
 TEST(get_token, determining_if_stay_alone)
 {
-	ExpectTokens("get", { Token::GET });
+	ExpectTokenInformations("get", { TokenInformation(Token::GET, StreamString("get", StreamPosition())) });
 }
 
 TEST(get_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" get ", { Token::GET });
-	ExpectTokens(";get;", { Token::SEMICOLON, Token::GET, Token::SEMICOLON });
+	ExpectTokenInformations(" get ", { TokenInformation(Token::GET, StreamString("get", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";get;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::GET, StreamString("get", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 5))) });
 }
 
 TEST(get_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("get;", { Token::GET, Token::SEMICOLON });
-	ExpectTokens(";get", { Token::SEMICOLON, Token::GET });
+	ExpectTokenInformations(
+		"get;",
+		{ TokenInformation(Token::GET, StreamString("get", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 4))) });
+	ExpectTokenInformations(
+		";get",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::GET, StreamString("get", StreamPosition(1, 2))) });
 }
 
 TEST(get_token, not_determining_if_stay_between_numbers)
 {
-	ExpectTokens("1get1", { Token::UNKNOWN });
-	ExpectTokens("1get1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1.1get1", { Token::UNKNOWN });
-	ExpectTokens("1.1get1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1_E+1get1", { Token::UNKNOWN });
-	ExpectTokens("1get1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokenInformations("1get1", { TokenInformation(Token::UNKNOWN, StreamString("1get1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1get1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1get1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 6))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 7))) });
+	ExpectTokenInformations("1.1get1", { TokenInformation(Token::UNKNOWN, StreamString("1.1get1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1.1get1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1.1get1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 8))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 9))) });
+	ExpectTokenInformations(
+		"1_E+1get1", { TokenInformation(Token::UNKNOWN, StreamString("1_E+1get1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1get1_E+1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1get1_E", StreamPosition())),
+		  TokenInformation(Token::PLUS, StreamString("+", StreamPosition(1, 8))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 9))) });
 }
 
 TEST(get_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"get\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" get \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1get1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";get;\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("get")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("get")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" get ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" get ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1get1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1get1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";get;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";get;")", StreamPosition())) });
 }
 
 TEST(get_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//get", { Token::LINE_COMMENT });
-	ExpectTokens("// get ", { Token::LINE_COMMENT });
-	ExpectTokens("//1get1", { Token::LINE_COMMENT });
-	ExpectTokens("//;get;", { Token::LINE_COMMENT });
-	ExpectTokens("/*get*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* get */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1get1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;get;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*get", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* get ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1get1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;get;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations(
+		"//get", { TokenInformation(Token::LINE_COMMENT, StreamString("//get", StreamPosition())) });
+	ExpectTokenInformations(
+		"// get ", { TokenInformation(Token::LINE_COMMENT, StreamString("// get ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1get1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1get1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;get;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;get;", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*get*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*get*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* get */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* get */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1get1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1get1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;get;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;get;*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*get", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*get", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* get ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* get ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1get1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1get1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;get;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;get;", StreamPosition())) });
 }

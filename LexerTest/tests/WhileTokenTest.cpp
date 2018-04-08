@@ -1,4 +1,4 @@
-#include "Lexer/Token/Token.h"
+#include "Lexer/Token/TokenInformation/TokenInformation.h"
 #include "TestHelper.h"
 #include "gtest/gtest.h"
 
@@ -6,51 +6,91 @@ using namespace std;
 
 TEST(while_token, determining_if_stay_alone)
 {
-	ExpectTokens("while", { Token::WHILE });
+	ExpectTokenInformations("while", { TokenInformation(Token::WHILE, StreamString("while", StreamPosition())) });
 }
 
 TEST(while_token, determining_if_stay_between_delimiters)
 {
-	ExpectTokens(" while ", { Token::WHILE });
-	ExpectTokens(";while;", { Token::SEMICOLON, Token::WHILE, Token::SEMICOLON });
+	ExpectTokenInformations(" while ", { TokenInformation(Token::WHILE, StreamString("while", StreamPosition(1, 2))) });
+	ExpectTokenInformations(
+		";while;",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::WHILE, StreamString("while", StreamPosition(1, 2))),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 7))) });
 }
 
 TEST(while_token, determining_if_stay_near_delimiter)
 {
-	ExpectTokens("while;", { Token::WHILE, Token::SEMICOLON });
-	ExpectTokens(";while", { Token::SEMICOLON, Token::WHILE });
+	ExpectTokenInformations(
+		"while;",
+		{ TokenInformation(Token::WHILE, StreamString("while", StreamPosition())),
+		  TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition(1, 6))) });
+	ExpectTokenInformations(
+		";while",
+		{ TokenInformation(Token::SEMICOLON, StreamString(";", StreamPosition())),
+		  TokenInformation(Token::WHILE, StreamString("while", StreamPosition(1, 2))) });
 }
 
 TEST(while_token, not_determining_if_stay_between_numbers)
 {
-	ExpectTokens("1while1", { Token::UNKNOWN });
-	ExpectTokens("1while1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1.1while1", { Token::UNKNOWN });
-	ExpectTokens("1.1while1.1", { Token::UNKNOWN, Token::DOT, Token::INTEGER });
-	ExpectTokens("1_E+1while1", { Token::UNKNOWN });
-	ExpectTokens("1while1_E+1", { Token::UNKNOWN, Token::PLUS, Token::INTEGER });
+	ExpectTokenInformations("1while1", { TokenInformation(Token::UNKNOWN, StreamString("1while1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1while1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1while1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 8))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 9))) });
+	ExpectTokenInformations(
+		"1.1while1", { TokenInformation(Token::UNKNOWN, StreamString("1.1while1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1.1while1.1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1.1while1", StreamPosition())),
+		  TokenInformation(Token::DOT, StreamString(".", StreamPosition(1, 10))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 11))) });
+	ExpectTokenInformations(
+		"1_E+1while1", { TokenInformation(Token::UNKNOWN, StreamString("1_E+1while1", StreamPosition())) });
+	ExpectTokenInformations(
+		"1while1_E+1",
+		{ TokenInformation(Token::UNKNOWN, StreamString("1while1_E", StreamPosition())),
+		  TokenInformation(Token::PLUS, StreamString("+", StreamPosition(1, 10))),
+		  TokenInformation(Token::INTEGER, StreamString("1", StreamPosition(1, 11))) });
 }
 
 TEST(while_token, not_determining_if_part_of_string_literal)
 {
-	ExpectTokens("\"while\"", { Token::STRING_LITERAL });
-	ExpectTokens("\" while \"", { Token::STRING_LITERAL });
-	ExpectTokens("\"1while1\"", { Token::STRING_LITERAL });
-	ExpectTokens("\";while;\"", { Token::STRING_LITERAL });
+	ExpectTokenInformations(
+		R"("while")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("while")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(" while ")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(" while ")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"("1while1")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"("1while1")", StreamPosition())) });
+	ExpectTokenInformations(
+		R"(";while;")", { TokenInformation(Token::STRING_LITERAL, StreamString(R"(";while;")", StreamPosition())) });
 }
 
 TEST(while_token, not_determining_if_part_of_comment)
 {
-	ExpectTokens("//while", { Token::LINE_COMMENT });
-	ExpectTokens("// while ", { Token::LINE_COMMENT });
-	ExpectTokens("//1while1", { Token::LINE_COMMENT });
-	ExpectTokens("//;while;", { Token::LINE_COMMENT });
-	ExpectTokens("/*while*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* while */", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1while1*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;while;*/", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*while", { Token::BLOCK_COMMENT });
-	ExpectTokens("/* while ", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*1while1", { Token::BLOCK_COMMENT });
-	ExpectTokens("/*;while;", { Token::BLOCK_COMMENT });
+	ExpectTokenInformations(
+		"//while", { TokenInformation(Token::LINE_COMMENT, StreamString("//while", StreamPosition())) });
+	ExpectTokenInformations(
+		"// while ", { TokenInformation(Token::LINE_COMMENT, StreamString("// while ", StreamPosition())) });
+	ExpectTokenInformations(
+		"//1while1", { TokenInformation(Token::LINE_COMMENT, StreamString("//1while1", StreamPosition())) });
+	ExpectTokenInformations(
+		"//;while;", { TokenInformation(Token::LINE_COMMENT, StreamString("//;while;", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*while*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*while*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* while */", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* while */", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1while1*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1while1*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;while;*/", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;while;*/", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*while", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*while", StreamPosition())) });
+	ExpectTokenInformations(
+		"/* while ", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/* while ", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*1while1", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*1while1", StreamPosition())) });
+	ExpectTokenInformations(
+		"/*;while;", { TokenInformation(Token::BLOCK_COMMENT, StreamString("/*;while;", StreamPosition())) });
 }

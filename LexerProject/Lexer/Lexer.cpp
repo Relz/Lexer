@@ -34,7 +34,7 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 	bool tokenDetermined = false;
 	StreamString scanned;
 	StreamString delimiter;
-	std::string lastScannedString;
+	StreamString lastScanned;
 	while (m_input.Scan(SCANNER_DELIMITERS, scanned, delimiter))
 	{
 		if (TryToCreateComment(delimiter.string, delimiter.string))
@@ -44,15 +44,19 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 		{
 		}
 
+		if (lastScanned.string.empty())
+		{
+			lastScanned.position = scanned.position;
+		}
 		scanned.string.insert(
 			scanned.string.begin(),
-			std::make_move_iterator(lastScannedString.begin()),
-			std::make_move_iterator(lastScannedString.end()));
+			std::make_move_iterator(lastScanned.string.begin()),
+			std::make_move_iterator(lastScanned.string.end()));
 		if (NeedMoreScanning(scanned.string, delimiter.string))
 		{
-			lastScannedString = move(scanned.string);
-			lastScannedString.insert(
-				lastScannedString.end(),
+			lastScanned.string = move(scanned.string);
+			lastScanned.string.insert(
+				lastScanned.string.end(),
 				std::make_move_iterator(delimiter.string.begin()),
 				std::make_move_iterator(delimiter.string.end()));
 			continue;
@@ -70,6 +74,7 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 				scannedStringToken = Token::TYPE;
 				m_customTypes.emplace(scanned.string);
 			}
+			scanned.position = lastScanned.position;
 			m_tokenInformations.emplace_back(TokenInformation(scannedStringToken, scanned, m_inputFileName));
 			tokenDetermined = true;
 		}
@@ -85,12 +90,13 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 			break;
 		}
 	}
-	if (!tokenDetermined && !lastScannedString.empty())
+	if (!tokenDetermined && !lastScanned.string.empty())
 	{
 		scanned.string.insert(
 				scanned.string.begin(),
-				std::make_move_iterator(lastScannedString.begin()),
-				std::make_move_iterator(lastScannedString.end()));
+				std::make_move_iterator(lastScanned.string.begin()),
+				std::make_move_iterator(lastScanned.string.end()));
+		scanned.position = lastScanned.position;
 		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_inputFileName));
 	}
 	if (m_tokenInformations.empty())

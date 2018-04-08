@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-enum class Token;
+class TokenInformation;
 
-void ExpectTokens(std::string const & str, std::vector<Token> const & expectedTokens);
+void ExpectTokenInformations(std::string const & str, std::vector<TokenInformation> const & expectedTokenInformations);
 
 #endif //PROJECT_TESTHELPER_H
