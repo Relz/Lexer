@@ -1,7 +1,7 @@
 #ifndef TOKEN_TOKENINFORMATION_H
 #define TOKEN_TOKENINFORMATION_H
 
-#include "../../InputLibrary/StreamString/StreamString.h"
+#include "../../InputLibrary/StreamStringLibrary/StreamString.h"
 #include "../Token.h"
 #include "../TokenExtensions/TokenExtensions.h"
 #include <string>
