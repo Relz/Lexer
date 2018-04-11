@@ -74,4 +74,4 @@ enum class Token
 	BLOCK_COMMENT
 };
 
-#endif //PROJECT_TOKEN_H
+#endif

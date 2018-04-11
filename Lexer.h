@@ -1,8 +1,8 @@
 #ifndef LEXER_LEXER_H
 #define LEXER_LEXER_H
 
-#include "Constant.h"
-#include "InputSolution/Input/Input.h"
+#include "InputLibrary/Input.h"
+#include "NumberSystem/NumberSystem.h"
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -19,6 +19,8 @@ public:
 	bool GetNextTokenInformation(TokenInformation & tokenInformation);
 
 private:
+	static std::vector<std::string> const SCANNER_DELIMITERS;
+	static NumberSystem const DEFAULT_NUMBER_SYSTEM;
 	static std::unordered_set<std::string> const DELIMITERS_TO_SKIP;
 
 	static bool DetermineScannedStringToken(
@@ -50,4 +52,4 @@ private:
 	bool NeedMoreScanning(std::string const & scannedString, std::string const & delimiter);
 };
 
-#endif //LEXER_LEXER_H
+#endif

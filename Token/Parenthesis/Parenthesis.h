@@ -9,4 +9,4 @@ struct Parenthesis
 	std::string const RIGHT;
 };
 
-#endif //TOKEN_PARENTHESIS_H
+#endif

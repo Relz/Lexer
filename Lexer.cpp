@@ -1,6 +1,7 @@
 #include "Lexer.h"
 #include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
 #include "Token/TokenInformation/TokenInformation.h"
+#include "Token/TokenConstant/TokenConstant.h"
 #include <set>
 
 Lexer::Lexer(std::string const & inputFileName)
@@ -108,20 +109,20 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 
 bool Lexer::TryToCreateComment(std::string const & delimiterString, std::string & comment)
 {
-	if (delimiterString == Constant::Comment::LINE)
+	if (delimiterString == TokenConstant::Comment::LINE)
 	{
 		m_input.SkipLine(comment);
-		comment.insert(0, Constant::Comment::LINE);
+		comment.insert(0, TokenConstant::Comment::LINE);
 		return true;
 	}
-	if (delimiterString == Constant::Comment::BLOCK_BEGINNING)
+	if (delimiterString == TokenConstant::Comment::BLOCK_BEGINNING)
 	{
-		if (m_input.SkipUntilStrings({ Constant::Comment::BLOCK_ENDING }, comment))
+		if (m_input.SkipUntilStrings({ TokenConstant::Comment::BLOCK_ENDING }, comment))
 		{
-			comment.append(Constant::Comment::BLOCK_ENDING);
-			m_input.SkipArguments<char>(Constant::Comment::BLOCK_ENDING.length());
+			comment.append(TokenConstant::Comment::BLOCK_ENDING);
+			m_input.SkipArguments<char>(TokenConstant::Comment::BLOCK_ENDING.length());
 		}
-		comment.insert(0, Constant::Comment::BLOCK_BEGINNING);
+		comment.insert(0, TokenConstant::Comment::BLOCK_BEGINNING);
 		return true;
 	}
 	return false;
@@ -130,13 +131,13 @@ bool Lexer::TryToCreateComment(std::string const & delimiterString, std::string 
 bool Lexer::TryToCreateLiteral(std::string const & delimiterString, std::string & literal)
 {
 	char wrapper = 0;
-	if (delimiterString == Constant::Parentheses::DOUBLE_QUOTE_STRING)
+	if (delimiterString == TokenConstant::Parentheses::DOUBLE_QUOTE_STRING)
 	{
-		wrapper = Constant::Parentheses::DOUBLE_QUOTE_CHARACTER;
+		wrapper = TokenConstant::Parentheses::DOUBLE_QUOTE_CHARACTER;
 	}
-	else if (delimiterString == Constant::Parentheses::QUOTE_STRING)
+	else if (delimiterString == TokenConstant::Parentheses::QUOTE_STRING)
 	{
-		wrapper = Constant::Parentheses::QUOTE_CHARACTER;
+		wrapper = TokenConstant::Parentheses::QUOTE_CHARACTER;
 	}
 	if (wrapper != 0 && m_input.SkipUntilCharacters({ wrapper }, literal))
 	{
@@ -152,11 +153,11 @@ bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string cons
 {
 	Token token;
 	return !scannedString.empty()
-		&& ((delimiter == Constant::Separator::DOT && DetermineNumberToken(scannedString, token))
-			|| (scannedString.back() == Constant::Separator::EXPONENT_CHARACTER
-				&& scannedString.at(scannedString.length() - 2) == Constant::Separator::UNDERSCORE_CHARACTER
-				&& (delimiter == Constant::Operator::Arithmetic::PLUS
-					|| delimiter == Constant::Operator::Arithmetic::MINUS)
+		&& ((delimiter == TokenConstant::Separator::DOT && DetermineNumberToken(scannedString, token))
+			|| (scannedString.back() == TokenConstant::Separator::EXPONENT_CHARACTER
+				&& scannedString.at(scannedString.length() - 2) == TokenConstant::Separator::UNDERSCORE_CHARACTER
+				&& (delimiter == TokenConstant::Operator::Arithmetic::PLUS
+					|| delimiter == TokenConstant::Operator::Arithmetic::MINUS)
 				&& DetermineNumberToken(scannedString.substr(0, scannedString.length() - 2), token)));
 }
 
@@ -183,7 +184,7 @@ bool Lexer::DetermineScannedStringToken(
 
 bool Lexer::IsIdentifier(std::string const & str)
 {
-	return std::regex_match(str.begin(), str.end(), Constant::Regex::IDENTIFIER);
+	return std::regex_match(str.begin(), str.end(), TokenConstant::Regex::IDENTIFIER);
 }
 
 bool Lexer::IsDigit(char ch, NumberSystem numberSystem)
@@ -227,7 +228,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 		return true;
 	}
 
-	if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+	if (scannedString.at(failIndex) == TokenConstant::Separator::DOT_CHARACTER)
 	{
 		if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
 		{
@@ -236,16 +237,16 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 		}
 	}
 
-	if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
+	if (scannedString.at(failIndex) == TokenConstant::Separator::UNDERSCORE_CHARACTER)
 	{
 		if (scannedString.length() > failIndex + 1
-			&& scannedString.at(failIndex + 1) == Constant::Separator::EXPONENT_CHARACTER)
+			&& scannedString.at(failIndex + 1) == TokenConstant::Separator::EXPONENT_CHARACTER)
 		{
 			if (scannedString.length() > failIndex + 2)
 			{
 				char nextChar = scannedString.at(failIndex + 2);
-				if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
-					|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
+				if (nextChar == TokenConstant::Operator::Arithmetic::PLUS_CHARACTER
+					|| nextChar == TokenConstant::Operator::Arithmetic::MINUS_CHARACTER)
 				{
 					if (IsInteger(scannedString, failIndex + 3, failIndex, goodString))
 					{
@@ -253,7 +254,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 						return true;
 					}
 
-					if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+					if (scannedString.at(failIndex) == TokenConstant::Separator::DOT_CHARACTER)
 					{
 						if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
 						{
@@ -278,7 +279,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			return true;
 		}
 
-		if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+		if (scannedString.at(failIndex) == TokenConstant::Separator::DOT_CHARACTER)
 		{
 			if (IsInteger(scannedString, failIndex + 1, failIndex, goodString, numberSystem))
 			{
@@ -287,16 +288,16 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			}
 		}
 
-		if (scannedString.at(failIndex) == Constant::Separator::UNDERSCORE_CHARACTER)
+		if (scannedString.at(failIndex) == TokenConstant::Separator::UNDERSCORE_CHARACTER)
 		{
 			if (scannedString.length() > failIndex + 1
-				&& scannedString.at(failIndex + 1) == Constant::Separator::EXPONENT_CHARACTER)
+				&& scannedString.at(failIndex + 1) == TokenConstant::Separator::EXPONENT_CHARACTER)
 			{
 				if (scannedString.length() > failIndex + 2)
 				{
 					char nextChar = scannedString.at(failIndex + 2);
-					if (nextChar == Constant::Operator::Arithmetic::PLUS_CHARACTER
-						|| nextChar == Constant::Operator::Arithmetic::MINUS_CHARACTER)
+					if (nextChar == TokenConstant::Operator::Arithmetic::PLUS_CHARACTER
+						|| nextChar == TokenConstant::Operator::Arithmetic::MINUS_CHARACTER)
 					{
 						if (IsInteger(scannedString, failIndex + 3, failIndex, goodString))
 						{
@@ -304,7 +305,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 							return true;
 						}
 
-						if (scannedString.at(failIndex) == Constant::Separator::DOT_CHARACTER)
+						if (scannedString.at(failIndex) == TokenConstant::Separator::DOT_CHARACTER)
 						{
 							if (IsInteger(scannedString, failIndex + 1, failIndex, goodString))
 							{
@@ -331,12 +332,12 @@ bool Lexer::DetermineDelimiterToken(std::string const & delimiterString, Token &
 
 bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & token)
 {
-	if (delimiterString.front() == Constant::Parentheses::QUOTE_CHARACTER && delimiterString.length() == 3)
+	if (delimiterString.front() == TokenConstant::Parentheses::QUOTE_CHARACTER && delimiterString.length() == 3)
 	{
 		token = Token::CHARACTER_LITERAL;
 		return true;
 	}
-	else if (delimiterString.front() == Constant::Parentheses::DOUBLE_QUOTE_CHARACTER)
+	else if (delimiterString.front() == TokenConstant::Parentheses::DOUBLE_QUOTE_CHARACTER)
 	{
 		token = Token::STRING_LITERAL;
 		return true;
@@ -347,12 +348,12 @@ bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & to
 bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & token)
 {
 	std::string commentBeginning = delimiterString.substr(0, 2);
-	if (commentBeginning == Constant::Comment::LINE)
+	if (commentBeginning == TokenConstant::Comment::LINE)
 	{
 		token = Token::LINE_COMMENT;
 		return true;
 	}
-	else if (commentBeginning == Constant::Comment::BLOCK_BEGINNING)
+	else if (commentBeginning == TokenConstant::Comment::BLOCK_BEGINNING)
 	{
 		token = Token::BLOCK_COMMENT;
 		return true;
@@ -360,10 +361,48 @@ bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & to
 	return false;
 }
 
+std::vector<std::string> const Lexer::SCANNER_DELIMITERS {
+		TokenConstant::Comment::BLOCK_BEGINNING,
+		TokenConstant::Comment::LINE,
+		TokenConstant::Separator::SPACE,
+		TokenConstant::Separator::TAB,
+		TokenConstant::Separator::END_OF_LINE_LF,
+		TokenConstant::Separator::END_OF_LINE_CR,
+		TokenConstant::Operator::Comparison::EQUIVALENCE,
+		TokenConstant::Operator::Comparison::NOT_EQUIVALENCE,
+		TokenConstant::Operator::Comparison::MORE_OR_EQUIVALENCE,
+		TokenConstant::Operator::Comparison::LESS_OR_EQUIVALENCE,
+		TokenConstant::Operator::Comparison::MORE,
+		TokenConstant::Operator::Comparison::LESS,
+		TokenConstant::Operator::Assignment::ASSIGNMENT,
+		TokenConstant::Operator::Assignment::DIVISION_ASSIGNMENT,
+		TokenConstant::Operator::Assignment::MINUS_ASSIGNMENT,
+		TokenConstant::Operator::Assignment::MULTIPLY_ASSIGNMENT,
+		TokenConstant::Operator::Assignment::PLUS_ASSIGNMENT,
+		TokenConstant::Operator::Arithmetic::DIVISION,
+		TokenConstant::Operator::Arithmetic::MINUS,
+		TokenConstant::Operator::Arithmetic::MULTIPLY,
+		TokenConstant::Operator::Arithmetic::PLUS,
+		TokenConstant::Separator::COLON,
+		TokenConstant::Separator::COMMA,
+		TokenConstant::Separator::DOT,
+		TokenConstant::Separator::SEMICOLON,
+		TokenConstant::Parentheses::QUOTE_STRING,
+		TokenConstant::Parentheses::DOUBLE_QUOTE_STRING,
+		TokenConstant::Parentheses::SQUARE_BRACKET.LEFT,
+		TokenConstant::Parentheses::SQUARE_BRACKET.RIGHT,
+		TokenConstant::Parentheses::ROUND_BRACKET.LEFT,
+		TokenConstant::Parentheses::ROUND_BRACKET.RIGHT,
+		TokenConstant::Parentheses::CURLY_BRACKET.LEFT,
+		TokenConstant::Parentheses::CURLY_BRACKET.RIGHT,
+};
+
+NumberSystem const Lexer::DEFAULT_NUMBER_SYSTEM = NumberSystem::TEN;
+
 std::unordered_set<std::string> const Lexer::DELIMITERS_TO_SKIP {
 	"",
-	Constant::Separator::SPACE,
-	Constant::Separator::TAB,
-	Constant::Separator::END_OF_LINE_LF,
-	Constant::Separator::END_OF_LINE_CR
+	TokenConstant::Separator::SPACE,
+	TokenConstant::Separator::TAB,
+	TokenConstant::Separator::END_OF_LINE_LF,
+	TokenConstant::Separator::END_OF_LINE_CR
 };

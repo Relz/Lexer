@@ -1,7 +1,7 @@
 #ifndef TOKEN_TOKENEXTENSIONS_H
 #define TOKEN_TOKENEXTENSIONS_H
 
-#include "../Constant/Constant.h"
+#include "../TokenConstant/TokenConstant.h"
 #include "../Token.h"
 #include <string>
 #include <unordered_map>
@@ -23,4 +23,4 @@ private:
 	static std::unordered_map<Token, std::string> const TOKEN_TO_NAME;
 };
 
-#endif //TOKEN_TOKENEXTENSIONS_H
+#endif

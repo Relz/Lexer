@@ -14,6 +14,7 @@ public:
 	static unsigned int ToUInt(NumberSystem numberSystem);
 
 private:
+	static NumberSystem const DEFAULT_NUMBER_SYSTEM;
 	static std::set<char> const ALL_AVAILABLE_CHARACTERS;
 	static std::set<char> const DEFAULT_NUMBER_SYSTEM_DIGITS;
 	static std::unordered_map<std::string, NumberSystem> const STRING_TO_NUMBER_SYSTEM;

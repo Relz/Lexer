@@ -9,4 +9,4 @@ ADD_SUBDIRECTORY(InputLibrary)
 ADD_SUBDIRECTORY(NumberSystem)
 ADD_SUBDIRECTORY(Token)
 
-TARGET_LINK_LIBRARIES(LexerLibrary Input NumberSystem Token)
+TARGET_LINK_LIBRARIES(LexerLibrary InputLibrary NumberSystem Token)

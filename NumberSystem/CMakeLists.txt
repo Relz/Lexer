@@ -1,7 +1,8 @@
 SET(SOURCE_FILES
-		NumberSystem.h
-		NumberSystemExtensions/NumberSystemExtensions.cpp
-		NumberSystemExtensions/NumberSystemExtensions.h)
+	NumberSystem.h)
 
 ADD_LIBRARY(NumberSystem ${SOURCE_FILES})
-SET_TARGET_PROPERTIES(NumberSystem PROPERTIES LINKER_LANGUAGE CXX)
+
+ADD_SUBDIRECTORY(NumberSystemExtensions)
+
+TARGET_LINK_LIBRARIES(NumberSystem NumberSystemExtensions)
