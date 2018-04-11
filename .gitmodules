@@ -1,3 +1,6 @@
-[submodule "LexerTest/googletest-lib"]
-	path = LexerTest/googletest-lib
-	url = https://github.com/google/googletest.git
+[submodule "LexerLibrary/InputLibrary"]
+	path = LexerLibrary/InputLibrary
+	url = https://github.com/Relz/InputLibrary.git
+[submodule "InputLibrary"]
+	path = InputLibrary
+	url = https://github.com/Relz/InputLibrary

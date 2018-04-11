@@ -1,6 +1,3 @@
 # CMake
 cmake-build-debug/
 cmake-build-release/
-
-# Google tests library
-googletest-lib
