@@ -1,6 +1,3 @@
-[submodule "LexerLibrary/InputLibrary"]
-	path = LexerLibrary/InputLibrary
-	url = https://github.com/Relz/InputLibrary.git
 [submodule "InputLibrary"]
 	path = InputLibrary
 	url = https://github.com/Relz/InputLibrary
