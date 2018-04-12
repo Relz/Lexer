@@ -3,10 +3,24 @@ PROJECT(LexerLibrary)
 
 SET(CMAKE_CXX_STANDARD 17)
 
-ADD_LIBRARY(LexerLibrary SHARED Lexer.cpp Lexer.h)
+SET(SOURCE_FILES
+	NumberSystem/NumberSystem.h
+	NumberSystem/NumberSystemExtensions/NumberSystemExtensions.cpp
+	NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h
+	Token/TokenConstant/TokenConstant.cpp
+	Token/TokenConstant/TokenConstant.h
+	Token/Parenthesis/Parenthesis.cpp
+	Token/Parenthesis/Parenthesis.h
+	Token/TokenExtensions/TokenExtensions.cpp
+	Token/TokenExtensions/TokenExtensions.h
+	Token/TokenInformation/TokenInformation.cpp
+	Token/TokenInformation/TokenInformation.h
+	Token/Token.h
+	Lexer.cpp
+	Lexer.h)
+
+ADD_LIBRARY(LexerLibrary SHARED ${SOURCE_FILES})
 
 ADD_SUBDIRECTORY(InputLibrary)
-ADD_SUBDIRECTORY(NumberSystem)
-ADD_SUBDIRECTORY(Token)
 
-TARGET_LINK_LIBRARIES(LexerLibrary InputLibrary NumberSystem Token)
+TARGET_LINK_LIBRARIES(LexerLibrary InputLibrary)
