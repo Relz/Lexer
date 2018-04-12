@@ -22,4 +22,4 @@ private:
 	std::string m_fileName;
 };
 
-#endif //TOKEN_TOKENINFORMATION_H
+#endif

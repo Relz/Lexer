@@ -1,5 +1,5 @@
-#ifndef PROJECT_NUMBERSYSTEMEXTENSIONS_H
-#define PROJECT_NUMBERSYSTEMEXTENSIONS_H
+#ifndef LEXER_NUMBERSYSTEMEXTENSIONS_H
+#define LEXER_NUMBERSYSTEMEXTENSIONS_H
 
 #include <set>
 #include <unordered_map>
@@ -21,4 +21,4 @@ private:
 	static std::unordered_map<NumberSystem, unsigned int> const NUMBER_SYSTEM_TO_UINT;
 };
 
-#endif //PROJECT_NUMBERSYSTEMEXTENSIONS_H
+#endif

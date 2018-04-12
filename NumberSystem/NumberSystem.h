@@ -1,5 +1,5 @@
-#ifndef PROJECT_NUMBERSYSTEM_H
-#define PROJECT_NUMBERSYSTEM_H
+#ifndef LEXER_NUMBERSYSTEM_H
+#define LEXER_NUMBERSYSTEM_H
 
 enum class NumberSystem
 {
@@ -20,4 +20,4 @@ enum class NumberSystem
 	SIXTEEN
 };
 
-#endif //PROJECT_NUMBERSYSTEM_H
+#endif
