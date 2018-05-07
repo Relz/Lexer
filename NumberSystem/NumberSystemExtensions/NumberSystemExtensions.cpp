@@ -1,7 +1,7 @@
 #include "NumberSystemExtensions.h"
 #include "../NumberSystem.h"
 
-void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem, std::set<char> & availableCharacters)
+void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem, std::set<wchar_t> & availableCharacters)
 {
 	if (numberSystem == DEFAULT_NUMBER_SYSTEM)
 	{
@@ -10,10 +10,10 @@ void NumberSystemExtensions::CreateAvailableCharacters(NumberSystem numberSystem
 	}
 	auto goalIterator = ALL_AVAILABLE_CHARACTERS.begin();
 	std::advance(goalIterator, ToUInt(numberSystem));
-	availableCharacters = std::set<char>(ALL_AVAILABLE_CHARACTERS.begin(), goalIterator);
+	availableCharacters = std::set<wchar_t>(ALL_AVAILABLE_CHARACTERS.begin(), goalIterator);
 }
 
-bool NumberSystemExtensions::CreateFromString(std::string const & str, NumberSystem & numberSystem)
+bool NumberSystemExtensions::CreateFromString(std::wstring const & str, NumberSystem & numberSystem)
 {
 	if (STRING_TO_NUMBER_SYSTEM.find(str) == STRING_TO_NUMBER_SYSTEM.end())
 	{
@@ -30,30 +30,30 @@ unsigned int NumberSystemExtensions::ToUInt(NumberSystem numberSystem)
 
 NumberSystem const NumberSystemExtensions::DEFAULT_NUMBER_SYSTEM = NumberSystem::TEN;
 
-std::set<char> const NumberSystemExtensions::ALL_AVAILABLE_CHARACTERS {
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+std::set<wchar_t> const NumberSystemExtensions::ALL_AVAILABLE_CHARACTERS {
+	L'0', L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9', L'A', L'B', L'C', L'D', L'E', L'F'
 };
 
-std::set<char> const NumberSystemExtensions::DEFAULT_NUMBER_SYSTEM_DIGITS {
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+std::set<wchar_t> const NumberSystemExtensions::DEFAULT_NUMBER_SYSTEM_DIGITS {
+	L'0', L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9'
 };
 
-std::unordered_map<std::string, NumberSystem> const NumberSystemExtensions::STRING_TO_NUMBER_SYSTEM {
-	{ "2", NumberSystem::TWO },
-	{ "3", NumberSystem::THREE },
-	{ "4", NumberSystem::FOUR },
-	{ "5", NumberSystem::FIVE },
-	{ "6", NumberSystem::SIX },
-	{ "7", NumberSystem::SEVEN },
-	{ "8", NumberSystem::EIGHT },
-	{ "9", NumberSystem::NINE },
-	{ "10", NumberSystem::TEN },
-	{ "11", NumberSystem::ELEVEN },
-	{ "12", NumberSystem::TWELVE },
-	{ "13", NumberSystem::THIRTEEN },
-	{ "14", NumberSystem::FOURTEEN },
-	{ "15", NumberSystem::FIFTEEN },
-	{ "16", NumberSystem::SIXTEEN }
+std::unordered_map<std::wstring, NumberSystem> const NumberSystemExtensions::STRING_TO_NUMBER_SYSTEM {
+	{ L"2", NumberSystem::TWO },
+	{ L"3", NumberSystem::THREE },
+	{ L"4", NumberSystem::FOUR },
+	{ L"5", NumberSystem::FIVE },
+	{ L"6", NumberSystem::SIX },
+	{ L"7", NumberSystem::SEVEN },
+	{ L"8", NumberSystem::EIGHT },
+	{ L"9", NumberSystem::NINE },
+	{ L"10", NumberSystem::TEN },
+	{ L"11", NumberSystem::ELEVEN },
+	{ L"12", NumberSystem::TWELVE },
+	{ L"13", NumberSystem::THIRTEEN },
+	{ L"14", NumberSystem::FOURTEEN },
+	{ L"15", NumberSystem::FIFTEEN },
+	{ L"16", NumberSystem::SIXTEEN }
 };
 
 std::unordered_map<NumberSystem, unsigned int> const NumberSystemExtensions::NUMBER_SYSTEM_TO_UINT {

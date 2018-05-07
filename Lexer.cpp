@@ -5,13 +5,11 @@
 #include <set>
 
 Lexer::Lexer(std::string const & inputFileName)
-	: m_inputFileName(inputFileName)
-	, m_input(inputFileName)
+	: m_input(inputFileName)
 {}
 
-Lexer::Lexer(std::istream & is)
-	: m_inputFileName("")
-	, m_input(is)
+Lexer::Lexer(std::wistream & is)
+	: m_input(is)
 {}
 
 bool Lexer::GetNextTokenInformation(TokenInformation & tokenInformation)
@@ -76,14 +74,14 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 				m_customTypes.emplace(scanned.string);
 			}
 			scanned.position = lastScanned.position;
-			m_tokenInformations.emplace_back(TokenInformation(scannedStringToken, scanned, m_inputFileName));
+			m_tokenInformations.emplace_back(TokenInformation(scannedStringToken, scanned, m_input.GetFileName()));
 			tokenDetermined = true;
 		}
 		if (DELIMITERS_TO_SKIP.find(delimiter.string) == DELIMITERS_TO_SKIP.end())
 		{
 			Token delimiterToken;
 			DetermineDelimiterToken(delimiter.string, delimiterToken);
-			m_tokenInformations.emplace_back(TokenInformation(delimiterToken, delimiter, m_inputFileName));
+			m_tokenInformations.emplace_back(TokenInformation(delimiterToken, delimiter, m_input.GetFileName()));
 			tokenDetermined = true;
 		}
 		if (tokenDetermined)
@@ -98,7 +96,7 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 				std::make_move_iterator(lastScanned.string.begin()),
 				std::make_move_iterator(lastScanned.string.end()));
 		scanned.position = lastScanned.position;
-		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_inputFileName));
+		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_input.GetFileName()));
 	}
 	if (m_tokenInformations.empty())
 	{
@@ -107,20 +105,20 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 	return PopNextTokenInformation(tokenInformation);
 }
 
-bool Lexer::TryToCreateComment(std::string const & delimiterString, std::string & comment)
+bool Lexer::TryToCreateComment(std::wstring const & delimiterString, std::wstring & comment)
 {
 	if (delimiterString == TokenConstant::Comment::LINE)
 	{
-		m_input.SkipLine(comment);
+		m_input.ReadLine(comment);
 		comment.insert(0, TokenConstant::Comment::LINE);
 		return true;
 	}
 	if (delimiterString == TokenConstant::Comment::BLOCK_BEGINNING)
 	{
-		if (m_input.SkipUntilStrings({ TokenConstant::Comment::BLOCK_ENDING }, comment))
+		if (m_input.ReadUntilStrings({ TokenConstant::Comment::BLOCK_ENDING }, comment))
 		{
 			comment.append(TokenConstant::Comment::BLOCK_ENDING);
-			m_input.SkipArguments<char>(TokenConstant::Comment::BLOCK_ENDING.length());
+			m_input.SkipArguments<wchar_t>(TokenConstant::Comment::BLOCK_ENDING.length());
 		}
 		comment.insert(0, TokenConstant::Comment::BLOCK_BEGINNING);
 		return true;
@@ -128,9 +126,9 @@ bool Lexer::TryToCreateComment(std::string const & delimiterString, std::string 
 	return false;
 }
 
-bool Lexer::TryToCreateLiteral(std::string const & delimiterString, std::string & literal)
+bool Lexer::TryToCreateLiteral(std::wstring const & delimiterString, std::wstring & literal)
 {
-	char wrapper = 0;
+	wchar_t wrapper = 0;
 	if (delimiterString == TokenConstant::Parentheses::DOUBLE_QUOTE_STRING)
 	{
 		wrapper = TokenConstant::Parentheses::DOUBLE_QUOTE_CHARACTER;
@@ -139,17 +137,17 @@ bool Lexer::TryToCreateLiteral(std::string const & delimiterString, std::string 
 	{
 		wrapper = TokenConstant::Parentheses::QUOTE_CHARACTER;
 	}
-	if (wrapper != 0 && m_input.SkipUntilCharacters({ wrapper }, literal))
+	if (wrapper != 0 && m_input.ReadUntilCharacters({ wrapper }, literal))
 	{
 		literal.insert(literal.begin(), wrapper);
 		literal.insert(literal.end(), wrapper);
-		m_input.SkipArgument<char>();
+		m_input.SkipArgument<wchar_t>();
 		return true;
 	}
 	return false;
 }
 
-bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string const & delimiter)
+bool Lexer::NeedMoreScanning(std::wstring const & scannedString, std::wstring const & delimiter)
 {
 	Token token;
 	return !scannedString.empty()
@@ -162,8 +160,7 @@ bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string cons
 }
 
 bool Lexer::DetermineScannedStringToken(
-		std::string const & scannedString, Token & token, std::unordered_set<std::string> const & customTypes
-)
+		std::wstring const & scannedString, Token & token, std::unordered_set<std::wstring> const & customTypes)
 {
 	token = Token::UNKNOWN;
 	if (scannedString.empty())
@@ -182,20 +179,20 @@ bool Lexer::DetermineScannedStringToken(
 	return DetermineNumberToken(scannedString, token);
 }
 
-bool Lexer::IsIdentifier(std::string const & str)
+bool Lexer::IsIdentifier(std::wstring const & str)
 {
 	return std::regex_match(str.begin(), str.end(), TokenConstant::Regex::IDENTIFIER);
 }
 
-bool Lexer::IsDigit(char ch, NumberSystem numberSystem)
+bool Lexer::IsDigit(wchar_t ch, NumberSystem numberSystem)
 {
-	std::set<char> availableCharacters;
+	std::set<wchar_t> availableCharacters;
 	NumberSystemExtensions::CreateAvailableCharacters(numberSystem, availableCharacters);
 	return availableCharacters.find(ch) != availableCharacters.end();
 }
 
 bool Lexer::IsInteger(
-	std::string const & str, size_t fromIndex, size_t & failIndex, std::string & goodString, NumberSystem numberSystem)
+	std::wstring const & str, size_t fromIndex, size_t & failIndex, std::wstring & goodString, NumberSystem numberSystem)
 {
 	if (str.empty() || fromIndex > str.length() - 1)
 	{
@@ -213,7 +210,7 @@ bool Lexer::IsInteger(
 	return true;
 }
 
-bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & token)
+bool Lexer::DetermineNumberToken(std::wstring const & scannedString, Token & token)
 {
 	if (scannedString.empty() || !IsDigit(scannedString.front()))
 	{
@@ -221,7 +218,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 	}
 
 	size_t failIndex;
-	std::string goodString;
+	std::wstring goodString;
 	if (IsInteger(scannedString, 0, failIndex, goodString))
 	{
 		token = Token::INTEGER;
@@ -244,7 +241,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 		{
 			if (scannedString.length() > failIndex + 2)
 			{
-				char nextChar = scannedString.at(failIndex + 2);
+				wchar_t nextChar = scannedString.at(failIndex + 2);
 				if (nextChar == TokenConstant::Operator::Arithmetic::PLUS_CHARACTER
 					|| nextChar == TokenConstant::Operator::Arithmetic::MINUS_CHARACTER)
 				{
@@ -295,7 +292,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 			{
 				if (scannedString.length() > failIndex + 2)
 				{
-					char nextChar = scannedString.at(failIndex + 2);
+					wchar_t nextChar = scannedString.at(failIndex + 2);
 					if (nextChar == TokenConstant::Operator::Arithmetic::PLUS_CHARACTER
 						|| nextChar == TokenConstant::Operator::Arithmetic::MINUS_CHARACTER)
 					{
@@ -322,7 +319,7 @@ bool Lexer::DetermineNumberToken(std::string const & scannedString, Token & toke
 	return false;
 }
 
-bool Lexer::DetermineDelimiterToken(std::string const & delimiterString, Token & token)
+bool Lexer::DetermineDelimiterToken(std::wstring const & delimiterString, Token & token)
 {
 	token = Token::UNKNOWN;
 	return TryToAddLiteralToken(delimiterString, token)
@@ -330,7 +327,7 @@ bool Lexer::DetermineDelimiterToken(std::string const & delimiterString, Token &
 			|| TokenExtensions::TryToGetDelimiterToken(delimiterString, token);
 }
 
-bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & token)
+bool Lexer::TryToAddLiteralToken(std::wstring const & delimiterString, Token & token)
 {
 	if (delimiterString.front() == TokenConstant::Parentheses::QUOTE_CHARACTER && delimiterString.length() == 3)
 	{
@@ -345,9 +342,9 @@ bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & to
 	return false;
 }
 
-bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & token)
+bool Lexer::TryToAddCommentToken(std::wstring const & delimiterString, Token & token)
 {
-	std::string commentBeginning = delimiterString.substr(0, 2);
+	std::wstring commentBeginning = delimiterString.substr(0, 2);
 	if (commentBeginning == TokenConstant::Comment::LINE)
 	{
 		token = Token::LINE_COMMENT;
@@ -361,7 +358,7 @@ bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & to
 	return false;
 }
 
-std::vector<std::string> const Lexer::SCANNER_DELIMITERS {
+std::vector<std::wstring> const Lexer::SCANNER_DELIMITERS {
 		TokenConstant::Comment::BLOCK_BEGINNING,
 		TokenConstant::Comment::LINE,
 		TokenConstant::Separator::SPACE,
@@ -399,8 +396,8 @@ std::vector<std::string> const Lexer::SCANNER_DELIMITERS {
 
 NumberSystem const Lexer::DEFAULT_NUMBER_SYSTEM = NumberSystem::TEN;
 
-std::unordered_set<std::string> const Lexer::DELIMITERS_TO_SKIP {
-	"",
+std::unordered_set<std::wstring> const Lexer::DELIMITERS_TO_SKIP {
+	L"",
 	TokenConstant::Separator::SPACE,
 	TokenConstant::Separator::TAB,
 	TokenConstant::Separator::END_OF_LINE_LF,

@@ -12,9 +12,9 @@ public:
 	class Comment
 	{
 	public:
-		static std::string const BLOCK_BEGINNING;
-		static std::string const BLOCK_ENDING;
-		static std::string const LINE;
+		static std::wstring const BLOCK_BEGINNING;
+		static std::wstring const BLOCK_ENDING;
+		static std::wstring const LINE;
 	};
 
 	class Operator
@@ -23,54 +23,54 @@ public:
 		class Arithmetic
 		{
 		public:
-			static std::string const DIVISION;
-			static std::string const MINUS;
-			static char const MINUS_CHARACTER;
-			static std::string const MULTIPLY;
-			static std::string const PLUS;
-			static char const PLUS_CHARACTER;
+			static std::wstring const DIVISION;
+			static std::wstring const MINUS;
+			static wchar_t const MINUS_CHARACTER;
+			static std::wstring const MULTIPLY;
+			static std::wstring const PLUS;
+			static wchar_t const PLUS_CHARACTER;
 		};
 
 		class Assignment
 		{
 		public:
-			static std::string const ASSIGNMENT;
-			static std::string const DIVISION_ASSIGNMENT;
-			static std::string const MINUS_ASSIGNMENT;
-			static std::string const MULTIPLY_ASSIGNMENT;
-			static std::string const PLUS_ASSIGNMENT;
+			static std::wstring const ASSIGNMENT;
+			static std::wstring const DIVISION_ASSIGNMENT;
+			static std::wstring const MINUS_ASSIGNMENT;
+			static std::wstring const MULTIPLY_ASSIGNMENT;
+			static std::wstring const PLUS_ASSIGNMENT;
 		};
 
 		class Comparison
 		{
 		public:
-			static std::string const EQUIVALENCE;
-			static std::string const NOT_EQUIVALENCE;
-			static std::string const MORE_OR_EQUIVALENCE;
-			static std::string const LESS_OR_EQUIVALENCE;
-			static std::string const MORE;
-			static std::string const LESS;
+			static std::wstring const EQUIVALENCE;
+			static std::wstring const NOT_EQUIVALENCE;
+			static std::wstring const MORE_OR_EQUIVALENCE;
+			static std::wstring const LESS_OR_EQUIVALENCE;
+			static std::wstring const MORE;
+			static std::wstring const LESS;
 		};
 	};
 
 	class Keyword
 	{
 	public:
-		static std::string const CLASS;
-		static std::string const CONSTRUCTOR;
-		static std::string const DO;
-		static std::string const EXTENDS;
-		static std::string const FOR;
-		static std::string const GET;
-		static std::string const IMPLEMENTS;
-		static std::string const NOT_INITIALIZED;
-		static std::string const PRIVATE;
-		static std::string const PUBLIC;
-		static std::string const RETURN;
-		static std::string const SET;
-		static std::string const WHILE;
-		static std::string const IF;
-		static std::string const ELSE;
+		static std::wstring const CLASS;
+		static std::wstring const CONSTRUCTOR;
+		static std::wstring const DO;
+		static std::wstring const EXTENDS;
+		static std::wstring const FOR;
+		static std::wstring const GET;
+		static std::wstring const IMPLEMENTS;
+		static std::wstring const NOT_INITIALIZED;
+		static std::wstring const PRIVATE;
+		static std::wstring const PUBLIC;
+		static std::wstring const RETURN;
+		static std::wstring const SET;
+		static std::wstring const WHILE;
+		static std::wstring const IF;
+		static std::wstring const ELSE;
 	};
 
 	class CoreType
@@ -79,35 +79,35 @@ public:
 		class Number
 		{
 		public:
-			static std::string const DOUBLE;
-			static std::string const FLOAT;
-			static std::string const INTEGER;
+			static std::wstring const DOUBLE;
+			static std::wstring const FLOAT;
+			static std::wstring const INTEGER;
 		};
 
 		class Complex
 		{
 		public:
-			static std::string const ARRAY;
-			static std::string const STRING;
+			static std::wstring const ARRAY;
+			static std::wstring const STRING;
 		};
 
-		static std::string const VOID;
+		static std::wstring const VOID;
 	};
 
 	class Separator
 	{
 	public:
-		static std::string const DOT;
-		static char const DOT_CHARACTER;
-		static std::string const COLON;
-		static std::string const COMMA;
-		static std::string const SEMICOLON;
-		static char const EXPONENT_CHARACTER;
-		static std::string const SPACE;
-		static std::string const TAB;
-		static std::string const END_OF_LINE_LF;
-		static std::string const END_OF_LINE_CR;
-		static char const UNDERSCORE_CHARACTER;
+		static std::wstring const DOT;
+		static wchar_t const DOT_CHARACTER;
+		static std::wstring const COLON;
+		static std::wstring const COMMA;
+		static std::wstring const SEMICOLON;
+		static wchar_t const EXPONENT_CHARACTER;
+		static std::wstring const SPACE;
+		static std::wstring const TAB;
+		static std::wstring const END_OF_LINE_LF;
+		static std::wstring const END_OF_LINE_CR;
+		static wchar_t const UNDERSCORE_CHARACTER;
 	};
 
 	class Parentheses
@@ -116,16 +116,16 @@ public:
 		static Parenthesis const CURLY_BRACKET;
 		static Parenthesis const ROUND_BRACKET;
 		static Parenthesis const SQUARE_BRACKET;
-		static char const QUOTE_CHARACTER;
-		static std::string const QUOTE_STRING;
-		static char const DOUBLE_QUOTE_CHARACTER;
-		static std::string const DOUBLE_QUOTE_STRING;
+		static wchar_t const QUOTE_CHARACTER;
+		static std::wstring const QUOTE_STRING;
+		static wchar_t const DOUBLE_QUOTE_CHARACTER;
+		static std::wstring const DOUBLE_QUOTE_STRING;
 	};
 
 	class Name
 	{
 	public:
-		static std::string const UNKNOWN;
+		static std::wstring const UNKNOWN;
 
 		class Operator
 		{
@@ -133,90 +133,90 @@ public:
 			class Arithmetic
 			{
 			public:
-				static std::string const DIVISION;
-				static std::string const MINUS;
-				static std::string const MULTIPLY;
-				static std::string const PLUS;
+				static std::wstring const DIVISION;
+				static std::wstring const MINUS;
+				static std::wstring const MULTIPLY;
+				static std::wstring const PLUS;
 			};
 
 			class Assignment
 			{
 			public:
-				static std::string const ASSIGNMENT;
-				static std::string const DIVISION_ASSIGNMENT;
-				static std::string const MINUS_ASSIGNMENT;
-				static std::string const MULTIPLY_ASSIGNMENT;
-				static std::string const PLUS_ASSIGNMENT;
+				static std::wstring const ASSIGNMENT;
+				static std::wstring const DIVISION_ASSIGNMENT;
+				static std::wstring const MINUS_ASSIGNMENT;
+				static std::wstring const MULTIPLY_ASSIGNMENT;
+				static std::wstring const PLUS_ASSIGNMENT;
 			};
 
 			class Comparison
 			{
 			public:
-				static std::string const EQUIVALENCE;
-				static std::string const NOT_EQUIVALENCE;
-				static std::string const MORE_OR_EQUIVALENCE;
-				static std::string const LESS_OR_EQUIVALENCE;
-				static std::string const MORE;
-				static std::string const LESS;
+				static std::wstring const EQUIVALENCE;
+				static std::wstring const NOT_EQUIVALENCE;
+				static std::wstring const MORE_OR_EQUIVALENCE;
+				static std::wstring const LESS_OR_EQUIVALENCE;
+				static std::wstring const MORE;
+				static std::wstring const LESS;
 			};
 		};
 
 		class Keyword
 		{
 		public:
-			static std::string const CLASS;
-			static std::string const CONSTRUCTOR;
-			static std::string const DO;
-			static std::string const EXTENDS;
-			static std::string const FOR;
-			static std::string const GET;
-			static std::string const IMPLEMENTS;
-			static std::string const NOT_INITIALIZED;
-			static std::string const PRIVATE;
-			static std::string const PUBLIC;
-			static std::string const RETURN;
-			static std::string const SET;
-			static std::string const WHILE;
-			static std::string const IF;
-			static std::string const ELSE;
+			static std::wstring const CLASS;
+			static std::wstring const CONSTRUCTOR;
+			static std::wstring const DO;
+			static std::wstring const EXTENDS;
+			static std::wstring const FOR;
+			static std::wstring const GET;
+			static std::wstring const IMPLEMENTS;
+			static std::wstring const NOT_INITIALIZED;
+			static std::wstring const PRIVATE;
+			static std::wstring const PUBLIC;
+			static std::wstring const RETURN;
+			static std::wstring const SET;
+			static std::wstring const WHILE;
+			static std::wstring const IF;
+			static std::wstring const ELSE;
 		};
 
-		static std::string const INTEGER;
-		static std::string const FLOAT;
-		static std::string const EXPONENTIAL;
+		static std::wstring const INTEGER;
+		static std::wstring const FLOAT;
+		static std::wstring const EXPONENTIAL;
 
 		class Separator
 		{
 		public:
-			static std::string const DOT;
-			static std::string const COLON;
-			static std::string const COMMA;
-			static std::string const SEMICOLON;
+			static std::wstring const DOT;
+			static std::wstring const COLON;
+			static std::wstring const COMMA;
+			static std::wstring const SEMICOLON;
 		};
 
 		class Parentheses
 		{
 		public:
-			static std::string const CURLY_BRACKET_LEFT;
-			static std::string const CURLY_BRACKET_RIGHT;
-			static std::string const ROUND_BRACKET_LEFT;
-			static std::string const ROUND_BRACKET_RIGHT;
-			static std::string const SQUARE_BRACKET_LEFT;
-			static std::string const SQUARE_BRACKET_RIGHT;
+			static std::wstring const CURLY_BRACKET_LEFT;
+			static std::wstring const CURLY_BRACKET_RIGHT;
+			static std::wstring const ROUND_BRACKET_LEFT;
+			static std::wstring const ROUND_BRACKET_RIGHT;
+			static std::wstring const SQUARE_BRACKET_LEFT;
+			static std::wstring const SQUARE_BRACKET_RIGHT;
 		};
 
-		static std::string const TYPE;
-		static std::string const IDENTIFIER;
-		static std::string const STRING_LITERAL;
-		static std::string const CHARACTER_LITERAL;
-		static std::string const LINE_COMMENT;
-		static std::string const BLOCK_COMMENT;
+		static std::wstring const TYPE;
+		static std::wstring const IDENTIFIER;
+		static std::wstring const STRING_LITERAL;
+		static std::wstring const CHARACTER_LITERAL;
+		static std::wstring const LINE_COMMENT;
+		static std::wstring const BLOCK_COMMENT;
 	};
 
 	class Regex
 	{
 	public:
-		static std::regex const IDENTIFIER;
+		static std::wregex const IDENTIFIER;
 	};
 };
 

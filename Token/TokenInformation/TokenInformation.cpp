@@ -21,9 +21,9 @@ std::string const & TokenInformation::GetFileName()
 	return m_fileName;
 }
 
-std::string TokenInformation::ToString() const
+std::wstring TokenInformation::ToString() const
 {
-	return m_fileName + "[" + std::to_string(m_tokenStreamString.position.GetLine()) + ", "
-		+ std::to_string(m_tokenStreamString.position.GetColumn()) + "]: \n" + "\t" + "String : "
-		+ m_tokenStreamString.string + "\n" + "\t" + "Type   : " + TokenExtensions::ToString(m_token) + "\n";
+	return std::wstring(m_fileName.begin(), m_fileName.end()) + L"[" + std::to_wstring(m_tokenStreamString.position.GetLine()) + L", "
+		+ std::to_wstring(m_tokenStreamString.position.GetColumn()) + L"]: \n" + L"\t" + L"String : "
+		+ m_tokenStreamString.string + L"\n" + L"\t" + L"Type   : " + TokenExtensions::ToString(m_token) + L"\n";
 }

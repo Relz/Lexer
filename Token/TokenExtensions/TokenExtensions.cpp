@@ -1,6 +1,6 @@
 #include "TokenExtensions.h"
 
-bool TokenExtensions::TryToGetDelimiterToken(std::string const & str, Token & token)
+bool TokenExtensions::TryToGetDelimiterToken(std::wstring const & str, Token & token)
 {
 	if (STRING_TO_DELIMITER_TOKEN.find(str) == STRING_TO_DELIMITER_TOKEN.end())
 	{
@@ -10,7 +10,7 @@ bool TokenExtensions::TryToGetDelimiterToken(std::string const & str, Token & to
 	return true;
 }
 
-bool TokenExtensions::TryToGetKeywordToken(std::string const & str, Token & token)
+bool TokenExtensions::TryToGetKeywordToken(std::wstring const & str, Token & token)
 {
 	if (STRING_TO_KEYWORD_TOKEN.find(str) == STRING_TO_KEYWORD_TOKEN.end())
 	{
@@ -21,7 +21,7 @@ bool TokenExtensions::TryToGetKeywordToken(std::string const & str, Token & toke
 }
 
 bool TokenExtensions::TryToGetTypeToken(
-	std::string const & str, Token & token, std::unordered_set<std::string> const & customTypes)
+	std::wstring const & str, Token & token, std::unordered_set<std::wstring> const & customTypes)
 {
 	if (TYPES.find(str) == TYPES.end() && customTypes.find(str) == customTypes.end())
 	{
@@ -31,12 +31,12 @@ bool TokenExtensions::TryToGetTypeToken(
 	return true;
 }
 
-std::string TokenExtensions::ToString(Token token)
+std::wstring TokenExtensions::ToString(Token token)
 {
-	return TOKEN_TO_NAME.find(token) == TOKEN_TO_NAME.end() ? "" : TOKEN_TO_NAME.at(token);
+	return TOKEN_TO_NAME.find(token) == TOKEN_TO_NAME.end() ? L"" : TOKEN_TO_NAME.at(token);
 }
 
-std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITER_TOKEN{
+std::unordered_map<std::wstring, Token> const TokenExtensions::STRING_TO_DELIMITER_TOKEN{
 	{ TokenConstant::Operator::Arithmetic::DIVISION, Token::DIVISION },
 	{ TokenConstant::Operator::Arithmetic::MINUS, Token::MINUS },
 	{ TokenConstant::Operator::Arithmetic::MULTIPLY, Token::MULTIPLY },
@@ -68,7 +68,7 @@ std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_DELIMITE
 	{ TokenConstant::Parentheses::SQUARE_BRACKET.RIGHT, Token::RIGHT_SQUARE_BRACKET }
 };
 
-std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_TOKEN{
+std::unordered_map<std::wstring, Token> const TokenExtensions::STRING_TO_KEYWORD_TOKEN{
 	{ TokenConstant::Keyword::CLASS, Token::CLASS },
 	{ TokenConstant::Keyword::CONSTRUCTOR, Token::CONSTRUCTOR },
 	{ TokenConstant::Keyword::DO, Token::DO },
@@ -86,7 +86,7 @@ std::unordered_map<std::string, Token> const TokenExtensions::STRING_TO_KEYWORD_
 	{ TokenConstant::Keyword::ELSE, Token::ELSE }
 };
 
-std::unordered_set<std::string> const TokenExtensions::TYPES{
+std::unordered_set<std::wstring> const TokenExtensions::TYPES{
 	TokenConstant::CoreType::Complex::ARRAY,
 	TokenConstant::CoreType::Number::DOUBLE,
 	TokenConstant::CoreType::Number::FLOAT,
@@ -95,7 +95,7 @@ std::unordered_set<std::string> const TokenExtensions::TYPES{
 	TokenConstant::CoreType::VOID
 };
 
-std::unordered_map<Token, std::string> const TokenExtensions::TOKEN_TO_NAME{
+std::unordered_map<Token, std::wstring> const TokenExtensions::TOKEN_TO_NAME{
 	{ Token::UNKNOWN, TokenConstant::Name::UNKNOWN },
 
 	{ Token::DIVISION, TokenConstant::Name::Operator::Arithmetic::DIVISION },
