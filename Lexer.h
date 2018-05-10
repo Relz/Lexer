@@ -15,40 +15,40 @@ class Lexer
 {
 public:
 	explicit Lexer(std::string const & inputFileName);
-	explicit Lexer(std::wistream & is);
+	explicit Lexer(std::istream & is);
 	bool GetNextTokenInformation(TokenInformation & tokenInformation);
 
 private:
-	static std::vector<std::wstring> const SCANNER_DELIMITERS;
+	static std::vector<std::string> const SCANNER_DELIMITERS;
 	static NumberSystem const DEFAULT_NUMBER_SYSTEM;
-	static std::unordered_set<std::wstring> const DELIMITERS_TO_SKIP;
+	static std::unordered_set<std::string> const DELIMITERS_TO_SKIP;
 
 	static bool DetermineScannedStringToken(
-		std::wstring const & scannedString, Token & token, std::unordered_set<std::wstring> const & customTypes
+		std::string const & scannedString, Token & token, std::unordered_set<std::string> const & customTypes
 	);
-	static bool IsIdentifier(std::wstring const & str);
-	static bool IsDigit(wchar_t ch, NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM);
+	static bool IsIdentifier(std::string const & str);
+	static bool IsDigit(char ch, NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM);
 	static bool IsInteger(
-			std::wstring const & str,
+			std::string const & str,
 			size_t fromIndex,
 			size_t & failIndex,
-			std::wstring & goodString,
+			std::string & goodString,
 			NumberSystem numberSystem = DEFAULT_NUMBER_SYSTEM
 	);
-	static bool DetermineNumberToken(std::wstring const & scannedString, Token & token);
-	static bool DetermineDelimiterToken(std::wstring const & delimiterString, Token & token);
-	static bool TryToAddLiteralToken(std::wstring const & delimiterString, Token & token);
-	static bool TryToAddCommentToken(std::wstring const & delimiterString, Token & token);
+	static bool DetermineNumberToken(std::string const & scannedString, Token & token);
+	static bool DetermineDelimiterToken(std::string const & delimiterString, Token & token);
+	static bool TryToAddLiteralToken(std::string const & delimiterString, Token & token);
+	static bool TryToAddCommentToken(std::string const & delimiterString, Token & token);
 
 	Input m_input;
 	std::vector<TokenInformation> m_tokenInformations;
-	std::unordered_set<std::wstring> m_customTypes;
+	std::unordered_set<std::string> m_customTypes;
 
 	bool PopNextTokenInformation(TokenInformation & tokenInformation);
 	bool DetermineNextTokenInformation(TokenInformation & tokenInformation);
-	bool TryToCreateComment(std::wstring const & delimiterString, std::wstring & comment);
-	bool TryToCreateLiteral(std::wstring const & delimiterString, std::wstring & literal);
-	bool NeedMoreScanning(std::wstring const & scannedString, std::wstring const & delimiter);
+	bool TryToCreateComment(std::string const & delimiterString, std::string & comment);
+	bool TryToCreateLiteral(std::string const & delimiterString, std::string & literal);
+	bool NeedMoreScanning(std::string const & scannedString, std::string const & delimiter);
 };
 
 #endif

@@ -15,7 +15,7 @@ public:
 	Token GetToken();
 	StreamString const & GetTokenStreamString();
 	std::string const & GetFileName();
-	std::wstring ToString() const;
+	std::string ToString() const;
 
 private:
 	Token m_token = Token::UNKNOWN;

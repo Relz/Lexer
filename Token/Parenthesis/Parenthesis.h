@@ -5,8 +5,8 @@
 
 struct Parenthesis
 {
-	std::wstring const LEFT;
-	std::wstring const RIGHT;
+	std::string const LEFT;
+	std::string const RIGHT;
 };
 
 #endif
