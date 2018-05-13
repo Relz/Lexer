@@ -98,9 +98,20 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 		scanned.position = lastScanned.position;
 		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_input.GetFileName()));
 	}
-	if (m_tokenInformations.empty())
+	if (!tokenDetermined)
 	{
-		return false;
+		static bool endOfFileReached = false;
+		if (endOfFileReached)
+		{
+			return false;
+		}
+		endOfFileReached = true;
+		while (m_input.SkipArgument<char>())
+		{
+
+		}
+		m_tokenInformations.emplace_back(
+			TokenInformation(Token::END_OF_FILE, StreamString("", m_input.GetPosition()), m_input.GetFileName()));
 	}
 	return PopNextTokenInformation(tokenInformation);
 }

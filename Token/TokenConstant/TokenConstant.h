@@ -211,6 +211,8 @@ public:
 		static std::string const CHARACTER_LITERAL;
 		static std::string const LINE_COMMENT;
 		static std::string const BLOCK_COMMENT;
+
+		static std::string const END_OF_FILE;
 	};
 
 	class Regex

@@ -128,4 +128,6 @@ std::string const TokenConstant::Name::CHARACTER_LITERAL = "Character literal";
 std::string const TokenConstant::Name::LINE_COMMENT = "Line comment";
 std::string const TokenConstant::Name::BLOCK_COMMENT = "Block comment";
 
+std::string const TokenConstant::Name::END_OF_FILE = "End of file";
+
 std::regex const TokenConstant::Regex::IDENTIFIER("[_a-zA-Z][_a-zA-Z0-9]*");

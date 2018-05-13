@@ -51,6 +51,7 @@
 |                       |IDENTIFIER          |Идентификатор                                            |```identifier0```             |
 |                       |STRING_LITERAL      |Строковый литерал                                        |```"string"```                |
 |                       |CHARACTER_LITERAL   |Символьный литерал                                       |```'a'```                     |
+|                       |END_OF_FILE         |Конец файла                                              |``````                        |
 
 ### Разделители
 
