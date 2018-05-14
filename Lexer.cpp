@@ -92,20 +92,19 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 	if (!tokenDetermined && !lastScanned.string.empty())
 	{
 		scanned.string.insert(
-				scanned.string.begin(),
-				std::make_move_iterator(lastScanned.string.begin()),
-				std::make_move_iterator(lastScanned.string.end()));
+			scanned.string.begin(),
+			std::make_move_iterator(lastScanned.string.begin()),
+			std::make_move_iterator(lastScanned.string.end()));
 		scanned.position = lastScanned.position;
 		m_tokenInformations.emplace_back(TokenInformation(Token::UNKNOWN, scanned, m_input.GetFileName()));
 	}
 	if (!tokenDetermined)
 	{
-		static bool endOfFileReached = false;
-		if (endOfFileReached)
+		if (m_endOfFileReached)
 		{
 			return false;
 		}
-		endOfFileReached = true;
+		m_endOfFileReached = true;
 		while (m_input.SkipArgument<char>())
 		{
 

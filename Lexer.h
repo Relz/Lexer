@@ -43,6 +43,7 @@ private:
 	Input m_input;
 	std::vector<TokenInformation> m_tokenInformations;
 	std::unordered_set<std::string> m_customTypes;
+	bool m_endOfFileReached = false;
 
 	bool PopNextTokenInformation(TokenInformation & tokenInformation);
 	bool DetermineNextTokenInformation(TokenInformation & tokenInformation);
