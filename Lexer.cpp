@@ -1,7 +1,7 @@
 #include "Lexer.h"
 #include "NumberSystem/NumberSystemExtensions/NumberSystemExtensions.h"
-#include "Token/TokenInformation/TokenInformation.h"
-#include "Token/TokenConstant/TokenConstant.h"
+#include "TokenLibrary/TokenInformation/TokenInformation.h"
+#include "TokenLibrary/TokenConstant/TokenConstant.h"
 #include <set>
 
 Lexer::Lexer(std::string const & inputFileName)
