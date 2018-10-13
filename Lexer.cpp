@@ -391,6 +391,8 @@ std::vector<std::string> const Lexer::SCANNER_DELIMITERS {
 		TokenConstant::Operator::Arithmetic::MINUS,
 		TokenConstant::Operator::Arithmetic::MULTIPLY,
 		TokenConstant::Operator::Arithmetic::PLUS,
+		TokenConstant::Operator::Logical::AND,
+		TokenConstant::Operator::Logical::OR,
 		TokenConstant::Separator::COLON,
 		TokenConstant::Separator::COMMA,
 		TokenConstant::Separator::DOT,
