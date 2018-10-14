@@ -182,6 +182,7 @@ bool Lexer::DetermineScannedStringToken(
 		token = Token::IDENTIFIER;
 		if (TokenExtensions::TryToGetKeywordToken(scannedString, token)
 			|| TokenExtensions::TryToGetBooleanLiteralToken(scannedString, token)
+			|| TokenExtensions::TryToGetPredefinedFunctionToken(scannedString, token)
 			|| TokenExtensions::TryToGetTypeToken(scannedString, token, customTypes))
 		{
 		}
