@@ -112,6 +112,7 @@ bool Lexer::DetermineNextTokenInformation(TokenInformation & tokenInformation)
 		m_tokenInformations.emplace_back(
 			TokenInformation(Token::END_OF_FILE, StreamString("", m_input.GetPosition()), m_input.GetFileName()));
 	}
+
 	return PopNextTokenInformation(tokenInformation);
 }
 
@@ -170,7 +171,7 @@ bool Lexer::NeedMoreScanning(std::string const & scannedString, std::string cons
 }
 
 bool Lexer::DetermineScannedStringToken(
-		std::string const & scannedString, Token & token, std::unordered_set<std::string> const & customTypes)
+	std::string const & scannedString, Token & token, std::unordered_set<std::string> const & customTypes)
 {
 	token = Token::UNKNOWN;
 	if (scannedString.empty())
