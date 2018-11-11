@@ -357,16 +357,19 @@ bool Lexer::TryToAddLiteralToken(std::string const & delimiterString, Token & to
 
 bool Lexer::TryToAddCommentToken(std::string const & delimiterString, Token & token)
 {
-	std::string commentBeginning = delimiterString.substr(0, 2);
-	if (commentBeginning == TokenConstant::Comment::LINE)
+	if (delimiterString.front() == TokenConstant::Comment::LINE_CHARACTER)
 	{
 		token = Token::LINE_COMMENT;
 		return true;
 	}
-	else if (commentBeginning == TokenConstant::Comment::BLOCK_BEGINNING)
+	else if (delimiterString.length() > 1)
 	{
-		token = Token::BLOCK_COMMENT;
-		return true;
+		std::string commentBeginning = delimiterString.substr(0, 2);
+		if (commentBeginning == TokenConstant::Comment::BLOCK_BEGINNING)
+		{
+			token = Token::BLOCK_COMMENT;
+			return true;
+		}
 	}
 	return false;
 }
@@ -391,8 +394,8 @@ std::vector<std::string> const Lexer::SCANNER_DELIMITERS {
 	TokenConstant::Operator::Assignment::MODULUS_ASSIGNMENT,
 	TokenConstant::Operator::Assignment::MULTIPLY_ASSIGNMENT,
 	TokenConstant::Operator::Assignment::PLUS_ASSIGNMENT,
-	TokenConstant::Operator::Arithmetic::DIVISION,
 	TokenConstant::Operator::Arithmetic::INTEGER_DIVISION,
+	TokenConstant::Operator::Arithmetic::DIVISION,
 	TokenConstant::Operator::Arithmetic::MINUS,
 	TokenConstant::Operator::Arithmetic::MODULUS,
 	TokenConstant::Operator::Arithmetic::MULTIPLY,
